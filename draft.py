@@ -17,13 +17,13 @@ additives = json.load(urllib.urlopen("http://world.openfoodfacts.org/additives.j
 countries = json.load(urllib.urlopen("http://world.openfoodfacts.org/countries.json"))
 purchase_places = json.load(urllib.urlopen("http://world.openfoodfacts.org/purchase-places.json"))
 states = json.load(urllib.urlopen("http://world.openfoodfacts.org/states.json"))
-entry_dates = json.load(urllib.urlopen("http://world.openfoodfacts.org/entry-dates.json""))
-languages = json.load(urllib.urlopen("http://world.openfoodfacts.org/languages.json""))
+entry_dates = json.load(urllib.urlopen("http://world.openfoodfacts.org/entry-dates.json"))
+languages = json.load(urllib.urlopen("http://world.openfoodfacts.org/languages.json"))
 product = json.load(urllib.urlopen("http://world.openfoodfacts.org/api/v0/product/"+ str(jr['code']) +".json"))
 # http://world.openfoodfacts.org/api/v0/product/737628064502.json
 
-/cgi/search.pl
-name="search_terms2"
+search_url = "http://world.openfoodfacts.org/cgi/search.pl"
+search_terms2 # search terms
 
 # FIRST CRITERIA
 
@@ -44,53 +44,57 @@ allergens # allergens
 traces # traces
 nutrition_grades # Nutrition grades
 states # states
-</select>	
+	
 
 tag_contains_0
 contains
 does_not_contain
 
 
-<input type="text" id="tag_0" name="tag_0" value="" placeholder="value"/>
+tag_0
 
-<input type="radio" name="additives" value="without" id="without_additives" />
-<label for="without_additives # Without</label>
-<input type="radio" name="additives" value="with" id="with_additives" />
-<label for="with_additives # With</label>
-<input type="radio" name="additives" value="indifferent" id="indifferent_additives" checked="checked"/>
-<label for="indifferent_additives # Indifferent</label>	
-
-
-<label>Ingredients from palm oil</label>		
-<input type="radio" name="ingredients_from_palm_oil" value="without" id="without_ingredients_from_palm_oil" />
-<label for="without_ingredients_from_palm_oil # Without</label>
-<input type="radio" name="ingredients_from_palm_oil" value="with" id="with_ingredients_from_palm_oil" />
-<label for="with_ingredients_from_palm_oil # With</label>
-<input type="radio" name="ingredients_from_palm_oil" value="indifferent" id="indifferent_ingredients_from_palm_oil" checked="checked"/>
-<label for="indifferent_ingredients_from_palm_oil # Indifferent</label>	
+additives # without # without_additives
+without_additives # Without
+additives # with # with_additives
+with_additives # With
+additives # indifferent # indifferent_additives
+indifferent_additives # Indifferent	
 
 
-<div class="small-12 medium-12 large-6 columns # 
-<label>Ingredients that may be from palm oil</label>		
-<input type="radio" name="ingredients_that_may_be_from_palm_oil" value="without" id="without_ingredients_that_may_be_from_palm_oil" />
-<label for="without_ingredients_that_may_be_from_palm_oil # Without</label>
-<input type="radio" name="ingredients_that_may_be_from_palm_oil" value="with" id="with_ingredients_that_may_be_from_palm_oil" />
-<label for="with_ingredients_that_may_be_from_palm_oil # With</label>
-<input type="radio" name="ingredients_that_may_be_from_palm_oil" value="indifferent" id="indifferent_ingredients_that_may_be_from_palm_oil" checked="checked"/>
-<label for="indifferent_ingredients_that_may_be_from_palm_oil # Indifferent</label>			
-</div>
-<div class="small-12 medium-12 large-6 columns # 
-<label>Ingredients from or that may be from palm oil</label>		
-<input type="radio" name="ingredients_from_or_that_may_be_from_palm_oil" value="without" id="without_ingredients_from_or_that_may_be_from_palm_oil" />
-<label for="without_ingredients_from_or_that_may_be_from_palm_oil # Without</label>
-<input type="radio" name="ingredients_from_or_that_may_be_from_palm_oil" value="with" id="with_ingredients_from_or_that_may_be_from_palm_oil" />
-<label for="with_ingredients_from_or_that_may_be_from_palm_oil # With</label>
-<input type="radio" name="ingredients_from_or_that_may_be_from_palm_oil" value="indifferent" id="indifferent_ingredients_from_or_that_may_be_from_palm_oil" checked="checked"/>
-<label for="indifferent_ingredients_from_or_that_may_be_from_palm_oil # Indifferent</label>			
-</div>
+# Ingredients from palm oil
+ingredients_from_palm_oil # without # without_ingredients_from_palm_oil
+without_ingredients_from_palm_oil # Without
+ingredients_from_palm_oil # with # with_ingredients_from_palm_oil
+with_ingredients_from_palm_oil # With
+ingredients_from_palm_oil # indifferent # indifferent_ingredients_from_palm_oil"
+indifferent_ingredients_from_palm_oil # Indifferent	
+
+
+
+# Ingredients that may be from palm oil
+ingredients_that_may_be_from_palm_oil # without # without_ingredients_that_may_be_from_palm_oil
+without_ingredients_that_may_be_from_palm_oil # Without
+ingredients_that_may_be_from_palm_oil # with # with_ingredients_that_may_be_from_palm_oil
+with_ingredients_that_may_be_from_palm_oil # With
+ingredients_that_may_be_from_palm_oil # indifferent # indifferent_ingredients_that_may_be_from_palm_oil
+indifferent_ingredients_that_may_be_from_palm_oil # Indifferent	
+
+
+# Ingredients from or that may be from palm oil
+ingredients_from_or_that_may_be_from_palm_oil # without # without_ingredients_from_or_that_may_be_from_palm_oil
+without_ingredients_from_or_that_may_be_from_palm_oil # Without
+ingredients_from_or_that_may_be_from_palm_oil # with # with_ingredients_from_or_that_may_be_from_palm_oil
+with_ingredients_from_or_that_may_be_from_palm_oil # With
+ingredients_from_or_that_may_be_from_palm_oil # indifferent # indifferent_ingredients_from_or_that_may_be_from_palm_oil
+indifferent_ingredients_from_or_that_may_be_from_palm_oil # Indifferent	
+
+
+# Nutrients
 
 nutriment_0 # nutriment_0 # 
+
 search_nutriment # choose a nutriment...
+
 energy # Energy
 energy-from-fat # Energy from fat
 fat # Fat
@@ -188,6 +192,7 @@ carbon-footprint # Carbon footprint / CO2 emissions
 nutrition-score-fr # Experimental nutrition score
 nutrition-score-uk # Nutrition score - UK
 
+# Comparison of nutrients
 
 nutriment_compare_0 # nutriment_compare_0 # 
 lt # &lt;
@@ -196,25 +201,23 @@ gt # &gt;
 gte # &gt;=
 eq # =
 		
+# Value to compare the nutrients to
+nutriment_value_0
 
-<input type="text" id="nutriment_value_0" name="nutriment_value_0" value="" />
-
-
-
+# Output
 sort_by # sort_by
-<option selected="selected" value="unique_scans_n # Popularity
+unique_scans_n # Popularity
 product_name # Product name
 created_t # Add date
 last_modified_t # Edit date
-</select>
-</div>
-<div class="small-6 columns # 
-<label for="page_size # Results per page</label>	
-page_size # page_size # 
-<option selected="selected" value="20 # 20
+
+
+# Results per page	
+page_size # page_size
+20 # 20
 50 # 50
 100 # 100
 250 # 250
 500 # 500
 1000 # 1000
-</select>
+
