@@ -25,10 +25,12 @@ product = json.load(urllib.urlopen("http://world.openfoodfacts.org/api/v0/produc
 search_url = "http://world.openfoodfacts.org/cgi/search.pl"
 search_terms2 # search terms
 
-# FIRST CRITERIA
+# FIRST CRITERIA (TAG0)
 
 tagtype_0
 search_tag # choose a criterion...
+
+# CRITERION
 brands # brands
 categories # categories
 packaging # packaging
@@ -45,53 +47,42 @@ traces # traces
 nutrition_grades # Nutrition grades
 states # states
 	
-
+# Contains or Not
 tag_contains_0
 contains
 does_not_contain
 
-
+# Value of Tag (free text)
 tag_0
 
-additives # without # without_additives
-without_additives # Without
-additives # with # with_additives
-with_additives # With
-additives # indifferent # indifferent_additives
-indifferent_additives # Indifferent	
-
+#additives 
+additives 
+without # without_additives
+with # with_additives
+indifferent # indifferent_additives
 
 # Ingredients from palm oil
-ingredients_from_palm_oil # without # without_ingredients_from_palm_oil
-without_ingredients_from_palm_oil # Without
-ingredients_from_palm_oil # with # with_ingredients_from_palm_oil
-with_ingredients_from_palm_oil # With
-ingredients_from_palm_oil # indifferent # indifferent_ingredients_from_palm_oil"
-indifferent_ingredients_from_palm_oil # Indifferent	
-
-
+ingredients_from_palm_oil 
+without
+with
+indifferent	
 
 # Ingredients that may be from palm oil
-ingredients_that_may_be_from_palm_oil # without # without_ingredients_that_may_be_from_palm_oil
-without_ingredients_that_may_be_from_palm_oil # Without
-ingredients_that_may_be_from_palm_oil # with # with_ingredients_that_may_be_from_palm_oil
-with_ingredients_that_may_be_from_palm_oil # With
-ingredients_that_may_be_from_palm_oil # indifferent # indifferent_ingredients_that_may_be_from_palm_oil
-indifferent_ingredients_that_may_be_from_palm_oil # Indifferent	
+ingredients_that_may_be_from_palm_oil
+without
+with
+indifferent
 
-
-# Ingredients from or that may be from palm oil
-ingredients_from_or_that_may_be_from_palm_oil # without # without_ingredients_from_or_that_may_be_from_palm_oil
-without_ingredients_from_or_that_may_be_from_palm_oil # Without
-ingredients_from_or_that_may_be_from_palm_oil # with # with_ingredients_from_or_that_may_be_from_palm_oil
-with_ingredients_from_or_that_may_be_from_palm_oil # With
-ingredients_from_or_that_may_be_from_palm_oil # indifferent # indifferent_ingredients_from_or_that_may_be_from_palm_oil
-indifferent_ingredients_from_or_that_may_be_from_palm_oil # Indifferent	
+#ingredients_from_or_that_may_be_from_palm_oi
+ingredients_from_or_that_may_be_from_palm_oil
+without
+with
+indifferent
 
 
 # Nutrients
 
-nutriment_0 # nutriment_0 # 
+nutriment_0
 
 search_nutriment # choose a nutriment...
 
@@ -193,13 +184,15 @@ nutrition-score-fr # Experimental nutrition score
 nutrition-score-uk # Nutrition score - UK
 
 # Comparison of nutrients
+# Nutriment to compare
+nutriment_compare_0
 
-nutriment_compare_0 # nutriment_compare_0 # 
-lt # &lt;
-lte # &lt;=
-gt # &gt;
-gte # &gt;=
-eq # =
+# Operator
+lt # less than
+lte # less than or equal
+gt # greater than
+gte # greater than or equal
+eq # equal to
 		
 # Value to compare the nutrients to
 nutriment_value_0
@@ -221,3 +214,10 @@ page_size # page_size
 500 # 500
 1000 # 1000
 
+#Pagination
+page=1
+
+#Format
+json=1
+xml=1
+jqm=1
