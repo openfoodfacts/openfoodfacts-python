@@ -1,0 +1,17 @@
+facets = [
+    'additives',
+    'allergens',
+    'brands',
+    'categories',
+    'countries',
+    'entry_dates',
+    'ingredients',
+    'languages',
+    'languages',
+    'packagings',
+    'packaging_codes',
+    'purchase_places',
+    'stores',
+    'traces',
+    'states',
+]
