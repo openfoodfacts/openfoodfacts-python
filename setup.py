@@ -39,7 +39,7 @@ setup(
     url='http://openfoodfacts.org',
     packages=packages,
     package_data={'': ['LICENSE']},
-    package_dir={'hungergame': 'hungergame'},
+    package_dir={'openfoodfacts': 'openfoodfacts'},
     include_package_data=True,
     install_requires=requires,
     license='Apache 2.0',

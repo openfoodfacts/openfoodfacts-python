@@ -4,11 +4,11 @@
 ### install
 
 
-    sudo pip install git+https://github.com/frankrousseau/openfoodfacts
+    sudo pip install git+https://github.com/openfoodfacts/openfoodfacts-python
 
 or:
 
-    git clone https://github.com/frankrousseau/openfoodfacts
+    git clone https://github.com/openfoodfacts/openfoodfacts-python
     cd openfoodfacts
     sudo python setup.py install
 
