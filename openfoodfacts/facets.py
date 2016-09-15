@@ -7,7 +7,6 @@ facets = [
     'entry_dates',
     'ingredients',
     'languages',
-    'languages',
     'packagings',
     'packaging_codes',
     'purchase_places',
