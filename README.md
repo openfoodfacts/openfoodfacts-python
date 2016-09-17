@@ -1,4 +1,4 @@
-# Open Food Facts client for your python scripts
+# Open Food Facts client for your Python scripts
 
 
 ### install
