@@ -1,0 +1,12 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+addons:
+    apt:
+        packages:
+            - pep8
+script:
+  - python setup.py test
+  - pep8 openfoodfacts/*.py
+
