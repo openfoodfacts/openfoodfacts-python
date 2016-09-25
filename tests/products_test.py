@@ -15,6 +15,29 @@ class TestProducts(unittest.TestCase):
             res = openfoodfacts.get_product('1223435')
             self.assertEquals(res, {'name': 'product_test'})
 
+    def test_get_by_trace(self):
+        with requests_mock.mock() as mock:
+            mock.get('http://world.openfoodfacts.org/trace/egg.json',
+                     text='{"products":["omelet"]}')
+            res = openfoodfacts.products.get_by_trace('egg')
+            self.assertEquals(res, ["omelet"])
+
+    def test_get_by_country(self):
+        with requests_mock.mock() as mock:
+            mock.get('http://world.openfoodfacts.org/country/france.json',
+                     text='{"products":["omelet"]}')
+            res = openfoodfacts.products.get_by_country('france')
+            self.assertEquals(res, ["omelet"])
+
+    def test_get_by_country_and_trace(self):
+        with requests_mock.mock() as mock:
+            mock.get(
+                'http://world.openfoodfacts.org/country/france/trace/egg.json',
+                text='{"products":["omelet"]}')
+            res = openfoodfacts.products.get_by_facets(
+                    {'trace': 'egg', 'country': 'france'})
+            self.assertEquals(res, ["omelet"])
+
 
 if __name__ == '__main__':
     unittest.main()
