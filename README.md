@@ -102,6 +102,15 @@ states = openfoodfacts.facets.get_states()
 
 #### Product by facet
 
+*Get all products for given facets.*
+
+```python
+products = openfoodfacts.products.get_by_facets({
+  'trace':'egg',
+  'country':'france',
+})
+```
+
 *Get all products for given additive.*
 
 ```python
