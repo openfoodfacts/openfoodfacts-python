@@ -18,12 +18,17 @@ def get_by_facets(query):
     """
     path = []
     keys = query.keys()
-    keys.sort()
-    for key in keys:
-        path.append(key)
-        path.append(query[key])
 
-    return utils.fetch('/'.join(path))['products']
+    if len(keys) == 0:
+        return []
+
+    else:
+        keys.sort()
+        for key in keys:
+            path.append(key)
+            path.append(query[key])
+
+        return utils.fetch('/'.join(path))['products']
 
 
 def search(query, pagination=20):

@@ -30,6 +30,9 @@ class TestProducts(unittest.TestCase):
             self.assertEquals(res, ["omelet"])
 
     def test_get_by_country_and_trace(self):
+        res = openfoodfacts.products.get_by_facets({})
+        self.assertEquals(res, [])
+
         with requests_mock.mock() as mock:
             mock.get(
                 'http://world.openfoodfacts.org/country/france/trace/egg.json',
