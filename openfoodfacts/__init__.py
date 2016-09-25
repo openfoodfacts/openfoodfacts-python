@@ -36,8 +36,10 @@ def add_by_facet_fetch_function(facet):
         facet = facet[:-3] + 'y'
     else:
         facet = facet[:-1]
+
     def func(facet_id):
         return utils.fetch('%s/%s' % (facet, facet_id))['products']
+
     func.__name__ = "get_by_%s" % facet
     setattr(products, func.__name__, func)
 
