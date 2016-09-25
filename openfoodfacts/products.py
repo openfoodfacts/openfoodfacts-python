@@ -23,7 +23,7 @@ def get_by_facets(query):
         return []
 
     else:
-        keys.sort()
+        keys = sorted(keys)
         for key in keys:
             path.append(key)
             path.append(query[key])
