@@ -203,3 +203,11 @@ products = openfoodfacts.products.get_by_state(state)
 ```python
 product = openfoodfacts.facets.get_product(barcode)
 ```
+
+**Status**
+===
+
+[![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/openfoodfacts/openfoodfacts-python.svg)](http://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/openfoodfacts/openfoodfacts-python.svg)](http://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Percentage of issues still open")
+
