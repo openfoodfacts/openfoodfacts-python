@@ -9,4 +9,6 @@ addons:
 script:
   - python setup.py test
   - pep8 openfoodfacts/*.py
-
+  
+notifications:
+  slack: openfoodfacts:kVMm929AwnFUHXzB8UXU01gG
