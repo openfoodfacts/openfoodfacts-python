@@ -31,8 +31,16 @@ def get_by_facets(query):
         return utils.fetch('/'.join(path))['products']
 
 
-def search(query, pagination=20):
+def search(query, page=1, page_size=20, sort_by='unique_scans'):
     """
     Perform a search using Open Food Facts search engine.
     """
-    pass
+    path = "cgi/search.pl?search_terms={query}&json=1&" + \
+           "page={page}&page_size={page_size}&sort_by={sort_by}"
+    path = path.format(
+        query=query,
+        page=page,
+        page_size=page_size,
+        sort_by=sort_by
+    )
+    return utils.fetch(path, json_file=False)
