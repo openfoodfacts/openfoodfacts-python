@@ -16,7 +16,6 @@ facets = [
     'purchase_places',
     'photographer',
     'informer',
-    'purchase_places',
     'states',
     'stores',
     'traces',
