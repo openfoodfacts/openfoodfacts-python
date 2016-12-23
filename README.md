@@ -1,4 +1,4 @@
-# Open Food Facts client for your Python scripts
+# Open Food Facts client for your Python applications and scripts
 ===================================
 ![Open Food Facts] (http://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png)
 
@@ -34,7 +34,7 @@ The project is initially started by [](https://github.com/), other contributors 
     Copyright 2016 Open Food Facts
 
 
-### install
+### Installation
 
     sudo pip install git+https://github.com/openfoodfacts/openfoodfacts-python
 
