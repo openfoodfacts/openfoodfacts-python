@@ -1,6 +1,6 @@
 import requests
 
-API_URL = "http://world.openfoodfacts.org/"
+API_URL = "https://world.openfoodfacts.org/"
 
 
 def fetch(path, json_file=True):
@@ -26,7 +26,7 @@ def get_ocr_json_url_for_an_image(first_three_digits,
     Get the URL of a JSON file given a barcode in 4 chunks of 3 digits and an
     image name (1, 2, 3, front_fr...).
     """
-    url = "http://world.openfoodfacts.org/images/products/"
+    url = "https://world.openfoodfacts.org/images/products/"
     url += "%s/%s/%s/%s/%s.json" % (
         first_three_digits,
         second_three_digits,
