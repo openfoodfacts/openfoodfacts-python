@@ -234,7 +234,7 @@ products = openfoodfacts.products.get_by_state(state)
 *Get a given product.*
 
 ```python
-product = openfoodfacts.facets.get_product(barcode)
+product = openfoodfacts.products.get_product(barcode)
 ```
 
 
