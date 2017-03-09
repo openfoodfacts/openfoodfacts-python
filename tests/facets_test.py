@@ -9,14 +9,14 @@ class TestFacets(unittest.TestCase):
 
     def test_get_traces(self):
         with requests_mock.mock() as mock:
-            mock.get('http://world.openfoodfacts.org/traces.json',
+            mock.get('https://world.openfoodfacts.org/traces.json',
                      text='{"tags":["egg"]}')
             res = openfoodfacts.facets.get_traces()
             self.assertEquals(res, ["egg"])
 
     def test_get_additives(self):
         with requests_mock.mock() as mock:
-            mock.get('http://world.openfoodfacts.org/additives.json',
+            mock.get('https://world.openfoodfacts.org/additives.json',
                      text='{"tags":["additive"]}')
             res = openfoodfacts.facets.get_additives()
             self.assertEquals(res, ["additive"])
