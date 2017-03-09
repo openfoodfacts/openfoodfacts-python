@@ -12,7 +12,7 @@ def get_product(barcode):
     return utils.fetch('api/v0/product/%s' % barcode)
 
 
-def get_by_facets(query):
+def get_by_facets(query, page=1):
     """
     Return products for a set of facets.
     """
@@ -28,7 +28,7 @@ def get_by_facets(query):
             path.append(key)
             path.append(query[key])
 
-        return utils.fetch('/'.join(path))['products']
+        return utils.fetch('%s/%s' % ('/'.join(path), page))['products']
 
 
 def search(query, page=1, page_size=20, sort_by='unique_scans'):
