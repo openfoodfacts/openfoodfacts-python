@@ -137,6 +137,8 @@ states = openfoodfacts.facets.get_states()
 
 *Get all products for given facets.*
 
+Page access (pagination) is available through parameters.
+
 ```python
 products = openfoodfacts.products.get_by_facets({
   'trace': 'egg',
@@ -147,7 +149,7 @@ products = openfoodfacts.products.get_by_facets({
 *Get all products for given additive.*
 
 ```python
-products = openfoodfacts.products.get_by_additive(additive)
+products = openfoodfacts.products.get_by_additive(additive, page=1)
 ```
 
 *Get all products for given allergen.*
