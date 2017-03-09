@@ -1,7 +1,5 @@
 import unittest
-import os
 import openfoodfacts
-import requests
 import requests_mock
 
 

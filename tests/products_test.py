@@ -17,14 +17,21 @@ class TestProducts(unittest.TestCase):
 
     def test_get_by_trace(self):
         with requests_mock.mock() as mock:
-            mock.get('https://world.openfoodfacts.org/trace/egg.json',
+            mock.get('https://world.openfoodfacts.org/trace/egg/1.json',
                      text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_trace('egg')
             self.assertEquals(res, ["omelet"])
 
+    def test_get_by_trace_pagination(self):
+        with requests_mock.mock() as mock:
+            mock.get('https://world.openfoodfacts.org/trace/egg/2.json',
+                     text='{"products":["omelet"]}')
+            res = openfoodfacts.products.get_by_trace('egg', 2)
+            self.assertEquals(res, ["omelet"])
+
     def test_get_by_country(self):
         with requests_mock.mock() as mock:
-            mock.get('https://world.openfoodfacts.org/country/france.json',
+            mock.get('https://world.openfoodfacts.org/country/france/1.json',
                      text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_country('france')
             self.assertEquals(res, ["omelet"])
@@ -35,7 +42,8 @@ class TestProducts(unittest.TestCase):
 
         with requests_mock.mock() as mock:
             mock.get(
-                'https://world.openfoodfacts.org/country/france/trace/egg.json',
+                'https://world.openfoodfacts.org/country/'
+                'france/trace/egg/1.json',
                 text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_facets(
                     {'trace': 'egg', 'country': 'france'})
