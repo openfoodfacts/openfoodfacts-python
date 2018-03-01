@@ -41,7 +41,7 @@ The project is initially started by [](https://github.com/), other contributors 
 or:
 
     git clone https://github.com/openfoodfacts/openfoodfacts-python
-    cd openfoodfacts
+    cd openfoodfacts-python
     sudo python setup.py install
 
 
