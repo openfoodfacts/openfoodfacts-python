@@ -29,7 +29,7 @@ def login_into_OFF():
             exit()
 
         #Return the session object
-        return c        
+        return c
 
 
 def fetch(path, json_file=True):
