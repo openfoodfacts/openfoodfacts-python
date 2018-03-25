@@ -16,7 +16,7 @@ def login_into_OFF():
     with requests.Session() as c:
         
         #post the username and password on the website
-        r = c.post(API_URL, data = payload)
+        r = c.post(API_URL, data=payload)
         
         #get the complete html text
         complete_html = r.text
