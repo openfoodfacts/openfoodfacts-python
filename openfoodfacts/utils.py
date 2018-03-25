@@ -4,7 +4,6 @@ import getpass
 
 API_URL = "https://world.openfoodfacts.org/"
 
-
 def login_into_OFF():
 	
 	#Get username and pasword
