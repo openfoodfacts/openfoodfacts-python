@@ -15,7 +15,6 @@ def login_into_OFF():
 
 	#create a requests session
 	with requests.Session() as c:
-
 		#post the username and password on the website
 		r=c.post(API_URL,data=payload)
 
@@ -24,11 +23,9 @@ def login_into_OFF():
 
 		#check if login is successfull
 		if re.search('You are connected as', complete_html):
-
 			print "Login Successfull"
 
 		else:
-
 			print "Incorrect username or password"
 			exit()
 
