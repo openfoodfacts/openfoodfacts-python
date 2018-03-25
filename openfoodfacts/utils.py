@@ -6,7 +6,6 @@ API_URL = "https://world.openfoodfacts.org/"
 
 
 def login_into_OFF():
-	
     #Get username and pasword
     username = raw_input('Username:')
     pswd = getpass.getpass('Password:')
@@ -39,10 +38,10 @@ def fetch(path, json_file=True):
     located on the OFF API.
     """
     if json_file:
-    path = "%s%s.json" % (API_URL, path)
+        path = "%s%s.json" % (API_URL, path)
     else:
-    path = "%s%s" % (API_URL, path)
-    
+        path = "%s%s" % (API_URL, path)
+
     response = requests.get(path)
     return response.json()
 
@@ -58,10 +57,10 @@ def get_ocr_json_url_for_an_image(first_three_digits,
     """
     url = "https://world.openfoodfacts.org/images/products/"
     url += "%s/%s/%s/%s/%s.json" % (
-    first_three_digits,
-    second_three_digits,
-    third_three_digits,
-    fourth_three_digits,
-    image_name
+        first_three_digits,
+        second_three_digits,
+        third_three_digits,
+        fourth_three_digits,
+        image_name
     )
     return url
