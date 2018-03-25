@@ -22,11 +22,8 @@ def login_into_OFF():
         complete_html = r.text
 
         # check if login is successfull
-        if re.search('You are connected as', complete_html):
-            print "Login Successfull"
-        else:
-            print "Incorrect username or password"
-            exit()
+        if re.search('You are connected as', complete_html) == None:
+            raise ValueError('Incorrect Username or Password.')
 
         # Return the session object
         return c
