@@ -9,25 +9,25 @@ def login_into_OFF():
     #Get username and pasword
     username = raw_input('Username:')
     pswd = getpass.getpass('Password:')
-    
+
     payload = {'user_id': username, 'password': pswd}
-    
+
     #create a requests session
     with requests.Session() as c:
-        
+
         #post the username and password on the website
         r = c.post(API_URL, data=payload)
-        
+
         #get the complete html text
         complete_html = r.text
-        
+
         #check if login is successfull
         if re.search('You are connected as', complete_html):
             print "Login Successfull"
         else:
             print "Incorrect username or password"
             exit()
-        
+
         #Return the session object
         return c        
 
