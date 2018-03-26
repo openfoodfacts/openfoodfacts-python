@@ -13,7 +13,7 @@ def get_product(barcode):
     return utils.fetch('api/v0/product/%s' % barcode)
 
 
-def get_user_products:
+def get_user_products():
     """
     Return all the products added or edited by the user.
     """
