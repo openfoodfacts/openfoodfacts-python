@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from . import utils
-import re
 
 
 SEARCH_PATH = "cgi/search.pl"
