@@ -45,9 +45,13 @@ or:
     sudo python setup.py install
 
 
-### Docs
+### Docs
 
-#### Facets
+*Login into Openfoodfacts*
+
+```login_session_object = openfoodfacts.utils.login_into_OFF()```
+
+#### Facets
 
 *Get all available additives.*
 
@@ -239,5 +243,8 @@ products = openfoodfacts.products.get_by_state(state)
 product = openfoodfacts.products.get_product(barcode)
 ```
 
+*Open Food Facts data exports*
+
+```openfoodfacts.utils.download_data(file_type)```
 
 
