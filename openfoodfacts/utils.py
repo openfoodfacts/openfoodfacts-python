@@ -30,26 +30,28 @@ def login_into_OFF():
 
 
 def download_data(file_type='mongodb'):
-
-	if file_type == 'mongodb':
+    """
+    Fetch data from Openfoodfacts server. Can give options like mongodb, csv, rdf. 
+    The file is downloded in the current directory.
+    """
+    if file_type == 'mongodb':
 		file_url = "https://world.openfoodfacts.org/data/openfoodfacts-mongodbdump.tar.gz"
 		filename = "openfoodfacts-mongodbdump.tar.gz"
 	elif file_type == 'csv':
 		file_url = "https://world.openfoodfacts.org/data/en.openfoodfacts.org.products.csv"
-		filename = "en.openfoodfacts.org.products.csv"
+		filename = "en.openfoodfacts
 	elif file_type == 'rdf':
 		file_url = "https://world.openfoodfacts.org/data/en.openfoodfacts.org.products.rdf"
 		filename = "en.openfoodfacts.org.products.rdf"
-
-
+		
 	request_content = requests.get(file_url, stream = True)
-
+	
 	with open(filename,"wb") as file:
-	    for chunk in request_content.iter_content(chunk_size=1024):
-	 
-	         # writing one chunk at a time to pdf file
-	         if chunk:
-	             file.write(chunk)
+		for chunk in request_content.iter_content(chunk_size=1024):
+			
+			# writing one chunk at a time to the file
+			if chunk:
+				file.write(chunk)
 
 
 def fetch(path, json_file=True):
