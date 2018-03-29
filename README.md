@@ -251,7 +251,7 @@ product = openfoodfacts.products.get_product(barcode)
 *Add a new product.*
 
 ```
-openfoodfacts.products.add_new_product({
+status_code = openfoodfacts.products.add_new_product({
   'code': barcode,
   'user_id'  : myUsername,
   'password'  : myPassword,
