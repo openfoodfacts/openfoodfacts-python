@@ -260,4 +260,4 @@ openfoodfacts.products.add_new_product({
   'brands': brand,
   'packaging': packaging,
 })
-'''
+```
