@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import utils
+import requests
 
 
 SEARCH_PATH = "cgi/search.pl"
@@ -29,6 +30,16 @@ def get_by_facets(query, page=1):
             path.append(query[key])
 
         return utils.fetch('%s/%s' % ('/'.join(path), page))['products']
+
+
+def add_new_product(postData):
+    """
+    Add a new product to OFF database.
+    """
+    if not postData['code'] or not postData['product_name']:
+        raise ValueError('code or product_name not found!')
+
+    return requests.post(utils.API_URL+"cgi/product_jqm2.pl", data=postData)
 
 
 def search(query, page=1, page_size=20, sort_by='unique_scans'):

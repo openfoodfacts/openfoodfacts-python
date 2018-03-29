@@ -248,3 +248,16 @@ product = openfoodfacts.products.get_product(barcode)
 ```openfoodfacts.utils.download_data(file_type)```
 
 
+*Add a new product.*
+
+```
+status_code = openfoodfacts.products.add_new_product({
+  'code': barcode,
+  'user_id'  : myUsername,
+  'password'  : myPassword,
+  'product_name' : myProduct,
+  'stores'  : store,
+  'brands': brand,
+  'packaging': packaging,
+})
+```
