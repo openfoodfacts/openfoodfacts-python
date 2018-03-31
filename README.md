@@ -104,7 +104,7 @@ languages = openfoodfacts.facets.get_languages()
 *Get all available packagings.*
 
 ```python
-packagings = openfoodfacts.facets.get_packagings()
+packagings = openfoodfacts.facets.get_packaging()
 ```
 
 *Get all available packaging codes.*
@@ -245,8 +245,9 @@ product = openfoodfacts.products.get_product(barcode)
 
 *Open Food Facts data exports*
 
-```openfoodfacts.utils.download_data(file_type)```
-
+```
+openfoodfacts.utils.download_data(file_type)
+```
 
 *Add a new product.*
 
@@ -259,5 +260,31 @@ status_code = openfoodfacts.products.add_new_product({
   'stores'  : store,
   'brands': brand,
   'packaging': packaging,
+})
+```
+
+
+#### Search
+
+*Basic Search*
+
+```
+search_result = openfoodfacts.products.search(query)
+```
+
+*Advanced Search*
+
+Can pass in any [parameters](https://en.wiki.openfoodfacts.org/API/Read/Search#Parameters).
+```
+search_result=products.advanced_search({
+  "search_terms":"coke",
+  "tagtype_0":"packaging",
+  "tag_contains_0":"contains",
+  "tag_0":"plastic",
+  "nutriment_0":"energy",
+  "nutriment_compare_0":"gt",
+  "nutriment_value_0":"0",
+  "sort_by":"unique_scans",
+  "page_size":"20"
 })
 ```
