@@ -19,7 +19,16 @@ def add_fetch_function(facet):
     """
     def func():
         return utils.fetch(facet)['tags']
+
     func.__name__ = "get_%s" % facet
+
+    if func.__name__ == "get_purchase_places":
+        facet = "purchase-places"
+    elif func.__name__ == "get_packaging_codes":
+        facet = "packager-codes"
+    elif func.__name__ == "get_entry_dates":
+        facet = "entry-dates"
+
     setattr(facets, func.__name__, func)
 
 
