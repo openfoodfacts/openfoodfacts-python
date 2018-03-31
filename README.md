@@ -104,7 +104,7 @@ languages = openfoodfacts.facets.get_languages()
 *Get all available packagings.*
 
 ```python
-packagings = openfoodfacts.facets.get_packagings()
+packagings = openfoodfacts.facets.get_packaging()
 ```
 
 *Get all available packaging codes.*
