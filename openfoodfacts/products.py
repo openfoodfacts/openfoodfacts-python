@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from . import utils
 import requests
+import urllib
 
 
-SEARCH_PATH = "cgi/search.pl"
+SEARCH_PATH = "cgi/search.pl?"
 
 
 def get_product(barcode):
@@ -54,4 +55,12 @@ def search(query, page=1, page_size=20, sort_by='unique_scans'):
         page_size=page_size,
         sort_by=sort_by
     )
+    return utils.fetch(path, json_file=False)
+
+
+def advanced_search(postQuery):
+    """
+    Perform advanced search using OFF search engine
+    """
+    path = SEARCH_PATH + urllib.urlencode(postQuery) + "&json=1"
     return utils.fetch(path, json_file=False)
