@@ -46,8 +46,9 @@ def add_by_facet_fetch_function(facet):
     else:
         facet = facet[:-1]
 
-    def func(facet_id, page=1):
-        return utils.fetch('%s/%s/%s' % (facet, facet_id, page))['products']
+    def func(facet_id, page=1, locale='world'):
+        return utils. \
+            fetch('%s/%s/%s' % (facet, facet_id, page), locale)['products']
 
     func.__name__ = "get_by_%s" % facet
     setattr(products, func.__name__, func)
