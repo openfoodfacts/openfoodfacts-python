@@ -2,7 +2,7 @@ import requests
 import re
 import getpass
 
-API_URL = "https://world.openfoodfacts.org/"
+API_URL = "https://%s.openfoodfacts.org/"
 
 
 def login_into_OFF():
@@ -16,7 +16,7 @@ def login_into_OFF():
     with requests.Session() as c:
 
         # post the username and password on the website
-        r = c.post(API_URL, data=payload)
+        r = c.post(API_URL % ('world'), data=payload)
 
         # get the complete html text
         complete_html = r.text
@@ -59,15 +59,15 @@ def download_data(file_type='mongodb'):
                 file.write(chunk)
 
 
-def fetch(path, json_file=True):
+def fetch(path, locale='world', json_file=True):
     """
     Fetch data at a given path assuming that target match a json file and is
     located on the OFF API.
     """
     if json_file:
-        path = "%s%s.json" % (API_URL, path)
+        path = "%s%s.json" % (API_URL % (locale), path)
     else:
-        path = "%s%s" % (API_URL, path)
+        path = "%s%s" % (API_URL % (locale), path)
 
     response = requests.get(path)
     return response.json()
