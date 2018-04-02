@@ -20,7 +20,6 @@ def get_by_facets(query, page=1, locale='world'):
     """
     path = []
     keys = query.keys()
-    print keys
 
     if len(keys) == 0:
         return []
