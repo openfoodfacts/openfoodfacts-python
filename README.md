@@ -263,6 +263,11 @@ status_code = openfoodfacts.products.add_new_product({
 })
 ```
 
+*Upload an image.*
+
+```
+status_code = openfoodfacts.products.upload_image(barcode, imagefield, img_path)
+```
 
 #### Search
 

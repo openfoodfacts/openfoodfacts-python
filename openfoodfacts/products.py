@@ -45,6 +45,36 @@ def add_new_product(postData, locale='world'):
         post(utils.API_URL % (locale)+"cgi/product_jqm2.pl", data=postData)
 
 
+def upload_image(code, imagefield, img_path):
+    """
+    Add new image for a product
+    """
+    if imagefield == 'front':
+        image_payload = {"imgupload_front": open(img_path, 'rb')}
+
+    elif imagefield == 'ingredients':
+        image_payload = {"imgupload_ingredients": open(img_path, 'rb')}
+
+    elif imagefield == 'nutrition':
+        image_payload = {"imgupload_nutrition": open(img_path, 'rb')}
+
+    else:
+        raise ValueError("Imagefield not valid!")
+
+    url = "https://world.openfoodfacts.org/cgi/product_image_upload.pl"
+
+    other_payload = {'code': code, 'imagefield': imagefield}
+
+    headers = {'Content-Type': 'multipart/form-data'}
+
+    request_content = requests.post(url=url,
+                                    data=other_payload,
+                                    files=image_payload,
+                                    headers=headers)
+
+    return request_content
+
+
 def search(query, page=1, page_size=20,
            sort_by='unique_scans', locale='world'):
     """
