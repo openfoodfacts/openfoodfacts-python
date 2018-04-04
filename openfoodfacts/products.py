@@ -45,18 +45,18 @@ def add_new_product(postData, locale='world'):
         post(utils.API_URL % (locale)+"cgi/product_jqm2.pl", data=postData)
 
 
-def upload_image(code, imagefield, path):
+def upload_image(code, imagefield, img_path):
     """
     Add new image for a product
     """
     if imagefield == 'front':
-        image_payload = {"imgupload_front": open(path, 'rb')}
+        image_payload = {"imgupload_front": open(img_path, 'rb')}
 
     elif imagefield == 'ingredients':
-        image_payload = {"imgupload_ingredients": open(path, 'rb')}
+        image_payload = {"imgupload_ingredients": open(img_path, 'rb')}
 
     elif imagefield == 'nutrition':
-        image_payload = {"imgupload_nutrition": open(path, 'rb')}
+        image_payload = {"imgupload_nutrition": open(img_path, 'rb')}
 
     else:
         raise ValueError("Imagefield not valid!")
