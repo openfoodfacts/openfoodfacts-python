@@ -42,7 +42,9 @@ def add_new_product(postData, locale='world'):
         raise ValueError('code or product_name not found!')
 
     return requests. \
-        post(utils.API_URL % (locale)+"cgi/product_jqm2.pl", data=postData)
+        post(utils.build_url(geography=locale,
+                             service='cgi',
+                             resource_type='product_jqm2.pl'))
 
 
 def upload_image(code, imagefield, img_path):
@@ -61,17 +63,17 @@ def upload_image(code, imagefield, img_path):
     else:
         raise ValueError("Imagefield not valid!")
 
-    url = utils.API_URL % ('world')+"cgi/product_image_upload.pl"
+    url = utils.build_url(service='cgi',
+                          resource_type='product_image_upload.pl')
 
     other_payload = {'code': code, 'imagefield': imagefield}
 
     headers = {'Content-Type': 'multipart/form-data'}
 
     return requests.post(url=url,
-                                    data=other_payload,
-                                    files=image_payload,
-                                    headers=headers)
-
+                         data=other_payload,
+                         files=image_payload,
+                         headers=headers)
 
 
 def search(query, page=1, page_size=20,
