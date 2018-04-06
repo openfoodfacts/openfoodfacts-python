@@ -1,6 +1,7 @@
 import requests
 import re
 import getpass
+import urllib
 
 API_URL = "https://%s.openfoodfacts.org/"
 
@@ -35,18 +36,19 @@ def download_data(file_type='mongodb'):
     The file is downloded in the current directory.
     """
     if file_type == 'mongodb':
-        file_url = "https://world.openfoodfacts.org/data/" + \
-                   "openfoodfacts-mongodbdump.tar.gz"
+        file_url = build_url(service='data',
+                             resource_type='openfoodfacts-mongodbdump.tar.gz')
         filename = "openfoodfacts-mongodbdump.tar.gz"
 
     elif file_type == 'csv':
-        file_url = "https://world.openfoodfacts.org/data/" + \
-                   "en.openfoodfacts.org.products.csv"
+        file_url = build_url(service='data',
+                             resource_type='en.openfoodfacts.org.products.csv')
         filename = "en.openfoodfacts.org.products.csv"
+
     elif file_type == 'rdf':
 
-        file_url = "https://world.openfoodfacts.org/data/" + \
-                   "en.openfoodfacts.org.products.rdf"
+        file_url = build_url(service='data',
+                             resource_type='en.openfoodfacts.org.products.rdf')
         filename = "en.openfoodfacts.org.products.rdf"
 
     request_content = requests.get(file_url, stream=True)
@@ -57,6 +59,41 @@ def download_data(file_type='mongodb'):
             # writing one chunk at a time to the file
             if chunk:
                 file.write(chunk)
+
+
+def build_url(geography='world', service='api',
+              resource_type=None, parameters=None):
+
+    if service not in ["api", "data", "cgi"]:
+        msg = "Resource type '%s' not allowed. Allowed types: \n%s" % \
+            (service, ",".join(("api", "data", "cgi")))
+        raise ValueError(msg)
+
+    geo_url = API_URL % (geography)
+
+    geo_url = geo_url[:-1]
+
+    if service == 'api':
+        version = 'v0'
+        base_url = "/".join([geo_url,
+                             service,
+                             version,
+                             resource_type,
+                             parameters])
+
+    elif service == 'data':
+        base_url = "/".join([geo_url, service, resource_type])
+
+    else:
+        if parameters is None:
+            base_url = "/".join([geo_url, service, resource_type])
+
+        else:
+            sub_url = "/".join([geo_url, service, resource_type])
+
+            base_url = "?".join([sub_url,  urllib.urlencode(parameters)])
+
+    return base_url
 
 
 def fetch(path, locale='world', json_file=True):
