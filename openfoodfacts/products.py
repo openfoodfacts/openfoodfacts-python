@@ -61,18 +61,17 @@ def upload_image(code, imagefield, img_path):
     else:
         raise ValueError("Imagefield not valid!")
 
-    url = "https://world.openfoodfacts.org/cgi/product_image_upload.pl"
+    url = utils.API_URL % ('world')+"cgi/product_image_upload.pl"
 
     other_payload = {'code': code, 'imagefield': imagefield}
 
     headers = {'Content-Type': 'multipart/form-data'}
 
-    request_content = requests.post(url=url,
+    return requests.post(url=url,
                                     data=other_payload,
                                     files=image_payload,
                                     headers=headers)
 
-    return request_content
 
 
 def search(query, page=1, page_size=20,
