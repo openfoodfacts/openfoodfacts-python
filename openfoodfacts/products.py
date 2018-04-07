@@ -33,7 +33,7 @@ def get_by_facets(query, page=1, locale='world'):
         return utils. \
             fetch(utils.build_url(geography=locale,
                                   resource_type=path,
-                                  parameters=str(page)))
+                                  parameters=str(page)))['products']
 
 
 def add_new_product(postData, locale='world'):
