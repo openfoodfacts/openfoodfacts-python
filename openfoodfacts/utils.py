@@ -46,7 +46,6 @@ def download_data(file_type='mongodb'):
         filename = "en.openfoodfacts.org.products.csv"
 
     elif file_type == 'rdf':
-
         file_url = build_url(service='data',
                              resource_type='en.openfoodfacts.org.products.rdf')
         filename = "en.openfoodfacts.org.products.rdf"
@@ -61,13 +60,8 @@ def download_data(file_type='mongodb'):
                 file.write(chunk)
 
 
-def build_url(geography='world', service='api',
+def build_url(geography='world', service=None,
               resource_type=None, parameters=None):
-
-    if service not in ["api", "data", "cgi"]:
-        msg = "Resource type '%s' not allowed. Allowed types: \n%s" % \
-            (service, ",".join(("api", "data", "cgi")))
-        raise ValueError(msg)
 
     geo_url = API_URL % (geography)
 
@@ -84,27 +78,32 @@ def build_url(geography='world', service='api',
     elif service == 'data':
         base_url = "/".join([geo_url, service, resource_type])
 
-    else:
+    elif service == 'cgi':
         if parameters is None:
             base_url = "/".join([geo_url, service, resource_type])
 
         else:
             sub_url = "/".join([geo_url, service, resource_type])
-
             base_url = "?".join([sub_url,  urllib.urlencode(parameters)])
+
+    elif service is None:
+        if type(resource_type) == list:
+            resource_type = '/'.join(resource_type)
+        base_url = "/".join(filter(None, (geo_url, resource_type, parameters)))
+
+    else:
+        raise ValueError("Service not found!")
 
     return base_url
 
 
-def fetch(path, locale='world', json_file=True):
+def fetch(path, json_file=True):
     """
     Fetch data at a given path assuming that target match a json file and is
     located on the OFF API.
     """
     if json_file:
-        path = "%s%s.json" % (API_URL % (locale), path)
-    else:
-        path = "%s%s" % (API_URL % (locale), path)
+        path = "%s.json" % (path)
 
     response = requests.get(path)
     return response.json()
