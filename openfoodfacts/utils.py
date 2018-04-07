@@ -1,6 +1,7 @@
 import requests
 import re
 import getpass
+import sys
 import urllib
 
 API_URL = "https://%s.openfoodfacts.org/"
@@ -84,7 +85,12 @@ def build_url(geography='world', service=None,
 
         else:
             sub_url = "/".join([geo_url, service, resource_type])
-            base_url = "?".join([sub_url,  urllib.urlencode(parameters)])
+            if sys.version_info >= (3, 0):
+                extension = urllib.parse.urlencode(parameters)
+            else:
+                extension = urllib.urlencode(parameters)
+
+            base_url = "?".join([sub_url, extension])
 
     elif service is None:
         if type(resource_type) == list:
