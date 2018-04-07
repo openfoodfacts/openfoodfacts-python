@@ -4,14 +4,14 @@ import requests
 import urllib
 
 
-SEARCH_PATH = "cgi/search.pl?"
-
-
 def get_product(barcode, locale='world'):
     """
     Return information of a given product.
     """
-    return utils.fetch('api/v0/product/%s' % barcode, locale)
+    return utils.fetch(utils.build_url(geography=locale,
+                                       service='api',
+                                       resource_type='product',
+                                       parameters=barcode))
 
 
 def get_by_facets(query, page=1, locale='world'):
@@ -31,7 +31,9 @@ def get_by_facets(query, page=1, locale='world'):
             path.append(query[key])
 
         return utils. \
-            fetch('%s/%s' % ('/'.join(path), page), locale)['products']
+            fetch(utils.build_url(geography=locale,
+                                  resource_type=path,
+                                  parameters=str(page)))['products']
 
 
 def add_new_product(postData, locale='world'):
@@ -41,8 +43,10 @@ def add_new_product(postData, locale='world'):
     if not postData['code'] or not postData['product_name']:
         raise ValueError('code or product_name not found!')
 
-    return requests. \
-        post(utils.API_URL % (locale)+"cgi/product_jqm2.pl", data=postData)
+    return requests.post(utils.build_url(geography='world',
+                                         service='cgi',
+                                         resource_type='product_jqm2.pl'),
+                         data=postData)
 
 
 def upload_image(code, imagefield, img_path):
@@ -61,18 +65,17 @@ def upload_image(code, imagefield, img_path):
     else:
         raise ValueError("Imagefield not valid!")
 
-    url = "https://world.openfoodfacts.org/cgi/product_image_upload.pl"
+    url = utils.build_url(service='cgi',
+                          resource_type='product_image_upload.pl')
 
     other_payload = {'code': code, 'imagefield': imagefield}
 
     headers = {'Content-Type': 'multipart/form-data'}
 
-    request_content = requests.post(url=url,
-                                    data=other_payload,
-                                    files=image_payload,
-                                    headers=headers)
-
-    return request_content
+    return requests.post(url=url,
+                         data=other_payload,
+                         files=image_payload,
+                         headers=headers)
 
 
 def search(query, page=1, page_size=20,
@@ -80,20 +83,26 @@ def search(query, page=1, page_size=20,
     """
     Perform a search using Open Food Facts search engine.
     """
-    path = "cgi/search.pl?search_terms={query}&json=1&" + \
-           "page={page}&page_size={page_size}&sort_by={sort_by}"
-    path = path.format(
-        query=query,
-        page=page,
-        page_size=page_size,
-        sort_by=sort_by
-    )
-    return utils.fetch(path, locale, json_file=False)
+    parameters = {'search_terms': query,
+                  'page': page,
+                  'page_size': page_size,
+                  'sort_by': sort_by,
+                  'json': '1'}
+
+    path = utils.build_url(geography=locale,
+                           service='cgi',
+                           resource_type='search.pl',
+                           parameters=parameters)
+
+    return utils.fetch(path, json_file=False)
 
 
 def advanced_search(postQuery):
     """
     Perform advanced search using OFF search engine
     """
-    path = SEARCH_PATH + urllib.urlencode(postQuery) + "&json=1"
+    postQuery['json'] = '1'
+    path = utils.build_url(service='cgi',
+                           resource_type='search.pl',
+                           parameters=postQuery)
     return utils.fetch(path, json_file=False)

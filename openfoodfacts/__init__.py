@@ -18,7 +18,10 @@ def add_fetch_function(facet):
         openfoodfacts.facets.fetch_traces()
     """
     def func(locale='world'):
-        return utils.fetch(facet, locale)['tags']
+        path = utils.build_url(geography=locale,
+                               resource_type=facet)
+
+        return utils.fetch(path)['tags']
 
     func.__name__ = "get_%s" % facet
 
@@ -47,8 +50,11 @@ def add_by_facet_fetch_function(facet):
         facet = facet[:-1]
 
     def func(facet_id, page=1, locale='world'):
-        return utils. \
-            fetch('%s/%s/%s' % (facet, facet_id, page), locale)['products']
+
+        path = utils.build_url(geography=locale,
+                               resource_type=[facet, facet_id, str(page)])
+
+        return utils.fetch(path)['products']
 
     func.__name__ = "get_by_%s" % facet
     setattr(products, func.__name__, func)

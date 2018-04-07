@@ -1,6 +1,8 @@
 import requests
 import re
 import getpass
+import sys
+import urllib
 
 API_URL = "https://%s.openfoodfacts.org/"
 
@@ -35,18 +37,18 @@ def download_data(file_type='mongodb'):
     The file is downloded in the current directory.
     """
     if file_type == 'mongodb':
-        file_url = "https://world.openfoodfacts.org/data/" + \
-                   "openfoodfacts-mongodbdump.tar.gz"
+        file_url = build_url(service='data',
+                             resource_type='openfoodfacts-mongodbdump.tar.gz')
         filename = "openfoodfacts-mongodbdump.tar.gz"
 
     elif file_type == 'csv':
-        file_url = "https://world.openfoodfacts.org/data/" + \
-                   "en.openfoodfacts.org.products.csv"
+        file_url = build_url(service='data',
+                             resource_type='en.openfoodfacts.org.products.csv')
         filename = "en.openfoodfacts.org.products.csv"
-    elif file_type == 'rdf':
 
-        file_url = "https://world.openfoodfacts.org/data/" + \
-                   "en.openfoodfacts.org.products.rdf"
+    elif file_type == 'rdf':
+        file_url = build_url(service='data',
+                             resource_type='en.openfoodfacts.org.products.rdf')
         filename = "en.openfoodfacts.org.products.rdf"
 
     request_content = requests.get(file_url, stream=True)
@@ -59,15 +61,55 @@ def download_data(file_type='mongodb'):
                 file.write(chunk)
 
 
-def fetch(path, locale='world', json_file=True):
+def build_url(geography='world', service=None,
+              resource_type=None, parameters=None):
+
+    geo_url = API_URL % (geography)
+
+    geo_url = geo_url[:-1]
+
+    if service == 'api':
+        version = 'v0'
+        base_url = "/".join([geo_url,
+                             service,
+                             version,
+                             resource_type,
+                             parameters])
+
+    elif service == 'data':
+        base_url = "/".join([geo_url, service, resource_type])
+
+    elif service == 'cgi':
+        if parameters is None:
+            base_url = "/".join([geo_url, service, resource_type])
+
+        else:
+            sub_url = "/".join([geo_url, service, resource_type])
+            if sys.version_info >= (3, 0):
+                extension = urllib.parse.urlencode(parameters)
+            else:
+                extension = urllib.urlencode(parameters)
+
+            base_url = "?".join([sub_url, extension])
+
+    elif service is None:
+        if type(resource_type) == list:
+            resource_type = '/'.join(resource_type)
+        base_url = "/".join(filter(None, (geo_url, resource_type, parameters)))
+
+    else:
+        raise ValueError("Service not found!")
+
+    return base_url
+
+
+def fetch(path, json_file=True):
     """
     Fetch data at a given path assuming that target match a json file and is
     located on the OFF API.
     """
     if json_file:
-        path = "%s%s.json" % (API_URL % (locale), path)
-    else:
-        path = "%s%s" % (API_URL % (locale), path)
+        path = "%s.json" % (path)
 
     response = requests.get(path)
     return response.json()
