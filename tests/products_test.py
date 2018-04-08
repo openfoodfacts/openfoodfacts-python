@@ -13,32 +13,32 @@ class TestProducts(unittest.TestCase):
                 'https://world.openfoodfacts.org/api/v0/product/1223435.json',
                 text='{"name":"product_test"}')
             res = openfoodfacts.get_product('1223435')
-            self.assertEquals(res, {'name': 'product_test'})
+            self.assertEqual(res, {'name': 'product_test'})
 
     def test_get_by_trace(self):
         with requests_mock.mock() as mock:
             mock.get('https://world.openfoodfacts.org/trace/egg/1.json',
                      text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_trace('egg')
-            self.assertEquals(res, ["omelet"])
+            self.assertEqual(res, ["omelet"])
 
     def test_get_by_trace_pagination(self):
         with requests_mock.mock() as mock:
             mock.get('https://world.openfoodfacts.org/trace/egg/2.json',
                      text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_trace('egg', 2)
-            self.assertEquals(res, ["omelet"])
+            self.assertEqual(res, ["omelet"])
 
     def test_get_by_country(self):
         with requests_mock.mock() as mock:
             mock.get('https://world.openfoodfacts.org/country/france/1.json',
                      text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_country('france')
-            self.assertEquals(res, ["omelet"])
+            self.assertEqual(res, ["omelet"])
 
     def test_get_by_country_and_trace(self):
         res = openfoodfacts.products.get_by_facets({})
-        self.assertEquals(res, [])
+        self.assertEqual(res, [])
 
         with requests_mock.mock() as mock:
             mock.get(
@@ -47,7 +47,7 @@ class TestProducts(unittest.TestCase):
                 text='{"products":["omelet"]}')
             res = openfoodfacts.products.get_by_facets(
                     {'trace': 'egg', 'country': 'france'})
-            self.assertEquals(res, ["omelet"])
+            self.assertEqual(res, ["omelet"])
 
     def test_search(self):
         with requests_mock.mock() as mock:
@@ -57,7 +57,7 @@ class TestProducts(unittest.TestCase):
                 '1&page_size=20&sort_by=unique_scans',
                 text='{"products":["kinder bueno"], "count": 1}')
             res = openfoodfacts.products.search('kinder bueno')
-            self.assertEquals(res["products"],  ["kinder bueno"])
+            self.assertEqual(res["products"],  ["kinder bueno"])
             mock.get(
                 'https://world.openfoodfacts.org/cgi/search.pl?' +
                 'search_terms=banania&json=1&page=' +
@@ -65,7 +65,7 @@ class TestProducts(unittest.TestCase):
                 text='{"products":["banania", "banania big"], "count": 2}')
             res = openfoodfacts.products.search(
                 'banania', page=2, page_size=10)
-            self.assertEquals(res["products"],  ["banania", "banania big"])
+            self.assertEqual(res["products"],  ["banania", "banania big"])
 
     def test_advanced_search(self):
         with requests_mock.mock() as mock:
@@ -88,7 +88,7 @@ class TestProducts(unittest.TestCase):
                   "sort_by":"unique_scans",
                   "page_size":"20"
                 })
-            self.assertEquals(res["products"],["Diet Coke"])
+            self.assertEqual(res["products"],["Diet Coke"])
 
 if __name__ == '__main__':
     unittest.main()

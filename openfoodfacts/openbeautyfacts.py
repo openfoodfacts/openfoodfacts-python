@@ -54,4 +54,4 @@ def search(query, page=1, page_size=20,
                            parameters=parameters,
                            entity="beauty")
 
-    return utils.fetch(path, json_file=False)   
+    return utils.fetch(path, json_file=False)
