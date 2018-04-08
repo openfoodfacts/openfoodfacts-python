@@ -67,5 +67,28 @@ class TestProducts(unittest.TestCase):
                 'banania', page=2, page_size=10)
             self.assertEquals(res["products"],  ["banania", "banania big"])
 
+    def test_advanced_search(self):
+        with requests_mock.mock() as mock:
+            mock.get(
+                'https://world.openfoodfacts.org/cgi/search.pl?' +
+                'search_terms=coke&tagtype_0=packaging&' +
+                'tag_contains_0=contains&tag_0=plastic&' +
+                'nutriment_0=energy&nutriment_compare_0=gt&' +
+                'nutriment_value_0=0&sort_by=unique_scans&' +
+                'page_size=20',
+                text= '{"products":["Diet Coke"], "count": 1}')
+            res = openfoodfacts.products.advanced_search({
+                  "search_terms":"coke",
+                  "tagtype_0":"packaging",
+                  "tag_contains_0":"contains",
+                  "tag_0":"plastic",
+                  "nutriment_0":"energy",
+                  "nutriment_compare_0":"gt",
+                  "nutriment_value_0":"0",
+                  "sort_by":"unique_scans",
+                  "page_size":"20"
+                })
+            self.assertEquals(res["products"],["Diet Coke"])
+
 if __name__ == '__main__':
     unittest.main()
