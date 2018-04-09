@@ -5,6 +5,7 @@ import sys
 import urllib
 
 API_URL = "https://%s.openfoodfacts.org/"
+OBF_API_URL = "https://%s.openbeautyfacts.org/"
 
 
 def login_into_OFF():
@@ -62,9 +63,16 @@ def download_data(file_type='mongodb'):
 
 
 def build_url(geography='world', service=None,
-              resource_type=None, parameters=None):
+              resource_type=None, parameters=None, entity="food"):
 
-    geo_url = API_URL % (geography)
+    if entity == "food":
+        geo_url = API_URL % (geography)
+
+    elif entity == "beauty":
+        geo_url = OBF_API_URL % (geography)
+
+    else:
+        raise ValueError("Product not recognized!")
 
     geo_url = geo_url[:-1]
 
