@@ -55,4 +55,3 @@ def search(query, page=1, page_size=20,
                            entity="pet")
 
     return utils.fetch(path, json_file=False)
-
