@@ -11,7 +11,7 @@ def get_product(barcode, locale='world'):
                                        service='api',
                                        resource_type='product',
                                        parameters=barcode,
-                                       entity="beauty"))
+                                       entity="pet"))
 
 
 def get_by_facets(query, page=1, locale='world'):
@@ -34,13 +34,13 @@ def get_by_facets(query, page=1, locale='world'):
             fetch(utils.build_url(geography=locale,
                                   resource_type=path,
                                   parameters=str(page),
-                                  entity="beauty"))['products']
+                                  entity="pet"))['products']
 
 
 def search(query, page=1, page_size=20,
            sort_by='unique_scans', locale='world'):
     """
-    Perform a search using Open Beauty Facts search engine.
+    Perform a search using Open Pet Food Facts search engine.
     """
     parameters = {'search_terms': query,
                   'page': page,
@@ -52,6 +52,7 @@ def search(query, page=1, page_size=20,
                            service='cgi',
                            resource_type='search.pl',
                            parameters=parameters,
-                           entity="beauty")
+                           entity="pet")
 
     return utils.fetch(path, json_file=False)
+

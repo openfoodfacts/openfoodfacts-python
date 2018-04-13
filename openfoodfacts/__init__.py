@@ -4,6 +4,7 @@ from . import facets
 from . import utils
 from .products import get_product
 from . import openbeautyfacts
+from . import openpetfoodfacts
 
 openfoodfacts = sys.modules[__name__]
 __version__ = '0.0.1'

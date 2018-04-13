@@ -6,6 +6,7 @@ import urllib
 
 API_URL = "https://%s.openfoodfacts.org/"
 OBF_API_URL = "https://%s.openbeautyfacts.org/"
+OPFF_API_URL = "https://%s.openpetfoodfacts.org/"
 
 
 def login_into_OFF():
@@ -70,6 +71,9 @@ def build_url(geography='world', service=None,
 
     elif entity == "beauty":
         geo_url = OBF_API_URL % (geography)
+
+    elif entity == "pet":
+        geo_url = OPFF_API_URL % (geography)
 
     else:
         raise ValueError("Product not recognized!")
