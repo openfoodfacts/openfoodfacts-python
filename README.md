@@ -281,7 +281,7 @@ search_result = openfoodfacts.products.search(query)
 
 Can pass in any [parameters](https://en.wiki.openfoodfacts.org/API/Read/Search#Parameters).
 ```
-search_result=products.advanced_search({
+search_result=openfoodfacts.products.advanced_search({
   "search_terms":"coke",
   "tagtype_0":"packaging",
   "tag_contains_0":"contains",
@@ -293,3 +293,54 @@ search_result=products.advanced_search({
   "page_size":"20"
 })
 ```
+
+#### Open Beauty Facts
+
+*Get a given product.*
+
+```python
+product = openfoodfacts.openbeautyfacts.get_product(barcode)
+```
+
+*Get all products for given facets.*
+
+Page access (pagination) is available through parameters.
+
+```python
+products = openfoodfacts.openbeautyfacts.get_by_facets({
+  'packaging': 'Plastique',
+  'country': 'france',
+})
+```
+
+*Basic Search*
+
+```
+search_result = openfoodfacts.openbeautyfacts.products.search(query)
+```
+
+#### Open Pet Food Facts
+
+*Get a given product.*
+
+```python
+product = openfoodfacts.openpetfoodfacts.get_product(barcode)
+```
+
+*Get all products for given facets.*
+
+Page access (pagination) is available through parameters.
+
+```python
+products = openpetfoodfacts.get_by_facets({
+  'brand': 'Sans marque',
+  'country': 'france',
+})
+```
+
+*Basic Search*
+
+```
+search_result = openfoodfacts.openpetfoodfacts.search(query)
+```
+
