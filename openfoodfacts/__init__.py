@@ -7,7 +7,7 @@ from . import openbeautyfacts
 from . import openpetfoodfacts
 
 openfoodfacts = sys.modules[__name__]
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 
 def add_fetch_function(facet):
