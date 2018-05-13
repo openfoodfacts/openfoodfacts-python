@@ -250,7 +250,7 @@ search_result = openfoodfacts.products.search(query)
 Can pass in any [parameters](https://en.wiki.openfoodfacts.org/API/Read/Search#Parameters).
 
 ```python
-search_result=openfoodfacts.products.advanced_search({
+search_result = openfoodfacts.products.advanced_search({
   "search_terms":"coke",
   "tagtype_0":"packaging",
   "tag_contains_0":"contains",
