@@ -32,7 +32,7 @@ The project is initially started by [](https://github.com/), other contributors 
 
     Copyright 2016 Open Food Facts
 
-- [License](./blob/master/LICENSE)
+- [License](./LICENSE)
 
 ## Installation
 
@@ -74,4 +74,4 @@ status_code = openfoodfacts.products.add_new_product({
 })
 ```
 
-To see all possible capabilities, check out the [usage guide](./tree/master/docs/Usage.md).
+To see all possible capabilities, check out the [usage guide](./docs/Usage.md).
