@@ -2,15 +2,15 @@
 
 This guide provides information on the API. All the I/O is [JSON](www.json.org).
 
-- [Open Food Facts](.#open-food-facts)
-  - [Login](.#login)
-  - [Facets](.#facets)
-  - [Products by Facet](.#products-by-facet)
-  - [Product](.#product)
-  - [Search](.#search)
+- [Open Food Facts](./Usage.md#open-food-facts)
+  - [Login](./Usage.md#login)
+  - [Facets](./Usage.md#facets)
+  - [Products by Facet](./Usage.md#products-by-facet)
+  - [Product](./Usage.md#product)
+  - [Search](./Usage.md#search)
 
-- [Open Beauty Facts](.#open-beauty-facts)
-- [Open Pet Food Facts](.#open-pet-food-facts)
+- [Open Beauty Facts](./Usage.md#open-beauty-facts)
+- [Open Pet Food Facts](./Usage.md#open-pet-food-facts)
 
 ## Open Food Facts
 
