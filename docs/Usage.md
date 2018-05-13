@@ -301,7 +301,7 @@ product = openfoodfacts.openpetfoodfacts.get_product(barcode)
 Page access (pagination) is available through parameters.
 
 ```python
-products = openpetfoodfacts.get_by_facets({
+products = openfoodfacts.openpetfoodfacts.get_by_facets({
   'brand': 'Sans marque',
   'country': 'france'
 })
