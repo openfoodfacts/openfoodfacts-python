@@ -3,6 +3,7 @@
 ![Open Food Facts](https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png)
 
 ## What is Open Food Facts?
+
 ### A food products database
 
 Open Food Facts is a database of food products with ingredients, allergens, nutrition facts and all the tidbits of information we can find on product labels. 
@@ -25,8 +26,23 @@ Data about food is of public interest and has to be open. The complete database 
 
 ## Contributing
 
-The project is initially started by [](https://github.com/), other contributors include:
+Any help is welcome, as long as you don't break the continuous integration.
+Fork the repository and open a Pull Request directly on the master branch. 
+A maintainer will review and integrate your changes.
+
+Maintainers:
+
+- [Frank Rousseau](https://github.com/frankrousseau)
 - [Pierre Slamich](https://github.com/teolemon)
+
+Contributors:
+
+- [Anubhav Bhargava](https://github.com/Anubhav-Bhargava)
+- [Agamit Sudo](https://github.com/agamitsudo)
+- [Daniel Stolpe](https://github.com/numberpi)
+- [Enioluwa Segun](https://github.com/enioluwa23)
+- [Nicolas Leger](https://github.com/nicolasleger)
+- [Pablo Hinojosa](https://github.com/Pablohn26)
 
 ## Copyright and License
 
