@@ -1,8 +1,6 @@
 # Open Food Facts client for your Python applications and scripts
-
-<div align="center">
-  <img width="178" src="https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png" alt="Open Food Facts"/>
-</div>
+===================================
+![Open Food Facts](https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png)
 
 ## What is Open Food Facts?
 ### A food products database
