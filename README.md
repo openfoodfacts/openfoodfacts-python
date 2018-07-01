@@ -34,12 +34,12 @@ A maintainer will review and integrate your changes.
 
 Maintainers:
 
+- [Anubhav Bhargava](https://github.com/Anubhav-Bhargava)
 - [Frank Rousseau](https://github.com/frankrousseau)
 - [Pierre Slamich](https://github.com/teolemon)
 
 Contributors:
 
-- [Anubhav Bhargava](https://github.com/Anubhav-Bhargava)
 - [Agamit Sudo](https://github.com/agamitsudo)
 - [Daniel Stolpe](https://github.com/numberpi)
 - [Enioluwa Segun](https://github.com/enioluwa23)
