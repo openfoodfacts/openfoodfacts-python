@@ -23,6 +23,9 @@ def add_fetch_function(facet):
         path = utils.build_url(geography=locale,
                                resource_type=facet)
 
+        if facet == "ingredients":
+            return utils.fetch(path)['products']
+
         return utils.fetch(path)['tags']
 
     func.__name__ = "get_%s" % facet
@@ -60,6 +63,7 @@ def add_by_facet_fetch_function(facet):
 
     func.__name__ = "get_by_%s" % facet
     setattr(products, func.__name__, func)
+
 
 # Build a fetch function for each facet.
 for facet in facets.facets:
