@@ -95,6 +95,9 @@ def build_url(geography="world", service=None,
     elif service is None:
         if type(resource_type) == list:
             resource_type = "/".join(resource_type)
+        if resource_type == "ingredients":
+            resource_type = "/".join(["state",  "complete", resource_type])
+            parameters = "1"
         base_url = "/".join(filter(None, (geo_url, resource_type, parameters)))
 
     else:
