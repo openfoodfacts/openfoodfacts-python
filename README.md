@@ -13,7 +13,7 @@ Open Food Facts is a database of food products with ingredients, allergens, nutr
 ### Made by everyone
 
 Open Food Facts is a non-profit association of volunteers.
-1800+ contributors like you have added 43 000+ products from 150 countries using our Android, iPhone or Windows Phone app or their camera to scan barcodes and upload pictures of products and their labels.
+1800+ contributors like you have added 700 000+ products from 150 countries using our Android, iPhone or Windows Phone app or their camera to scan barcodes and upload pictures of products and their labels.
 
 ### For everyone
 
@@ -22,9 +22,9 @@ Data about food is of public interest and has to be open. The complete database 
 
 ## Status
 
-[![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/openfoodfacts/openfoodfacts-python.svg)](http://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/openfoodfacts/openfoodfacts-python.svg)](http://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Percentage of issues still open")
+[![Project Status](https://opensource.box.com/badges/active.svg)](https://opensource.box.com/badges)
+[![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/openfoodfacts/openfoodfacts-python.svg)](https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Average time to resolve an issue")
+[![Percentage of issues still open](https://isitmaintained.com/badge/open/openfoodfacts/openfoodfacts-python.svg)](https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Percentage of issues still open")
 
 ## Contributing
 
