@@ -48,7 +48,7 @@ Contributors:
 
 ## Copyright and License
 
-    Copyright 2016 Open Food Facts
+    Copyright 2016-2019 Open Food Facts
 
 - [License](./LICENSE)
 
