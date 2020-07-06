@@ -8,7 +8,7 @@
 
 ### A food products database
 
-Open Food Facts is a database of food products with ingredients, allergens, nutrition facts and all the tidbits of information we can find on product labels. 
+Open Food Facts is a database of food products with ingredients, allergens, nutrition facts and all the tidbits of information we can find on product labels.
 
 ### Made by everyone
 
@@ -25,11 +25,14 @@ Data about food is of public interest and has to be open. The complete database 
 [![Project Status](https://opensource.box.com/badges/active.svg)](https://opensource.box.com/badges)
 [![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/openfoodfacts/openfoodfacts-python.svg)](https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Average time to resolve an issue")
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/openfoodfacts/openfoodfacts-python.svg)](https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Percentage of issues still open")
+[![Build Status](https://travis-ci.org/openfoodfacts/openfoodfacts-python.svg?branch=master)](https://travis-ci.org/openfoodfacts/openfoodfacts-python)
+[![codecov](https://codecov.io/gh/openfoodfacts/openfoodfacts-python/branch/master/graph/badge.svg)](https://codecov.io/gh/openfoodfacts/openfoodfacts-python)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE)
 
 ## Contributing
 
 Any help is welcome, as long as you don't break the continuous integration.
-Fork the repository and open a Pull Request directly on the master branch. 
+Fork the repository and open a Pull Request directly on the master branch.
 A maintainer will review and integrate your changes.
 
 Maintainers:
