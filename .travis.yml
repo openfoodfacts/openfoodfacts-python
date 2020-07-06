@@ -16,6 +16,7 @@ addons:
 
 install:
   - pip install coverage
+  - pip install codecov
 
 script:
   - coverage run ./setup.py test
@@ -23,3 +24,6 @@ script:
 
 notifications:
   slack: openfoodfacts:kVMm929AwnFUHXzB8UXU01gG
+
+after_success:
+  - codecov
