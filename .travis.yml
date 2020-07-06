@@ -1,17 +1,29 @@
 language: python
+
 python:
   - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
   - "pypy3.5"
+
 addons:
-    apt:
-        packages:
-            - pep8
+  apt:
+    packages:
+      - pep8
+
+install:
+  - pip install coverage
+  - pip install codecov
+
 script:
-  - python setup.py test
+  - coverage run ./setup.py test
   - pep8 openfoodfacts/*.py
-  
+
 notifications:
   slack: openfoodfacts:kVMm929AwnFUHXzB8UXU01gG
+
+after_success:
+  - codecov
