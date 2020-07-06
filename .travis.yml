@@ -1,4 +1,5 @@
 language: python
+
 python:
   - "2.7"
   - "3.4"
@@ -7,10 +8,15 @@ python:
   - "3.7"
   - "3.8"
   - "pypy3.5"
+
 addons:
-    apt:
-        packages:
-            - pep8
+  apt:
+    packages:
+      - pep8
+
+install:
+  - pip install coverage
+
 script:
   - coverage run ./setup.py test
   - pep8 openfoodfacts/*.py
