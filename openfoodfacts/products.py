@@ -36,6 +36,13 @@ def get_by_facets(query, page=1, locale='world'):
         return utils.fetch(url)['products']
 
 
+def get_all_by_facets(query, locale='world'):
+    """
+    Return products for a set of facets using a generator.
+    """
+    return utils.get_all(get_by_facets, query, locale=locale)
+
+
 def add_new_product(post_data, locale='world'):
     """
     Add a new product to OFF database.
@@ -87,7 +94,15 @@ def search(query, page=1, page_size=20,
                           resource_type='search.pl',
                           parameters=parameters)
 
-    return utils.fetch(url, json_file=False)
+    return utils.fetch(url, json_file=False)['products']
+
+
+def search_all(query, sort_by='unique_scans', locale='world'):
+    """
+    Perform a search using Open Food Facts search engine using a generator.
+    """
+    return utils.get_all(search, query,
+                         page_size=20, sort_by=sort_by,locale=locale)
 
 
 def advanced_search(post_query):

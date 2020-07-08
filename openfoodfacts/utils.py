@@ -113,7 +113,7 @@ def fetch(path, json_file=True):
     """
     if json_file:
         path = "%s.json" % (path)
-
+    print (path)
     response = requests.get(path)
     return response.json()
 
@@ -136,3 +136,14 @@ def get_ocr_json_url_for_an_image(first_three_digits,
         image_name
     )
     return url
+
+
+def get_all(func, *args, **kwargs):
+    kwargs['page'] = 1
+    while True:
+        products = func(*args, **kwargs)
+        if not products:
+            break
+        for product in products:
+            yield product
+        kwargs['page'] += 1
