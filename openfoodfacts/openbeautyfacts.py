@@ -69,4 +69,4 @@ def search_all(query, sort_by='unique_scans', locale='world'):
     Perform a search using Open Beauty Facts search engine using a generator.
     """
     return utils.get_all(search, query,
-                         page_size=20, sort_by=sort_by,locale=locale)
+                         page_size=20, sort_by=sort_by, locale=locale)

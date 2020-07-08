@@ -113,7 +113,6 @@ def fetch(path, json_file=True):
     """
     if json_file:
         path = "%s.json" % (path)
-    print (path)
     response = requests.get(path)
     return response.json()
 
