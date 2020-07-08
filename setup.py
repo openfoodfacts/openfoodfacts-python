@@ -16,8 +16,8 @@ packages = [
     'openfoodfacts',
 ]
 
-requires = open('requirements.txt').read().split('\n')
-test_requirements = open('requirements_test.txt').read().split('\n')
+requires = [req for req in open('requirements.txt').read().split('\n') if req.strip()]
+test_requirements = [req for req in open('requirements_test.txt').read().split('\n') if req.strip()]
 
 with open('openfoodfacts/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
@@ -26,7 +26,7 @@ with open('openfoodfacts/__init__.py', 'r') as fd:
 if not version:
     raise RuntimeError('Cannot find version information')
 
-with open('README.md', 'r') as f:
+with open('README.rst', 'r') as f:
     readme = f.read()
 
 setup(
@@ -55,6 +55,9 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy'
     ),
