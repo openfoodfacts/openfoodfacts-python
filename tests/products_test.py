@@ -65,6 +65,26 @@ class TestProducts(unittest.TestCase):
                     {'trace': 'egg', 'country': 'france'})
             self.assertEqual(res, ["omelet"])
 
+    def test_get_by_country_and_trace_all(self):
+        with requests_mock.mock() as mock:
+            mock.get(
+                'https://world.openfoodfacts.org/country/'
+                'france/trace/egg/1.json',
+                text='{"products":["omelet"], "count": 1}')
+            mock.get(
+                'https://world.openfoodfacts.org/country/'
+                'france/trace/egg/2.json',
+                text='{"products":["omelet small", "omelet big"], "count": 2}')
+            mock.get(
+                'https://world.openfoodfacts.org/country/'
+                'france/trace/egg/3.json',
+                text='{"products":[], "count": 0}')
+            res = openfoodfacts.products.get_all_by_facets(
+                    {'trace': 'egg', 'country': 'france'})
+            expected_products_sequence = ["omelet", "omelet small", "omelet big"]
+            for i, product in enumerate(res):
+                self.assertEqual(product, expected_products_sequence[i])
+
     def test_search(self):
         with requests_mock.mock() as mock:
             mock.get(
@@ -73,14 +93,14 @@ class TestProducts(unittest.TestCase):
                 '1&page_size=20&sort_by=unique_scans',
                 text='{"products":["kinder bueno"], "count": 1}')
             res = openfoodfacts.products.search('kinder bueno')
-            self.assertEqual(res,  ["kinder bueno"])
+            self.assertEqual(res['products'],  ["kinder bueno"])
             mock.get(
                 'https://world.openfoodfacts.org/cgi/search.pl?' +
                 'search_terms=banania&json=1&page=' +
                 '2&page_size=10&sort_by=unique_scans',
                 text='{"products":["banania", "banania big"], "count": 2}')
             res = openfoodfacts.products.search('banania', page=2, page_size=10)
-            self.assertEqual(res,  ["banania", "banania big"])
+            self.assertEqual(res['products'],  ["banania", "banania big"])
 
     def test_search_all(self):
         with requests_mock.mock() as mock:

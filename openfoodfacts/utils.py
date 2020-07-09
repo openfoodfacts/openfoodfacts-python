@@ -137,12 +137,14 @@ def get_ocr_json_url_for_an_image(first_three_digits,
     return url
 
 
-def get_all(func, *args, **kwargs):
+def get_all(func, key, *args, **kwargs):
     kwargs['page'] = 1
     while True:
-        products = func(*args, **kwargs)
-        if not products:
+        elements = func(*args, **kwargs)
+        if key and key in elements:
+            elements = elements[key]
+        if not elements:
             break
-        for product in products:
-            yield product
+        for element in elements:
+            yield element
         kwargs['page'] += 1
