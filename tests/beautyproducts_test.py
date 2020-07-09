@@ -23,28 +23,28 @@ class TestBeautyProducts(unittest.TestCase):
             mock.get(
                 'https://world.openbeautyfacts.org/country/'
                 'france/packaging/plastique/1.json',
-                text='{"products":["déodorant"]}')
+                text='{"products":["parfum"]}')
             res = openfoodfacts.openbeautyfacts.get_by_facets(
                     {'packaging': 'Plastique', 'country': 'france'})
-            self.assertEqual(res, ["déodorant"])
+            self.assertEqual(res, ["parfum"])
 
     def test_get_by_country_and_trace_all(self):
         with requests_mock.mock() as mock:
             mock.get(
                 'https://world.openbeautyfacts.org/brand/'
                 'Sans%20marque/country/france/1.json',
-                text='{"products":["déodorant"], "count": 1}')
+                text='{"products":["parfum"], "count": 1}')
             mock.get(
                 'https://world.openbeautyfacts.org/brand/'
                 'Sans%20marque/country/france/2.json',
-                text='{"products":["déodorant small", "déodorant big"], "count": 2}')
+                text='{"products":["parfum small", "parfum big"], "count": 2}')
             mock.get(
                 'https://world.openbeautyfacts.org/brand/'
                 'Sans%20marque/country/france/3.json',
                 text='{"products":[], "count": 0}')
             res = openfoodfacts.openbeautyfacts.get_all_by_facets(
                     {'brand': 'Sans marque', 'country': 'france'})
-            expected_products_sequence = ["déodorant", "déodorant small", "déodorant big"]
+            expected_products_sequence = ["parfum", "parfum small", "parfum big"]
             for i, product in enumerate(res):
                 self.assertEqual(product, expected_products_sequence[i])
 
