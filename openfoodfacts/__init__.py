@@ -48,6 +48,10 @@ def add_by_facet_fetch_function(facet):
     Usage example for egg trace:
 
         openfoodfacts.products.get_by_trace(egg)
+
+    Using a generator:
+
+        openfoodfacts.products.get_all_by_trace(egg)
     """
     if facet[-3:] == 'ies':
         facet = facet[:-3] + 'y'
@@ -63,6 +67,21 @@ def add_by_facet_fetch_function(facet):
 
     func.__name__ = "get_by_%s" % facet
     setattr(products, func.__name__, func)
+
+    def func_all(facet_id, locale='world'):
+        page = 1
+        while True:
+            path = utils.build_url(geography=locale,
+                                   resource_type=[facet, facet_id, str(page)])
+            products = utils.fetch(path)['products']
+            if not products:
+                break
+            for product in products:
+                yield product
+            page += 1
+
+    func_all.__name__ = "get_all_by_%s" % facet
+    setattr(products, func_all.__name__, func_all)
 
 
 # Build a fetch function for each facet.

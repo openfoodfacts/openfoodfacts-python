@@ -37,6 +37,13 @@ def get_by_facets(query, page=1, locale='world'):
                                   entity="pet"))['products']
 
 
+def get_all_by_facets(query, locale='world'):
+    """
+    Return products for a set of facets using a generator.
+    """
+    return utils.get_all(get_by_facets, None, query, locale=locale)
+
+
 def search(query, page=1, page_size=20,
            sort_by='unique_scans', locale='world'):
     """
@@ -55,3 +62,11 @@ def search(query, page=1, page_size=20,
                            entity="pet")
 
     return utils.fetch(path, json_file=False)
+
+
+def search_all(query, sort_by='unique_scans', locale='world'):
+    """
+    Perform a search using Open Pet Food Facts search engine using a generator.
+    """
+    return utils.get_all(search, 'products', query,
+                         page_size=20, sort_by=sort_by, locale=locale)

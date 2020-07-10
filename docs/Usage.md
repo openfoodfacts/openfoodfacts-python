@@ -15,6 +15,7 @@ This guide provides information on the API. All the I/O is [JSON](www.json.org).
 ## Open Food Facts
 
 #### Login
+
 *Login into Openfoodfacts*
 
 ```login_session_object = openfoodfacts.utils.login_into_OFF()```
@@ -118,10 +119,27 @@ products = openfoodfacts.products.get_by_facets({
 })
 ```
 
+To get all products for given facets without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_by_facets({
+  'trace': 'egg',
+  'country': 'france'
+}):
+    print (product['product_name'])
+```
+
 *Get all products for given additive.*
 
 ```python
 products = openfoodfacts.products.get_by_additive(additive, page=1)
+```
+
+To get all products for given additive without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_additive(additive):
+    print (product['product_name'])
 ```
 
 *Get all products for given allergen.*
@@ -130,10 +148,24 @@ products = openfoodfacts.products.get_by_additive(additive, page=1)
 products = openfoodfacts.products.get_by_allergen(allergen)
 ```
 
+To get all products for given allergen without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_allergen(allergen):
+    print (product['product_name'])
+```
+
 *Get all products for given brand.*
 
 ```python
 products = openfoodfacts.products.get_by_brand(brand)
+```
+
+To get all products for given brand without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_brand(brand):
+    print (product['product_name'])
 ```
 
 *Get all products for given category.*
@@ -142,10 +174,24 @@ products = openfoodfacts.products.get_by_brand(brand)
 products = openfoodfacts.products.get_by_category(category)
 ```
 
+To get all products for given category without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_category(category):
+    print (product['product_name'])
+```
+
 *Get all products for given country.*
 
 ```python
 products = openfoodfacts.products.get_by_country(country)
+```
+
+To get all products for given country without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_country(country):
+    print (product['product_name'])
 ```
 
 *Get all products for given entry date.*
@@ -154,10 +200,24 @@ products = openfoodfacts.products.get_by_country(country)
 products = openfoodfacts.products.get_by_entry_date(entry_date)
 ```
 
+To get all products for given entry date without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_entry_date(entry_date):
+    print (product['product_name'])
+```
+
 *Get all products for given ingredient.*
 
 ```python
 products = openfoodfacts.products.get_by_ingredient(ingredient)
+```
+
+To get all products for given ingredient without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_ingredient(ingredient):
+    print (product['product_name'])
 ```
 
 *Get all products for given language.*
@@ -166,10 +226,24 @@ products = openfoodfacts.products.get_by_ingredient(ingredient)
 products = openfoodfacts.products.get_by_language(language)
 ```
 
+To get all products for given language without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_language(language):
+    print (product['product_name'])
+```
+
 *Get all products for given packaging.*
 
 ```python
 products = openfoodfacts.products.get_by_packaging(packaging)
+```
+
+To get all products for given packaging without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_packaging(packaging):
+    print (product['product_name'])
 ```
 
 *Get all products for given packaging code.*
@@ -178,10 +252,24 @@ products = openfoodfacts.products.get_by_packaging(packaging)
 products = openfoodfacts.products.get_by_packaging_code(code)
 ```
 
+To get all products for given packaging code without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_packaging_code(packaging_code):
+    print (product['product_name'])
+```
+
 *Get all products for given purchase place.*
 
 ```python
 products = openfoodfacts.products.get_by_purchase_place(place)
+```
+
+To get all products for given purchase place without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_purchase_place(purchase_place):
+    print (product['product_name'])
 ```
 
 *Get all products for given store.*
@@ -190,10 +278,24 @@ products = openfoodfacts.products.get_by_purchase_place(place)
 products = openfoodfacts.products.get_by_store(store)
 ```
 
+To get all products for given store without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_store(store):
+    print (product['product_name'])
+```
+
 *Get all products for given trace type.*
 
 ```python
 products = openfoodfacts.products.get_by_trace(trace)
+```
+
+To get all products for given trace type without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_trace_type(trace_type):
+    print (product['product_name'])
 ```
 
 *Get all products for given state.*
@@ -202,6 +304,12 @@ products = openfoodfacts.products.get_by_trace(trace)
 products = openfoodfacts.products.get_by_state(state)
 ```
 
+To get all products for given state without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.get_all_by_state(state):
+    print (product['product_name'])
+```
 
 #### Product
 
@@ -213,7 +321,7 @@ product = openfoodfacts.products.get_product(barcode)
 
 *Open Food Facts data exports*
 
-```
+```python
 openfoodfacts.utils.download_data(file_type)
 ```
 
@@ -243,6 +351,13 @@ status_code = openfoodfacts.products.upload_image(barcode, imagefield, img_path)
 
 ```python
 search_result = openfoodfacts.products.search(query)
+```
+
+To get all products without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.products.search_all(query):
+    print (product['product_name'])
 ```
 
 *Advanced Search*
@@ -282,10 +397,27 @@ products = openfoodfacts.openbeautyfacts.get_by_facets({
 })
 ```
 
+To get all products for given facets without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.openbeautyfacts.get_all_by_facets({
+  'packaging': 'Plastique',
+  'country': 'france'
+}):
+    print (product['product_name'])
+```
+
 *Basic Search*
 
-```
+```python
 search_result = openfoodfacts.openbeautyfacts.products.search(query)
+```
+
+To get all products without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.openbeautyfacts.products.search(query):
+    print (product['product_name'])
 ```
 
 ## Open Pet Food Facts
@@ -307,9 +439,25 @@ products = openfoodfacts.openpetfoodfacts.get_by_facets({
 })
 ```
 
+To get all products for given facets without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.openpetfoodfacts.get_all_by_facets({
+  'brand': 'Sans marque',
+  'country': 'france'
+}):
+    print (product['product_name'])
+```
+
 *Basic Search*
 
-```
+```python
 search_result = openfoodfacts.openpetfoodfacts.search(query)
 ```
 
+To get all products without pagination (returns a generator):
+
+```python
+for product in openfoodfacts.openpetfoodfacts.search_all(query):
+    print (product['product_name'])
+```
