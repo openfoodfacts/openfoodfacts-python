@@ -3,8 +3,8 @@ import sys
 from . import facets
 from . import utils
 from .products import get_product
-from . import openbeautyfacts
-from . import openpetfoodfacts
+from . import openbeautyfacts as beauty_products
+from . import openpetfoodfacts as pet_products
 
 openfoodfacts = sys.modules[__name__]
 __version__ = '0.1.0'

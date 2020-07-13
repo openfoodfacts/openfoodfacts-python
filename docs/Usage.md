@@ -383,7 +383,7 @@ search_result = openfoodfacts.products.advanced_search({
 *Get a given product.*
 
 ```python
-product = openfoodfacts.openbeautyfacts.get_product(barcode)
+product = openfoodfacts.beauty_products.get_product(barcode)
 ```
 
 *Get all products for given facets.*
@@ -391,7 +391,7 @@ product = openfoodfacts.openbeautyfacts.get_product(barcode)
 Page access (pagination) is available through parameters.
 
 ```python
-products = openfoodfacts.openbeautyfacts.get_by_facets({
+products = openfoodfacts.beauty_products.get_by_facets({
   'packaging': 'Plastique',
   'country': 'france'
 })
@@ -400,7 +400,7 @@ products = openfoodfacts.openbeautyfacts.get_by_facets({
 To get all products for given facets without pagination (returns a generator):
 
 ```python
-for product in openfoodfacts.openbeautyfacts.get_all_by_facets({
+for product in openfoodfacts.beauty_products.get_all_by_facets({
   'packaging': 'Plastique',
   'country': 'france'
 }):
@@ -410,13 +410,13 @@ for product in openfoodfacts.openbeautyfacts.get_all_by_facets({
 *Basic Search*
 
 ```python
-search_result = openfoodfacts.openbeautyfacts.products.search(query)
+search_result = openfoodfacts.beauty_products.products.search(query)
 ```
 
 To get all products without pagination (returns a generator):
 
 ```python
-for product in openfoodfacts.openbeautyfacts.products.search(query):
+for product in openfoodfacts.beauty_products.products.search(query):
     print (product['product_name'])
 ```
 
@@ -425,7 +425,7 @@ for product in openfoodfacts.openbeautyfacts.products.search(query):
 *Get a given product.*
 
 ```python
-product = openfoodfacts.openpetfoodfacts.get_product(barcode)
+product = openfoodfacts.pet_products.get_product(barcode)
 ```
 
 *Get all products for given facets.*
@@ -433,7 +433,7 @@ product = openfoodfacts.openpetfoodfacts.get_product(barcode)
 Page access (pagination) is available through parameters.
 
 ```python
-products = openfoodfacts.openpetfoodfacts.get_by_facets({
+products = openfoodfacts.pet_products.get_by_facets({
   'brand': 'Sans marque',
   'country': 'france'
 })
@@ -442,7 +442,7 @@ products = openfoodfacts.openpetfoodfacts.get_by_facets({
 To get all products for given facets without pagination (returns a generator):
 
 ```python
-for product in openfoodfacts.openpetfoodfacts.get_all_by_facets({
+for product in openfoodfacts.pet_products.get_all_by_facets({
   'brand': 'Sans marque',
   'country': 'france'
 }):
@@ -452,12 +452,12 @@ for product in openfoodfacts.openpetfoodfacts.get_all_by_facets({
 *Basic Search*
 
 ```python
-search_result = openfoodfacts.openpetfoodfacts.search(query)
+search_result = openfoodfacts.pet_products.search(query)
 ```
 
 To get all products without pagination (returns a generator):
 
 ```python
-for product in openfoodfacts.openpetfoodfacts.search_all(query):
+for product in openfoodfacts.pet_products.search_all(query):
     print (product['product_name'])
 ```
