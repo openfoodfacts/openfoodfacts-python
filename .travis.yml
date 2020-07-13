@@ -9,18 +9,14 @@ python:
   - "3.8"
   - "pypy3.5"
 
-addons:
-  apt:
-    packages:
-      - pep8
-
 install:
+  - pip install pycodestyle
   - pip install coverage
   - pip install codecov
 
 script:
   - coverage run ./setup.py test
-  - pep8 openfoodfacts/*.py
+  - pycodestyle openfoodfacts/*.py
 
 notifications:
   slack: openfoodfacts:kVMm929AwnFUHXzB8UXU01gG
