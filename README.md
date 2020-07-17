@@ -27,6 +27,7 @@ Data about food is of public interest and has to be open. The complete database 
 [![Percentage of issues still open](https://isitmaintained.com/badge/open/openfoodfacts/openfoodfacts-python.svg)](https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg "Percentage of issues still open")
 [![Build Status](https://travis-ci.org/openfoodfacts/openfoodfacts-python.svg?branch=master)](https://travis-ci.org/openfoodfacts/openfoodfacts-python)
 [![codecov](https://codecov.io/gh/openfoodfacts/openfoodfacts-python/branch/master/graph/badge.svg)](https://codecov.io/gh/openfoodfacts/openfoodfacts-python)
+[![Latest Version](https://img.shields.io/pypi/v/openfoodfacts.svg)](https://pypi.org/project/openfoodfacts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE)
 
 ## Contributing
@@ -48,16 +49,17 @@ Contributors:
 - [Enioluwa Segun](https://github.com/enioluwa23)
 - [Nicolas Leger](https://github.com/nicolasleger)
 - [Pablo Hinojosa](https://github.com/Pablohn26)
+- [Andrea Stagi](https://github.com/astagi)
 
 ## Copyright and License
 
-    Copyright 2016-2019 Open Food Facts
+    Copyright 2016-2020 Open Food Facts
 
-- [License](./LICENSE)
+- [License MIT](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE)
 
 ## Installation
 
-    sudo pip install git+https://github.com/openfoodfacts/openfoodfacts-python
+    pip install openfoodfacts
 
 or:
 
@@ -95,4 +97,4 @@ status_code = openfoodfacts.products.add_new_product({
 })
 ```
 
-To see all possible capabilities, check out the [usage guide](./docs/Usage.md).
+To see all possible capabilities, check out the [usage guide](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/docs/Usage.md).

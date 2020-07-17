@@ -1,14 +1,6 @@
 Open Food Facts client for your Python applications and scripts
 ===============================================================
 
-.. raw:: html
-
-   <div align="center">
-
-.. raw:: html
-
-   </div>
-
 What is Open Food Facts?
 ------------------------
 
@@ -39,7 +31,8 @@ Status
 ------
 
 |Project Status| |Average time to resolve an issue| |Percentage of
-issues still open| |Build Status| |codecov| |License: MIT|
+issues still open| |Build Status| |codecov| |Latest Version| |License:
+MIT|
 
 Contributing
 ------------
@@ -61,22 +54,24 @@ Contributors:
 -  `Enioluwa Segun <https://github.com/enioluwa23>`__
 -  `Nicolas Leger <https://github.com/nicolasleger>`__
 -  `Pablo Hinojosa <https://github.com/Pablohn26>`__
+-  `Andrea Stagi <https://github.com/astagi>`__
 
 Copyright and License
 ---------------------
 
 ::
 
-    Copyright 2016-2019 Open Food Facts
+    Copyright 2016-2020 Open Food Facts
 
--  `License <./LICENSE>`__
+-  `License
+   MIT <https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE>`__
 
 Installation
 ------------
 
 ::
 
-    sudo pip install git+https://github.com/openfoodfacts/openfoodfacts-python
+    pip install openfoodfacts
 
 or:
 
@@ -119,7 +114,7 @@ Example Usage
     })
 
 To see all possible capabilities, check out the `usage
-guide <./docs/Usage.md>`__.
+guide <https://github.com/openfoodfacts/openfoodfacts-python/blob/master/docs/Usage.md>`__.
 
 .. |Project Status| image:: https://opensource.box.com/badges/active.svg
    :target: https://opensource.box.com/badges
@@ -131,5 +126,7 @@ guide <./docs/Usage.md>`__.
    :target: https://travis-ci.org/openfoodfacts/openfoodfacts-python
 .. |codecov| image:: https://codecov.io/gh/openfoodfacts/openfoodfacts-python/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/openfoodfacts/openfoodfacts-python
+.. |Latest Version| image:: https://img.shields.io/pypi/v/openfoodfacts.svg
+   :target: https://pypi.org/project/openfoodfacts
 .. |License: MIT| image:: https://img.shields.io/badge/License-MIT-blue.svg
    :target: https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE
