@@ -49,6 +49,7 @@ Contributors:
 - [Enioluwa Segun](https://github.com/enioluwa23)
 - [Nicolas Leger](https://github.com/nicolasleger)
 - [Pablo Hinojosa](https://github.com/Pablohn26)
+- [Andrea Stagi](https://github.com/astagi)
 
 ## Copyright and License
 
