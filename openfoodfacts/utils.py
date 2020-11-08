@@ -24,7 +24,7 @@ ENTITY_MAP = {
 def login_into_OFF():
     try:
         input_function = raw_input
-    except:
+    except NameError:
         input_function = input
     username = input_function("Username:")
     password = getpass.getpass("Password:")
