@@ -106,6 +106,16 @@ traces = openfoodfacts.facets.get_traces()
 states = openfoodfacts.facets.get_states()
 ```
 
+*Filter with parameters*
+
+You can also use `parameters` parameter to filter results
+
+```python
+emb_packaging_codes = openfoodfacts.facets.get_packaging_codes(
+    parameters={'filter': 'emb'}
+)
+```
+
 #### Products by Facet
 
 *Get all products for given facets.*

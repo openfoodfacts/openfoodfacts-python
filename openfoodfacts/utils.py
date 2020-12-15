@@ -66,6 +66,14 @@ def download_data(file_type="mongodb"):
                 target_file.write(chunk)
 
 
+def encode_parameters(parameters):
+    if sys.version_info >= (3, 0):
+        extension = urllib.parse.urlencode(parameters)
+    else:
+        extension = urllib.urlencode(parameters)
+    return extension
+
+
 def build_url(geography="world", service=None,
               resource_type=None, parameters=None, entity="food"):
 
@@ -88,12 +96,8 @@ def build_url(geography="world", service=None,
 
     elif service == "cgi":
         base_url = "/".join([geo_url, service, resource_type])
-
         if parameters is not None:
-            if sys.version_info >= (3, 0):
-                extension = urllib.parse.urlencode(parameters)
-            else:
-                extension = urllib.urlencode(parameters)
+            extension = encode_parameters(parameters)
             base_url = "?".join([base_url, extension])
 
     elif service is None:

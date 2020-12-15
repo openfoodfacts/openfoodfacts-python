@@ -19,10 +19,19 @@ def add_fetch_function(facet):
 
         openfoodfacts.facets.fetch_traces()
     """
-    def func(locale='world'):
-        path = utils.build_url(geography=locale,
-                               resource_type=facet)
-        return utils.fetch(path)['tags']
+    def func(locale='world', parameters={}):
+        json = True
+        if parameters:
+            json = False
+            parameters['json'] = '1'
+            path = utils.build_url(
+                geography=locale,
+                resource_type=facet,
+                parameters='?' + utils.encode_parameters(parameters)
+            )
+        else:
+            path = utils.build_url(geography=locale, resource_type=facet)
+        return utils.fetch(path, json)['tags']
 
     func.__name__ = "get_%s" % facet
 
