@@ -22,10 +22,6 @@ def add_fetch_function(facet):
     def func(locale='world'):
         path = utils.build_url(geography=locale,
                                resource_type=facet)
-
-        if facet == "ingredients":
-            return utils.fetch(path)['products']
-
         return utils.fetch(path)['tags']
 
     func.__name__ = "get_%s" % facet
