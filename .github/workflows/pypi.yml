@@ -1,0 +1,21 @@
+name: Publish PyPI package
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  push_to_pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2.4.0
+      - name: Set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - uses: abatilo/actions-poetry@v2.0.0
+      - name: Run poetry build
+        run:  poetry build
+      - name: Run poetry publish
+        run: POETRY_PYPI_TOKEN_PYPI=${{ secrets.PYPI_TOKEN }} poetry publish
