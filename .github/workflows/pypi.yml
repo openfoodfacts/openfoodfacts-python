@@ -1,6 +1,7 @@
 name: Publish PyPI Package
 
 on:
+  # Triggers the workflow on a new release
   release:
     types: [created]
 
@@ -17,12 +18,14 @@ jobs:
     - name: Install dependencies
       run: |
         rm -rf dist build *.egg-info
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel twine
+    - name: Build package
       run: |
-        python setup.py sdist bdist_wheel
-        sudo python -m twine upload --non-interactive dist/*  
+        python3 setup.py sdist bdist_wheel 
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_TOKEN }}
+
