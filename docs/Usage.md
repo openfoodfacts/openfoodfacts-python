@@ -25,7 +25,7 @@ This guide provides information on the API. All the I/O is [JSON](www.json.org).
 *Get all available additives.*
 
 ```python
-traces = openfoodfacts.facets.get_additives()
+additives = openfoodfacts.facets.get_additives()
 ```
 
 *Get all available allergens.*
