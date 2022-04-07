@@ -1,8 +1,12 @@
 name: Publish PyPI Package
 
 on:
+  # Triggers the workflow on a new release
   release:
     types: [created]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -17,12 +21,13 @@ jobs:
     - name: Install dependencies
       run: |
         rm -rf dist build *.egg-info
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel twine
     - name: Build and publish
       env:
         TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+        TWINE_REPOSITORY: testpypi
       run: |
-        python setup.py sdist bdist_wheel
-        sudo python -m twine upload --non-interactive dist/*  
+        python3 setup.py sdist bdist_wheel
+        sudo python3 -m twine upload --non-interactive dist/*  
