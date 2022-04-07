@@ -22,12 +22,14 @@ jobs:
       run: |
         rm -rf dist build *.egg-info
         python3 -m pip install --upgrade pip
-        pip install twine
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
-        TWINE_REPOSITORY: testpypi
+        python3 -m pip install setuptools wheel twine
+    - name: Build dist
       run: |
-        python3 setup.py sdist bdist_wheel
-        sudo python3 -m twine upload --non-interactive dist/*  
+        python3 setup.py sdist bdist_wheel 
+    - name: Publish package to testPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1.5.0
+      with:
+        user: __token__
+        password: ${{ secrets.TEST_PYPI_TOKEN }}
+        repository_url: https://test.pypi.org/legacy/
+
