@@ -2,8 +2,8 @@ name: Publish PyPI Package
 
 on:
   # Triggers the workflow on a new release
-  release:
-    types: [created]
+  push:
+    branches: [actions-dev]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
