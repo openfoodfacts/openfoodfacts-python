@@ -25,4 +25,4 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       run: |
         python setup.py sdist bdist_wheel
-        sudo python -m twine upload dist/*  
+        sudo python -m twine upload --non-interactive dist/*  
