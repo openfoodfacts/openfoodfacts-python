@@ -2,11 +2,8 @@ name: Publish PyPI Package
 
 on:
   # Triggers the workflow on a new release
-  push:
-    branches: [actions-dev]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -23,13 +20,12 @@ jobs:
         rm -rf dist build *.egg-info
         python3 -m pip install --upgrade pip
         python3 -m pip install setuptools wheel twine
-    - name: Build dist
+    - name: Build package
       run: |
         python3 setup.py sdist bdist_wheel 
-    - name: Publish package to testPyPI
+    - name: Publish package to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
-        password: ${{ secrets.TEST_PYPI_TOKEN }}
-        repository_url: https://test.pypi.org/legacy/
+        password: ${{ secrets.PYPI_TOKEN }}
 
