@@ -71,7 +71,7 @@ def add_by_facet_fetch_function(facet):
         return utils.fetch(path)['products']
 
     func.__name__ = "get_by_%s" % facet
-    setattr(products, func.__name__, func) # noqa
+    setattr(products, func.__name__, func)  # noqa
 
     def func_all(facet_id, locale='world'):
         page = 1
@@ -86,7 +86,7 @@ def add_by_facet_fetch_function(facet):
             page += 1
 
     func_all.__name__ = "get_all_by_%s" % facet
-    setattr(products, func_all.__name__, func_all) # noqa
+    setattr(products, func_all.__name__, func_all)  # noqa
 
 
 # Build a fetch function for each facet.
