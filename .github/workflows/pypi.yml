@@ -22,7 +22,7 @@ jobs:
       run: |
         rm -rf dist build *.egg-info
         python3 -m pip install --upgrade pip
-        python3 -m pip install setuptools wheel twine
+        pip install twine
     - name: Build and publish
       env:
         TWINE_USERNAME: __token__
