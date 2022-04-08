@@ -4,7 +4,7 @@ site_url: https://aadarsh-ram.github.io/openfoodfacts-python
 site_dir: gh_pages
 
 nav:
-  - 'Home.md'
+  - Home: 'index.md'
   - Usage: 'Usage.md'
 
 theme:
