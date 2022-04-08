@@ -6,7 +6,9 @@ name: Generate Automatic Documentation
 on:
   # Triggers the workflow on push
   push:
-    branches: [ actions-dev ]
+    branches:
+      - actions-dev
+      - develop
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
