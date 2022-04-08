@@ -4,7 +4,7 @@ site_name: openfoodfacts-python
 site_dir: gh_pages
 
 theme:
-  name: material
+  name: readthedocs
 
 plugins:
   - awesome-pages
