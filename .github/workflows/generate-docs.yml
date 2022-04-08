@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v2
         with: 
           python-version: 3.8
-      - run: pip install --upgrade pip && pip install mkdocs mkdocs-gen-files mkdocs-awesome-pages-plugin
+      - run: pip install --upgrade pip && pip install mkdocs mkdocs-gen-files mkdocs-material
       - run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
       - name: Publish docs
         run: mkdocs gh-deploy

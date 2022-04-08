@@ -1,10 +1,10 @@
 docs_dir: docs
-repo_url: https://openfoodfacts.github.io/openfoodfacts-python/
 site_name: openfoodfacts-python
 site_dir: gh_pages
 
-theme:
-  name: readthedocs
+nav:
+  - Home: Index.md
+  - Usage: Usage.md
 
-plugins:
-  - awesome-pages
+theme:
+  name: material
