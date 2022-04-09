@@ -1,0 +1,735 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://openfoodfacts.github.io/openfoodfacts-python/Usage/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.9">
+    
+    
+      
+        <title>Usage - openfoodfacts-python</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.120efc48.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.9647289d.min.css">
+        
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#usage-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="openfoodfacts-python" class="md-header__button md-logo" aria-label="openfoodfacts-python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            openfoodfacts-python
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Usage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="openfoodfacts-python" class="md-nav__button md-logo" aria-label="openfoodfacts-python" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    openfoodfacts-python
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Usage
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#open-food-facts" class="md-nav__link">
+    Open Food Facts
+  </a>
+  
+    <nav class="md-nav" aria-label="Open Food Facts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login" class="md-nav__link">
+    Login
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#facets" class="md-nav__link">
+    Facets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#products-by-facet" class="md-nav__link">
+    Products by Facet
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#product" class="md-nav__link">
+    Product
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    Search
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-beauty-facts" class="md-nav__link">
+    Open Beauty Facts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-pet-food-facts" class="md-nav__link">
+    Open Pet Food Facts
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#open-food-facts" class="md-nav__link">
+    Open Food Facts
+  </a>
+  
+    <nav class="md-nav" aria-label="Open Food Facts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login" class="md-nav__link">
+    Login
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#facets" class="md-nav__link">
+    Facets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#products-by-facet" class="md-nav__link">
+    Products by Facet
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#product" class="md-nav__link">
+    Product
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search" class="md-nav__link">
+    Search
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-beauty-facts" class="md-nav__link">
+    Open Beauty Facts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-pet-food-facts" class="md-nav__link">
+    Open Pet Food Facts
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+
+<h1 id="usage-guide">Usage Guide</h1>
+<p>This guide provides information on the API. All the I/O is <a href="www.json.org">JSON</a>.</p>
+<ul>
+<li><a href="./#open-food-facts">Open Food Facts</a></li>
+<li><a href="./#login">Login</a></li>
+<li><a href="./#facets">Facets</a></li>
+<li><a href="./#products-by-facet">Products by Facet</a></li>
+<li><a href="./#product">Product</a></li>
+<li>
+<p><a href="./#search">Search</a></p>
+</li>
+<li>
+<p><a href="./#open-beauty-facts">Open Beauty Facts</a></p>
+</li>
+<li><a href="./#open-pet-food-facts">Open Pet Food Facts</a></li>
+</ul>
+<h2 id="open-food-facts">Open Food Facts</h2>
+<h4 id="login">Login</h4>
+<p><em>Login into Openfoodfacts</em></p>
+<p><code>login_session_object = openfoodfacts.utils.login_into_OFF()</code></p>
+<h4 id="facets">Facets</h4>
+<p><em>Get all available additives.</em></p>
+<pre><code class="language-python">additives = openfoodfacts.facets.get_additives()
+</code></pre>
+<p><em>Get all available allergens.</em></p>
+<pre><code class="language-python">allergens = openfoodfacts.facets.get_allergens()
+</code></pre>
+<p><em>Get all available brands.</em></p>
+<pre><code class="language-python">brands = openfoodfacts.facets.get_brands()
+</code></pre>
+<p><em>Get all available categories.</em></p>
+<pre><code class="language-python">categories = openfoodfacts.facets.get_categories()
+</code></pre>
+<p><em>Get all available countries.</em></p>
+<pre><code class="language-python">countries = openfoodfacts.facets.get_countries()
+</code></pre>
+<p><em>Get all available entry dates.</em></p>
+<pre><code class="language-python">entry_dates = openfoodfacts.facets.get_entry_dates()
+</code></pre>
+<p><em>Get all available ingredients.</em></p>
+<pre><code class="language-python">ingredients = openfoodfacts.facets.get_ingredients()
+</code></pre>
+<p><em>Get all available languages.</em></p>
+<pre><code class="language-python">languages = openfoodfacts.facets.get_languages()
+</code></pre>
+<p><em>Get all available packagings.</em></p>
+<pre><code class="language-python">packagings = openfoodfacts.facets.get_packaging()
+</code></pre>
+<p><em>Get all available packaging codes.</em></p>
+<pre><code class="language-python">codes = openfoodfacts.facets.get_packaging_codes()
+</code></pre>
+<p><em>Get all available purchase places.</em></p>
+<pre><code class="language-python">places = openfoodfacts.facets.get_purchase_places()
+</code></pre>
+<p><em>Get all available stores.</em></p>
+<pre><code class="language-python">stores = openfoodfacts.facets.get_stores()
+</code></pre>
+<p><em>Get all available trace types.</em></p>
+<pre><code class="language-python">traces = openfoodfacts.facets.get_traces()
+</code></pre>
+<p><em>Get all available states.</em></p>
+<pre><code class="language-python">states = openfoodfacts.facets.get_states()
+</code></pre>
+<p><em>Filter with parameters</em></p>
+<p>You can also use <code>parameters</code> parameter to filter results</p>
+<pre><code class="language-python">emb_packaging_codes = openfoodfacts.facets.get_packaging_codes(
+    parameters={'filter': 'emb'}
+)
+</code></pre>
+<h4 id="products-by-facet">Products by Facet</h4>
+<p><em>Get all products for given facets.</em></p>
+<p>Page access (pagination) is available through parameters.</p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_facets({
+  'trace': 'egg',
+  'country': 'france'
+})
+</code></pre>
+<p>To get all products for given facets without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_by_facets({
+  'trace': 'egg',
+  'country': 'france'
+}):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given additive.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_additive(additive, page=1)
+</code></pre>
+<p>To get all products for given additive without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_additive(additive):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given allergen.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_allergen(allergen)
+</code></pre>
+<p>To get all products for given allergen without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_allergen(allergen):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given brand.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_brand(brand)
+</code></pre>
+<p>To get all products for given brand without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_brand(brand):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given category.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_category(category)
+</code></pre>
+<p>To get all products for given category without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_category(category):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given country.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_country(country)
+</code></pre>
+<p>To get all products for given country without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_country(country):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given entry date.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_entry_date(entry_date)
+</code></pre>
+<p>To get all products for given entry date without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_entry_date(entry_date):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given ingredient.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_ingredient(ingredient)
+</code></pre>
+<p>To get all products for given ingredient without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_ingredient(ingredient):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given language.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_language(language)
+</code></pre>
+<p>To get all products for given language without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_language(language):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given packaging.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_packaging(packaging)
+</code></pre>
+<p>To get all products for given packaging without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_packaging(packaging):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given packaging code.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_packaging_code(code)
+</code></pre>
+<p>To get all products for given packaging code without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_packaging_code(packaging_code):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given purchase place.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_purchase_place(place)
+</code></pre>
+<p>To get all products for given purchase place without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_purchase_place(purchase_place):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given store.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_store(store)
+</code></pre>
+<p>To get all products for given store without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_store(store):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given trace type.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_trace(trace)
+</code></pre>
+<p>To get all products for given trace type without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_trace_type(trace_type):
+    print (product['product_name'])
+</code></pre>
+<p><em>Get all products for given state.</em></p>
+<pre><code class="language-python">products = openfoodfacts.products.get_by_state(state)
+</code></pre>
+<p>To get all products for given state without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.get_all_by_state(state):
+    print (product['product_name'])
+</code></pre>
+<h4 id="product">Product</h4>
+<p><em>Get a given product.</em></p>
+<pre><code class="language-python">product = openfoodfacts.products.get_product(barcode)
+</code></pre>
+<p><em>Open Food Facts data exports</em></p>
+<pre><code class="language-python">openfoodfacts.utils.download_data(file_type)
+</code></pre>
+<p><em>Add a new product.</em></p>
+<pre><code class="language-python">status_code = openfoodfacts.products.add_new_product({
+  'code': barcode,
+  'user_id'  : myUsername,
+  'password'  : myPassword,
+  'product_name' : myProduct,
+  'stores'  : store,
+  'brands': brand,
+  'packaging': packaging
+})
+</code></pre>
+<p><em>Upload an image.</em></p>
+<pre><code class="language-python">status_code = openfoodfacts.products.upload_image(barcode, imagefield, img_path)
+</code></pre>
+<h4 id="search">Search</h4>
+<p><em>Basic Search</em></p>
+<pre><code class="language-python">search_result = openfoodfacts.products.search(query)
+</code></pre>
+<p>To get all products without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.products.search_all(query):
+    print (product['product_name'])
+</code></pre>
+<p><em>Advanced Search</em></p>
+<p>Can pass in any <a href="https://en.wiki.openfoodfacts.org/API/Read/Search#Parameters">parameters</a>.</p>
+<pre><code class="language-python">search_result = openfoodfacts.products.advanced_search({
+  &quot;search_terms&quot;:&quot;coke&quot;,
+  &quot;tagtype_0&quot;:&quot;packaging&quot;,
+  &quot;tag_contains_0&quot;:&quot;contains&quot;,
+  &quot;tag_0&quot;:&quot;plastic&quot;,
+  &quot;nutriment_0&quot;:&quot;energy&quot;,
+  &quot;nutriment_compare_0&quot;:&quot;gt&quot;,
+  &quot;nutriment_value_0&quot;:&quot;0&quot;,
+  &quot;sort_by&quot;:&quot;unique_scans&quot;,
+  &quot;page_size&quot;:&quot;20&quot;
+})
+</code></pre>
+<h2 id="open-beauty-facts">Open Beauty Facts</h2>
+<p><em>Get a given product.</em></p>
+<pre><code class="language-python">product = openfoodfacts.beauty_products.get_product(barcode)
+</code></pre>
+<p><em>Get all products for given facets.</em></p>
+<p>Page access (pagination) is available through parameters.</p>
+<pre><code class="language-python">products = openfoodfacts.beauty_products.get_by_facets({
+  'packaging': 'Plastique',
+  'country': 'france'
+})
+</code></pre>
+<p>To get all products for given facets without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.beauty_products.get_all_by_facets({
+  'packaging': 'Plastique',
+  'country': 'france'
+}):
+    print (product['product_name'])
+</code></pre>
+<p><em>Basic Search</em></p>
+<pre><code class="language-python">search_result = openfoodfacts.beauty_products.products.search(query)
+</code></pre>
+<p>To get all products without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.beauty_products.products.search(query):
+    print (product['product_name'])
+</code></pre>
+<h2 id="open-pet-food-facts">Open Pet Food Facts</h2>
+<p><em>Get a given product.</em></p>
+<pre><code class="language-python">product = openfoodfacts.pet_products.get_product(barcode)
+</code></pre>
+<p><em>Get all products for given facets.</em></p>
+<p>Page access (pagination) is available through parameters.</p>
+<pre><code class="language-python">products = openfoodfacts.pet_products.get_by_facets({
+  'brand': 'Sans marque',
+  'country': 'france'
+})
+</code></pre>
+<p>To get all products for given facets without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.pet_products.get_all_by_facets({
+  'brand': 'Sans marque',
+  'country': 'france'
+}):
+    print (product['product_name'])
+</code></pre>
+<p><em>Basic Search</em></p>
+<pre><code class="language-python">search_result = openfoodfacts.pet_products.search(query)
+</code></pre>
+<p>To get all products without pagination (returns a generator):</p>
+<pre><code class="language-python">for product in openfoodfacts.pet_products.search_all(query):
+    print (product['product_name'])
+</code></pre>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Home
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e54b5cd.min.js"></script>
+      
+    
+  </body>
+</html>
