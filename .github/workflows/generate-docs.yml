@@ -1,0 +1,26 @@
+name: Generate Automatic Documentation
+
+on:
+  # Triggers the workflow on push
+  push:
+    branches:
+      - actions-dev
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with: 
+          python-version: 3.8
+      - name: Copy README.md to docs
+        run: cp ./README.md ./docs/index.md
+      - name: Install dependencies
+        run: pip install --upgrade pip && pip install mkdocs mkdocs-gen-files mkdocs-material
+      - run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: Publish docs
+        run: mkdocs gh-deploy

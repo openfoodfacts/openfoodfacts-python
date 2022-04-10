@@ -1,0 +1,31 @@
+name: Publish PyPI Package
+
+on:
+  # Triggers the workflow on a new release
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v2.4.0
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with: 
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        rm -rf dist build *.egg-info
+        python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools wheel twine
+    - name: Build package
+      run: |
+        python3 setup.py sdist bdist_wheel 
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_TOKEN }}
+
