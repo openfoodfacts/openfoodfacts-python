@@ -35,6 +35,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
           pip install pycodestyle
           pip install coverage
           pip install codecov
