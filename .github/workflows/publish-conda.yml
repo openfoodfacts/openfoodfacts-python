@@ -2,11 +2,8 @@ name: Publish to Conda
 
 on:
   # Triggers the workflow on a new release
-  # release:
-  #   types: [created]
-  push:
-    branches:
-      - conda-build
+  release:
+    types: [created]
     
 jobs:
   publish:
