@@ -12,9 +12,11 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: publish-to-conda
-      uses: jegp/conda-package-publish-action@v1.5
+      uses: MichaelsJP/conda-package-publish-action@v1.0.0
       with:
         subDir: 'conda'
         AnacondaToken: ${{ secrets.ANACONDA_TOKEN }}
+        platforms: 'all'
+        override: true
