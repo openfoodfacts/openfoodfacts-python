@@ -2,11 +2,8 @@ name: Publish PyPI Package
 
 on:
   # Triggers the workflow on a new release
-  # release:
-  #   types: [created]
-  push:
-    branches:
-      - conda-build
+  release:
+    types: [created]
 
 jobs:
   deploy:
@@ -30,6 +27,5 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
-        password: ${{ secrets.TEST_PYPI_TOKEN }}
-        repository_url: https://test.pypi.org/legacy/
+        password: ${{ secrets.PYPI_TOKEN }}
 
