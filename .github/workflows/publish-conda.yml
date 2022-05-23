@@ -2,6 +2,9 @@ name: Publish to Conda
 
 on:
   # Triggers the workflow on a new release
+  push:
+    branches:
+      - condaAction
   release:
     types: [created]
     
