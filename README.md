@@ -1,7 +1,7 @@
 # Open Food Facts Python SDK
 
 <div align="center">
-  <img width="178" src="https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png" alt="Open Food Facts"/>
+  <img width="400" src="https://en.blog.openfoodfacts.org/images/EXE_LOGO_OFF_RVB_Plan_de_travail_1_copie_0_t.jpg" alt="Open Food Facts"/>
 </div>
 
 ## What is Open Food Facts?
