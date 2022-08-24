@@ -1,5 +1,11 @@
-**Problem**
-<!--- Explain the problem -->
+## Description
 
-**Solution**
-<!--- Describe the change, including rationale and design decisions -->
+- Brief note about the issue
+
+## Solution
+
+- Mention how your solution resolves the issue
+
+## Related issue(s)
+
+- Fixes #[ISSUE NUMBER]

@@ -1,7 +1,7 @@
-# Open Food Facts client for your Python applications and scripts
+# Open Food Facts Python SDK
 
 <div align="center">
-  <img width="178" src="https://static.openfoodfacts.org/images/misc/openfoodfacts-logo-en-178x150.png" alt="Open Food Facts"/>
+  <img width="400" src="https://blog.openfoodfacts.org/wp-content/uploads/2022/05/EXE_LOGO_OFF_RVB_Plan-de-travail-1-copie-0-1-768x256.jpg" alt="Open Food Facts"/>
 </div>
 
 ## What is Open Food Facts?
@@ -13,12 +13,13 @@ Open Food Facts is a database of food products with ingredients, allergens, nutr
 ### Made by everyone
 
 Open Food Facts is a non-profit association of volunteers.
-1800+ contributors like you have added 700 000+ products from 150 countries using our Android, iPhone or Windows Phone app or their camera to scan barcodes and upload pictures of products and their labels.
+25000+ contributors like you have added 1.7 million+ products from 150 countries using our Android, iPhone or Windows Phone app or their camera to scan barcodes and upload pictures of products and their labels.
 
 ### For everyone
 
-Data about food is of public interest and has to be open. The complete database is published as open data and can be reused by anyone and for any use. Check-out the cool reuses or make your own!
-- <https://world.openfoodfacts.org>
+Data about food is of public interest and has to be open. The complete database is published as open data and can be reused by anyone and for any use. Check-out the cool reuses or make your own! 
+
+The Open Food Facts Website: <https://world.openfoodfacts.org>
 
 ## Status
 
@@ -33,7 +34,7 @@ Data about food is of public interest and has to be open. The complete database 
 ## Contributing
 
 Any help is welcome, as long as you don't break the continuous integration.
-Fork the repository and open a Pull Request directly on the master branch.
+Fork the repository and open a Pull Request directly on the "develop" branch.
 A maintainer will review and integrate your changes.
 
 Maintainers:
@@ -44,18 +45,20 @@ Maintainers:
 
 Contributors:
 
-- [Agamit Sudo](https://github.com/agamitsudo)
+- Agamit Sudo
 - [Daniel Stolpe](https://github.com/numberpi)
-- [Enioluwa Segun](https://github.com/enioluwa23)
+- [Enioluwa Segun](https://github.com/enioluwas)
 - [Nicolas Leger](https://github.com/nicolasleger)
 - [Pablo Hinojosa](https://github.com/Pablohn26)
 - [Andrea Stagi](https://github.com/astagi)
+- [Benoît Prieur](https://github.com/benprieur)
+- [Aadarsh A](https://github.com/aadarsh-ram)
 
 ## Copyright and License
 
-    Copyright 2016-2020 Open Food Facts
+    Copyright 2016-2022 Open Food Facts
 
-- [License MIT](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE)
+The Open Food Facts Python SDK is licensed under the [MIT License](https://github.com/openfoodfacts/openfoodfacts-python/blob/develop/LICENSE).
 
 ## Installation
 
@@ -67,23 +70,21 @@ or:
     cd openfoodfacts-python
     sudo python setup.py install
 
-## Docs
+## Examples
 
-### Example Usage
-
-*Query a Facet*
+- *Query a facet*
 
 ```python
 brands = openfoodfacts.facets.get_brands()
 ```
 
-*Basic Search*
+- *Basic search*
 
 ```python
 search_result = openfoodfacts.products.search(query)
 ```
 
-*Add a new product.*
+- *Add a new product*
 
 ```python
 status_code = openfoodfacts.products.add_new_product({
@@ -97,4 +98,4 @@ status_code = openfoodfacts.products.add_new_product({
 })
 ```
 
-To see all possible capabilities, check out the [usage guide](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/docs/Usage.md).
+To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/Usage/).

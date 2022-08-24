@@ -1,6 +1,6 @@
 # Usage Guide
 
-This guide provides information on the API. All the I/O is [JSON](www.json.org).
+This guide provides information on the methods available within the Open Food Facts Python SDK. All the I/O is [JSON](www.json.org).
 
 - [Open Food Facts](./Usage.md#open-food-facts)
   - [Login](./Usage.md#login)
