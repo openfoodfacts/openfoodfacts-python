@@ -1,1 +1,1 @@
-requests_mock==1.9.3
+requests_mock==1.10.0
