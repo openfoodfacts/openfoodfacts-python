@@ -99,3 +99,6 @@ status_code = openfoodfacts.products.add_new_product({
 ```
 
 To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/Usage/).
+
+## Third party applications
+If you use this SDK, feel free to open a PR to add your application in this list.
