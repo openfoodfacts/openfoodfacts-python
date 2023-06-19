@@ -11,7 +11,7 @@ def get_http_auth(environment: Environment) -> Optional[Tuple[str, str]]:
 
 
 def send_get_request(
-    url: str, api_config: APIConfig, params: Optional[Dict[str, str]] = None
+    url: str, api_config: APIConfig, params: Optional[Dict[str, Any]] = None
 ) -> dict:
     r = http_session.get(
         url,
@@ -69,9 +69,10 @@ class ProductResource:
         url = f"{self.base_url}/api/{self.api_config.version}/product/{code}"
 
         if fields:
-            # requests escape comma in URLs, as expected, but openfoodfacts server
-            # does not recognize escaped commas.
-            # See https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
+            # requests escape comma in URLs, as expected, but openfoodfacts
+            # server does not recognize escaped commas.
+            # See
+            # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
             url += "?fields={}".format(",".join(fields))
 
         return send_get_request(url=url, api_config=self.api_config)

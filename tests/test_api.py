@@ -1,8 +1,9 @@
 import json
 import unittest
 
-import openfoodfacts
 import requests_mock
+
+import openfoodfacts
 
 
 class TestProducts(unittest.TestCase):

@@ -1,52 +1,31 @@
-# This is a basic workflow to help you get started with Actions
-name: CI
+name: Python SDK quality checks and unit tests
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
     branches: [ '*' ]
   pull_request:
     branches: [ '*' ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
-        python-version: '3.8' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-     #  - "2.7"
-    #   - "3.4"
-    #   - "3.5"
-    #   - "3.6"
-    #   - "3.7"
-    #   - "3.8"
-    #   - "pypy3.5"
-        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+        python-version: '3.8'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
-          pip install pycodestyle
-          pip install coverage
-          pip install codecov
-    - name: Lint with flake8
+        pip install -r requirements.txt
+        pip install -r requirements_test.txt
+        pip install codecov
+    - name: Launch quality checks
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - run: coverage run ./setup.py test
-    - run: pycodestyle openfoodfacts/*.py
+        flake8 .
+        black --check .
+        mypy .
+        isort --check .
     - name: Test with pytest
       run: |
-        pytest
+        pytest tests
