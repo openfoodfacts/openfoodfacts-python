@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 
-from .types import APIConfig, APIVersion, Environment, Facet, Flavor
+from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor
 from .utils import URLBuilder, http_session
 
 
@@ -42,7 +42,7 @@ class FacetResource:
         self.base_url = URLBuilder.country(
             self.api_config.flavor,
             environment=api_config.environment,
-            country_code=self.api_config.country,
+            country_code=self.api_config.country.name,
         )
 
     def get(self, facet: Union[Facet, str]):
@@ -61,7 +61,7 @@ class ProductResource:
         self.base_url = URLBuilder.country(
             self.api_config.flavor,
             environment=api_config.environment,
-            country_code=self.api_config.country,
+            country_code=self.api_config.country.name,
         )
 
     def get(self, code: str, fields: Optional[List[str]] = None) -> Optional[dict]:
@@ -107,13 +107,16 @@ class API:
         self,
         username: Optional[str] = None,
         password: Optional[str] = None,
-        country: str = "world",
+        country: Union[Country, str] = Country.world,
         flavor: Union[Flavor, str] = Flavor.off,
         version: Union[APIVersion, str] = APIVersion.v2,
         environment: Union[Environment, str] = Environment.org,
     ) -> None:
+        if not isinstance(country, Country):
+            country = Country.get_from_2_letter_code(country)
+
         self.api_config = APIConfig(
-            country=country,
+            country=country,  # type: ignore
             flavor=Flavor[flavor],
             version=APIVersion[version],
             environment=Environment[environment],
