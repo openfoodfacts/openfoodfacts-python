@@ -65,6 +65,13 @@ class ProductResource:
         )
 
     def get(self, code: str, fields: Optional[List[str]] = None) -> Optional[dict]:
+        """Return a product.
+
+        :param code: barcode of the product
+        :param fields: a list of fields to return. If None, all fields are
+            returned.
+        :return: the API response
+        """
         fields = fields or []
         url = f"{self.base_url}/api/{self.api_config.version}/product/{code}"
 
@@ -112,6 +119,20 @@ class API:
         version: Union[APIVersion, str] = APIVersion.v2,
         environment: Union[Environment, str] = Environment.org,
     ) -> None:
+        """Initialize the API instance.
+
+        :param username: user username, only used for write requests, defaults
+            to None
+        :param password: user password, only used for write requests, defaults
+            to None
+        :param country: the country, has an effect on the default display
+            language and when uploading products, defaults to Country.world
+        :param flavor: which O*F project to use, defaults to Flavor.off (Open
+            Food Facts)
+        :param version: the API version to use, defaults to APIVersion.v2
+        :param environment: what environment (prod/staging) to use, defaults
+            to Environment.org
+        """
         if not isinstance(country, Country):
             country = Country.get_from_2_letter_code(country)
 
