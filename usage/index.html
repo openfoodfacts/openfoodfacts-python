@@ -11,13 +11,15 @@
         <link rel="canonical" href="https://openfoodfacts.github.io/openfoodfacts-python/usage/">
       
       
+        <link rel="prev" href="..">
+      
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
     
     
       
-        <title>Usage Guide - openfoodfacts-python</title>
+        <title>Usage - openfoodfacts-python</title>
       
     
     
@@ -94,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage Guide
+              Usage
             
           </span>
         </div>
@@ -193,11 +195,59 @@
 
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../Usage.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Usage
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-dataset" class="md-nav__link">
+    Using the dataset
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -222,6 +272,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-dataset" class="md-nav__link">
+    Using the dataset
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -237,6 +309,8 @@
 
 <h1 id="usage-guide">Usage Guide</h1>
 <p>This guide provides information on the methods available within the Open Food Facts Python SDK.</p>
+<h2 id="api">API</h2>
+<p>The SDK can be used to access Open Food Facts API.</p>
 <p>First, instantiate an API object:</p>
 <pre><code class="language-python">from openfoodfacts import API, APIVersion, Country, Environment, Flavor
 
@@ -268,6 +342,19 @@ api.product.get(code)
 <pre><code class="language-python">results = api.product.update(CODE, body)
 </code></pre>
 <p>with <code>CODE</code> the product barcode and <code>body</code> the update body.</p>
+<h2 id="using-the-dataset">Using the dataset</h2>
+<p>If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump.
+Fortunately it can be done really easily using the SDK:</p>
+<pre><code class="language-python">from openfoodfacts import ProductDataset
+
+dataset = ProductDataset(&quot;csv&quot;)
+
+for product in dataset:
+    print(product[&quot;product_name&quot;])
+</code></pre>
+<p>With <code>dataset = ProductDataset("csv")</code>, we automatically download (and cache) the dataset. We can then iterate over it to get information about products.</p>
+<p>Two dataset types are available <code>csv</code> and <code>jsonl</code>. The <code>jsonl</code> dataset contains all the Open Food Facts database information but takes much more storage (&gt;5 GB), while the <code>csv</code> dataset is much ligher (~700 MB) but only contains the most important fields.</p>
+<p>The <code>jsonl</code> dataset type is used by default.</p>
 
 
 
