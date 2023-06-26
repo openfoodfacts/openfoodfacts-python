@@ -380,3 +380,8 @@ class APIConfig(BaseModel):
     username: Optional[str] = None
     password: Optional[str] = None
     timeout: float = 10.0
+
+
+class DatasetType(str, enum.Enum):
+    csv = "csv"
+    jsonl = "jsonl"

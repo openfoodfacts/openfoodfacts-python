@@ -2,6 +2,10 @@
 
 This guide provides information on the methods available within the Open Food Facts Python SDK.
 
+## API
+
+The SDK can be used to access Open Food Facts API.
+
 First, instantiate an API object:
 
 ```python
@@ -26,7 +30,6 @@ All parameters are optional, but here is a description of the parameters you can
 - `environment`: either `org` for production environment (openfoodfacts.org) or `net` for staging (openfoodfacts.net)
 
 
-
 *Get information about a product*
 
 ```python
@@ -47,3 +50,23 @@ results = api.product.update(CODE, body)
 ```
 
 with `CODE` the product barcode and `body` the update body.
+
+## Using the dataset
+
+If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump.
+Fortunately it can be done really easily using the SDK:
+
+```python
+from openfoodfacts import ProductDataset
+
+dataset = ProductDataset("csv")
+
+for product in dataset:
+    print(product["product_name"])
+```
+
+With `dataset = ProductDataset("csv")`, we automatically download (and cache) the dataset. We can then iterate over it to get information about products.
+
+Two dataset types are available `csv` and `jsonl`. The `jsonl` dataset contains all the Open Food Facts database information but takes much more storage (>5 GB), while the `csv` dataset is much ligher (~700 MB) but only contains the most important fields.
+
+The `jsonl` dataset type is used by default.
