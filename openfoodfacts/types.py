@@ -1,7 +1,11 @@
 import enum
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel
+
+#: A precise expectation of what mappings looks like in json.
+#: (dict where keys are always of type `str`).
+JSONType = Dict[str, Any]
 
 
 class Flavor(str, enum.Enum):

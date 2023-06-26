@@ -1,5 +1,6 @@
 from .api import API
 from .dataset import ProductDataset
+from .ocr import OCRResult
 from .types import APIConfig, APIVersion, Country, DatasetType, Environment, Flavor
 from .utils import get_logger
 
@@ -14,6 +15,7 @@ __all__ = [
     "DatasetType",
     "Flavor",
     "Environment",
+    "OCRResult",
     "ProductDataset",
 ]
 
