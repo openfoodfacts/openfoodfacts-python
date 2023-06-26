@@ -85,23 +85,40 @@ class ProductResource:
         return send_get_request(url=url, api_config=self.api_config)
 
     def text_search(
-        self, query: str, page: int = 1, page_size: int = 20, sort_by="unique_scans"
+        self,
+        query: str,
+        page: int = 1,
+        page_size: int = 20,
+        sort_by: Optional[str] = None,
     ):
+        """Search products using a textual query.
+
+        :param query: the search query
+        :param page: requested page (starts at 1), defaults to 1
+        :param page_size: number of items per page, defaults to 20
+        :param sort_by: result sorting key, defaults to None (no sorting)
+        :return: the search results
+        """
         # We force usage of v2 of API
+        params = {
+            "search_terms": query,
+            "page": page,
+            "page_size": page_size,
+            "sort_by": sort_by,
+            "json": "1",
+        }
+
+        if sort_by is not None:
+            params["sort_by"] = sort_by
+
         return send_get_request(
             url=f"{self.base_url}/api/v2/search",
-            params={
-                "search_terms": query,
-                "page": page,
-                "page_size": page_size,
-                "sort_by": sort_by,
-                "json": "1",
-            },
             api_config=self.api_config,
+            params=params,
         )
 
-    def create(self, body: Dict[str, Any]):
-        """Create a new product."""
+    def update(self, body: Dict[str, Any]):
+        """Create a new product or create it if it doesn't exist yet."""
         if not body.get("code"):
             raise ValueError("missing code from body")
 

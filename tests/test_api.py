@@ -25,8 +25,8 @@ class TestProducts(unittest.TestCase):
             response_data = {"products": ["kinder bueno"], "count": 1}
             mock.get(
                 "https://world.openfoodfacts.org/api/v2/search?"
-                + "search_terms=kinder bueno&json=1&page="
-                + "1&page_size=20&sort_by=unique_scans",
+                + "search_terms=kinder+bueno&json=1&page="
+                + "1&page_size=20",
                 text=json.dumps(response_data),
             )
             res = api.product.text_search("kinder bueno")
@@ -38,7 +38,9 @@ class TestProducts(unittest.TestCase):
                 + "2&page_size=10&sort_by=unique_scans",
                 text=json.dumps(response_data),
             )
-            res = api.product.text_search("banania", page=2, page_size=10)
+            res = api.product.text_search(
+                "banania", page=2, page_size=10, sort_by="unique_scans"
+            )
             self.assertEqual(res["products"], ["banania", "banania big"])
 
 
