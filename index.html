@@ -12,8 +12,6 @@
       
       
       
-        <link rel="next" href="Usage/">
-      
       <link rel="icon" href="assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.17">
     
@@ -216,40 +214,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-is-open-food-facts" class="md-nav__link">
-    What is Open Food Facts?
-  </a>
-  
-    <nav class="md-nav" aria-label="What is Open Food Facts?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-food-products-database" class="md-nav__link">
-    A food products database
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#made-by-everyone" class="md-nav__link">
-    Made by everyone
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#for-everyone" class="md-nav__link">
-    For everyone
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#status" class="md-nav__link">
     Status
   </a>
@@ -307,7 +271,7 @@
   
   
     <li class="md-nav__item">
-      <a href="Usage/" class="md-nav__link">
+      <a href="Usage.md" class="md-nav__link">
         Usage
       </a>
     </li>
@@ -339,40 +303,6 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-is-open-food-facts" class="md-nav__link">
-    What is Open Food Facts?
-  </a>
-  
-    <nav class="md-nav" aria-label="What is Open Food Facts?">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-food-products-database" class="md-nav__link">
-    A food products database
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#made-by-everyone" class="md-nav__link">
-    Made by everyone
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#for-everyone" class="md-nav__link">
-    For everyone
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
   <a href="#status" class="md-nav__link">
@@ -436,19 +366,8 @@
   <img width="400" src="https://blog.openfoodfacts.org/wp-content/uploads/2022/05/EXE_LOGO_OFF_RVB_Plan-de-travail-1-copie-0-1-768x256.jpg" alt="Open Food Facts"/>
 </div>
 
-<h2 id="what-is-open-food-facts">What is Open Food Facts?</h2>
-<h3 id="a-food-products-database">A food products database</h3>
-<p>Open Food Facts is a database of food products with ingredients, allergens, nutrition facts and all the tidbits of information we can find on product labels.</p>
-<h3 id="made-by-everyone">Made by everyone</h3>
-<p>Open Food Facts is a non-profit association of volunteers.
-25000+ contributors like you have added 2.5 million+ products from 150 countries using our Android, iPhone or Windows Phone app or their camera to scan barcodes and upload pictures of products and their labels.</p>
-<h3 id="for-everyone">For everyone</h3>
-<p>Data about food is of public interest and has to be open. The complete database is published as open data and can be reused by anyone and for any use. Check-out the cool reuses or make your own! </p>
-<p>The Open Food Facts Website: <a href="https://world.openfoodfacts.org">https://world.openfoodfacts.org</a></p>
 <h2 id="status">Status</h2>
 <p><a href="https://opensource.box.com/badges"><img alt="Project Status" src="https://opensource.box.com/badges/active.svg" /></a>
-<a href="https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg" title="Average time to resolve an issue"><img alt="Average time to resolve an issue" src="https://isitmaintained.com/badge/resolution/openfoodfacts/openfoodfacts-python.svg" /></a>
-<a href="https://isitmaintained.com/project/openfoodfacts/openfoodfacts-python.svg" title="Percentage of issues still open"><img alt="Percentage of issues still open" src="https://isitmaintained.com/badge/open/openfoodfacts/openfoodfacts-python.svg" /></a>
 <a href="https://travis-ci.org/openfoodfacts/openfoodfacts-python"><img alt="Build Status" src="https://travis-ci.org/openfoodfacts/openfoodfacts-python.svg?branch=master" /></a>
 <a href="https://codecov.io/gh/openfoodfacts/openfoodfacts-python"><img alt="codecov" src="https://codecov.io/gh/openfoodfacts/openfoodfacts-python/branch/master/graph/badge.svg" /></a>
 <a href="https://pypi.org/project/openfoodfacts"><img alt="Latest Version" src="https://img.shields.io/pypi/v/openfoodfacts.svg" /></a>
@@ -479,38 +398,27 @@ A maintainer will review and integrate your changes.</p>
 </code></pre>
 <p>The Open Food Facts Python SDK is licensed under the <a href="https://github.com/openfoodfacts/openfoodfacts-python/blob/develop/LICENSE">MIT License</a>.</p>
 <h2 id="installation">Installation</h2>
+<p>The easiest way to install the SDK is through pip:</p>
 <pre><code>pip install openfoodfacts
 </code></pre>
-<p>or:</p>
+<p>or manually from source:</p>
 <pre><code>git clone https://github.com/openfoodfacts/openfoodfacts-python
 cd openfoodfacts-python
-sudo python setup.py install
+python setup.py install
 </code></pre>
 <h2 id="examples">Examples</h2>
-<ul>
-<li><em>Query a facet</em></li>
-</ul>
-<pre><code class="language-python">brands = openfoodfacts.facets.get_brands()
+<p><em>Get information about a product</em></p>
+<pre><code class="language-python">code = &quot;3017620422003&quot;
+api.product.get(code)
 </code></pre>
-<ul>
-<li><em>Basic search</em></li>
-</ul>
-<pre><code class="language-python">search_result = openfoodfacts.products.search(query)
+<p><em>Perform text search</em></p>
+<pre><code class="language-python">results = api.product.text_search(&quot;mineral water&quot;)
 </code></pre>
-<ul>
-<li><em>Add a new product</em></li>
-</ul>
-<pre><code class="language-python">status_code = openfoodfacts.products.add_new_product({
-  'code': barcode,
-  'user_id'  : myUsername,
-  'password'  : myPassword,
-  'product_name' : myProduct,
-  'stores'  : store,
-  'brands': brand,
-  'packaging': packaging
-})
+<p><em>Create a new product or update an existing one</em></p>
+<pre><code class="language-python">results = api.product.update(CODE, body)
 </code></pre>
-<p>To see all possible capabilities, check out the <a href="https://openfoodfacts.github.io/openfoodfacts-python/Usage/">usage guide</a>.</p>
+<p>with <code>CODE</code> the product barcode and <code>body</code> the update body.</p>
+<p>To see all possible capabilities, check out the <a href="https://openfoodfacts.github.io/openfoodfacts-python/usage/">usage guide</a>.</p>
 <h2 id="third-party-applications">Third party applications</h2>
 <p>If you use this SDK, feel free to open a PR to add your application in this list.</p>
 
