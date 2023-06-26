@@ -5,7 +5,7 @@ site_dir: gh_pages
 
 nav:
   - Home: 'index.md'
-  - Usage: 'Usage.md'
+  - Usage: 'usage.md'
 
 theme:
   name: material
