@@ -1,14 +1,15 @@
 import csv
-import json
-import shutil
-import time
 from pathlib import Path
-from typing import Optional
-
-import tqdm
 
 from .types import DatasetType, Environment, Flavor
-from .utils import URLBuilder, get_logger, get_open_fn, http_session, jsonl_iter
+from .utils import (
+    URLBuilder,
+    download_file,
+    get_logger,
+    get_open_fn,
+    jsonl_iter,
+    should_download_file,
+)
 
 logger = get_logger(__name__)
 
@@ -23,71 +24,6 @@ JSONL_DATASET_FILE_PATHS = {
     DatasetType.jsonl: CACHE_DIR / DATASET_FILE_NAMES[DatasetType.jsonl],
     DatasetType.csv: CACHE_DIR / DATASET_FILE_NAMES[DatasetType.csv],
 }
-
-
-def sanitize_file_path(file_path: Path, suffix: str) -> Path:
-    return file_path.with_name(file_path.name.replace(".", "_") + suffix)
-
-
-def fetch_etag(url: str) -> str:
-    """Get the Etag of a remote file.
-
-    :param url: the file URL
-    :return: the Etag
-    """
-    r = http_session.head(url)
-    return r.headers.get("ETag", "").strip("'\"")
-
-
-def download_file(url: str, output_path: Path):
-    """Download a dataset file and store it in `output_path`.
-
-    The dataset metadata (`etag`, `url`, `created_at`) are stored in a JSON
-        file whose name is derived from `output_path`
-    :param url: the file URL
-    :param output_path: the file output path
-    """
-    r = http_session.get(url, stream=True)
-    etag = r.headers.get("ETag", "").strip("'\"")
-
-    tmp_output_path = output_path.with_name(output_path.name + ".part")
-    with tmp_output_path.open("wb") as f, tqdm.tqdm(
-        unit="B",
-        unit_scale=True,
-        unit_divisor=1024,
-        miniters=1,
-        desc=str(output_path),
-        total=int(r.headers.get("content-length", 0)),
-    ) as pbar:
-        for chunk in r.iter_content(chunk_size=4096):
-            f.write(chunk)
-            pbar.update(len(chunk))
-
-    shutil.move(tmp_output_path, output_path)
-
-    sanitize_file_path(output_path, ".json").write_text(
-        json.dumps(
-            {
-                "etag": etag,
-                "created_at": int(time.time()),
-                "url": url,
-            }
-        )
-    )
-
-
-def get_dataset_etag(dataset_path: Path) -> Optional[str]:
-    """Return a dataset Etag.
-
-    :param dataset_path: the path of the dataset
-    :return: the file Etag
-    """
-    metadata_path = sanitize_file_path(dataset_path, ".json")
-
-    if metadata_path.is_file():
-        return json.loads(metadata_path.read_text())["etag"]
-
-    return None
 
 
 def get_dataset(
@@ -111,17 +47,8 @@ def get_dataset(
     file_name = DATASET_FILE_NAMES[dataset_type]
     url = f"{URLBuilder.static(Flavor.off, Environment.org)}/data/{file_name}"
 
-    if dataset_path.is_file():
-        if not force_download:
-            return dataset_path
-
-        if download_newer:
-            cached_etag = get_dataset_etag(dataset_path)
-            current_etag = fetch_etag(url)
-
-            if cached_etag == current_etag:
-                # The file is up to date, return cached file path
-                return dataset_path
+    if not should_download_file(url, dataset_path, force_download, download_newer):
+        return dataset_path
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     logger.info("Downloading dataset, saving it in %s", dataset_path)

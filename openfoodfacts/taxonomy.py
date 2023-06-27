@@ -1,0 +1,310 @@
+from pathlib import Path
+from typing import Any, Iterable, List, Optional, Union
+
+import requests
+
+from .types import Environment, Flavor, JSONType, TaxonomyType
+from .utils import (
+    URLBuilder,
+    download_file,
+    get_logger,
+    http_session,
+    load_json,
+    should_download_file,
+)
+
+logger = get_logger(__name__)
+
+
+CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
+
+
+# Only available for Open Food Facts for now (not other flavors)
+TAXONOMY_URLS = {
+    TaxonomyType.category: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/categories.full.json",
+    TaxonomyType.ingredient: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/ingredients.full.json",
+    TaxonomyType.label: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/labels.full.json",
+    TaxonomyType.brand: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/brands.full.json",
+    TaxonomyType.packaging_shape: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/packaging_shapes.full.json",
+    TaxonomyType.packaging_material: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/packaging_materials.full.json",
+    TaxonomyType.packaging_recycling: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/packaging_recycling.full.json",
+}
+
+
+class TaxonomyNode:
+    __slots__ = ("id", "names", "parents", "children", "synonyms", "properties")
+
+    def __init__(
+        self,
+        identifier: str,
+        names: dict[str, str],
+        synonyms: Optional[dict[str, List[str]]],
+        properties: Optional[dict[str, Any]] = None,
+    ):
+        self.id: str = identifier
+        self.names: dict[str, str] = names
+        self.parents: List["TaxonomyNode"] = []
+        self.children: List["TaxonomyNode"] = []
+        self.properties = properties or {}
+
+        if synonyms:
+            self.synonyms = synonyms
+        else:
+            self.synonyms = {}
+
+    def is_child_of(self, item: "TaxonomyNode") -> bool:
+        """Return True if `item` is a child of `self` in the taxonomy."""
+        if not self.parents:
+            return False
+
+        if item in self.parents:
+            return True
+
+        for parent in self.parents:
+            is_parent = parent.is_child_of(item)
+
+            if is_parent:
+                return True
+
+        return False
+
+    def is_parent_of(self, candidate: "TaxonomyNode") -> bool:
+        """Return True if `self` is parent of `candidate`, False otherwise.
+
+        :param candidate: a TaxonomyNode of the same Taxonomy
+        """
+        return candidate.is_child_of(self)
+
+    def is_parent_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
+        """Return True if `self` is a parent of any of `candidates`, False
+        otherwise.
+
+        :param candidates: an iterable of TaxonomyNodes of the same Taxonomy
+        """
+        for candidate in candidates:
+            if candidate.is_child_of(self):
+                return True
+
+        return False
+
+    def get_parents_hierarchy(self) -> List["TaxonomyNode"]:
+        """Return the list of all parent nodes (direct and indirect)."""
+        all_parents = []
+        seen: set[str] = set()
+
+        if not self.parents:
+            return []
+
+        for self_parent in self.parents:
+            if self_parent.id not in seen:
+                all_parents.append(self_parent)
+                seen.add(self_parent.id)
+
+            for parent_parent in self_parent.get_parents_hierarchy():
+                if parent_parent.id not in seen:
+                    all_parents.append(parent_parent)
+                    seen.add(parent_parent.id)
+
+        return all_parents
+
+    def get_localized_name(self, lang: str) -> str:
+        """Return the localized name of the node.
+
+        We first check if there is an entry in `names` under the provided
+        `lang`. Otherwise, we check the existence of an international name
+        (`xx`). We eventually return the node ID if none of the previous
+        checks were successful.
+
+        :param lang: the language code
+        """
+        if lang in self.names:
+            return self.names[lang]
+
+        if "xx" in self.names:
+            # Return international name if it exists
+            return self.names["xx"]
+
+        return self.id
+
+    def get_synonyms(self, lang: str) -> List[str]:
+        return self.synonyms.get(lang, [])
+
+    def add_parents(self, parents: Iterable["TaxonomyNode"]):
+        for parent in parents:
+            if parent not in self.parents:
+                self.parents.append(parent)
+                parent.children.append(self)
+
+    def to_dict(self) -> JSONType:
+        return {"name": self.names, "parents": [p.id for p in self.parents]}
+
+    def __repr__(self):
+        return "<TaxonomyNode %s>" % self.id
+
+
+class Taxonomy:
+    def __init__(self) -> None:
+        self.nodes: dict[str, TaxonomyNode] = {}
+
+    def add(self, key: str, node: TaxonomyNode) -> None:
+        self.nodes[key] = node
+
+    def __contains__(self, item: str):
+        return item in self.nodes
+
+    def __getitem__(self, item: str):
+        return self.nodes.get(item)
+
+    def __len__(self):
+        return len(self.nodes)
+
+    def iter_nodes(self) -> Iterable[TaxonomyNode]:
+        """Iterate over the nodes of the taxonomy."""
+        return iter(self.nodes.values())
+
+    def keys(self):
+        return self.nodes.keys()
+
+    def find_deepest_nodes(self, nodes: List[TaxonomyNode]) -> List[TaxonomyNode]:
+        """Given a list of nodes, returns the list of nodes where all the
+        parents within the list have been removed.
+
+        For example, for a taxonomy, 'fish' -> 'salmon' -> 'smoked-salmon':
+
+        ['fish', 'salmon'] -> ['salmon'] ['fish', 'smoked-salmon'] ->
+        [smoked-salmon']
+        """
+        excluded: set[str] = set()
+
+        for node in nodes:
+            for second_node in (
+                n for n in nodes if n.id not in excluded and n.id != node.id
+            ):
+                if node.is_child_of(second_node):
+                    excluded.add(second_node.id)
+
+        return [node for node in nodes if node.id not in excluded]
+
+    def is_parent_of_any(
+        self, item: str, candidates: Iterable[str], raises: bool = True
+    ) -> bool:
+        """Return True if `item` is parent of any candidate, False otherwise.
+
+        If the item is not in the taxonomy and raises is False, return False.
+
+        :param item: The item to compare
+        :param candidates: A list of candidates
+        :param raises: if True, raises a ValueError if item is not in the
+        taxonomy, defaults to True.
+        """
+        node: TaxonomyNode = self[item]
+
+        if node is None:
+            if raises:
+                raise ValueError("unknown id in taxonomy: %s", node)
+            else:
+                return False
+
+        to_check_nodes: set[TaxonomyNode] = set()
+
+        for candidate in candidates:
+            candidate_node = self[candidate]
+
+            if candidate_node is not None:
+                to_check_nodes.add(candidate_node)
+
+        return node.is_parent_of_any(to_check_nodes)
+
+    def get_localized_name(self, key: str, lang: str) -> str:
+        if key not in self.nodes:
+            return key
+
+        return self.nodes[key].get_localized_name(lang)
+
+    def to_dict(self) -> JSONType:
+        export = {}
+
+        for key, node in self.nodes.items():
+            export[key] = node.to_dict()
+
+        return export
+
+    @classmethod
+    def from_dict(cls, data: JSONType) -> "Taxonomy":
+        taxonomy = Taxonomy()
+
+        for key, key_data in data.items():
+            if key not in taxonomy:
+                node = TaxonomyNode(
+                    identifier=key,
+                    names=key_data.get("name", {}),
+                    synonyms=key_data.get("synonyms", None),
+                    properties={
+                        k: v
+                        for k, v in key_data.items()
+                        if k not in {"parents", "name", "synonyms", "children"}
+                    },
+                )
+                taxonomy.add(key, node)
+
+        for key, key_data in data.items():
+            node = taxonomy[key]
+            parents = [taxonomy[ref] for ref in key_data.get("parents", [])]
+            node.add_parents(parents)
+
+        return taxonomy
+
+    @classmethod
+    def from_path(cls, file_path: Union[str, Path]) -> "Taxonomy":
+        return cls.from_dict(load_json(file_path))  # type: ignore
+
+    @classmethod
+    def from_url(
+        cls, url: str, session: Optional[requests.Session] = None, timeout: int = 120
+    ) -> "Taxonomy":
+        session = http_session if session is None else session
+        r = session.get(url, timeout=timeout)
+        data = r.json()
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_type(cls, taxonomy_type: TaxonomyType) -> "Taxonomy":
+        url = TAXONOMY_URLS[TaxonomyType[taxonomy_type]]
+        return cls.from_url(url)
+
+
+def get_taxonomy(
+    taxonomy_type: Union[TaxonomyType, str],
+    force_download: bool = False,
+    download_newer: bool = False,
+) -> Taxonomy:
+    """Return the taxonomy of the provided type.
+
+    The taxonomy file is downloaded and cached locally.
+
+    :param taxonomy_type: the requested taxonomy type
+    :param force_download: if True, (re)download the taxonomy even if it was
+        cached, defaults to False
+    :param download_newer: if True, download the taxonomy if a more recent
+        version is available (based on file Etag)
+    :return: a Taxonomy
+    """
+    taxonomy_type = TaxonomyType[taxonomy_type]
+    filename = f"{taxonomy_type.name}.json"
+    taxonomy_path = CACHE_DIR / filename
+    url = TAXONOMY_URLS[taxonomy_type]
+
+    if not should_download_file(url, taxonomy_path, force_download, download_newer):
+        return Taxonomy.from_path(taxonomy_path)
+
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    logger.info("Downloading taxonomy, saving it in %s", taxonomy_path)
+    download_file(url, taxonomy_path)
+    return Taxonomy.from_path(taxonomy_path)

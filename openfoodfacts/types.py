@@ -389,3 +389,13 @@ class APIConfig(BaseModel):
 class DatasetType(str, enum.Enum):
     csv = "csv"
     jsonl = "jsonl"
+
+
+class TaxonomyType(str, enum.Enum):
+    category = "category"
+    ingredient = "ingredient"
+    label = "label"
+    brand = "brand"
+    packaging_shape = "packaging_shape"
+    packaging_material = "packaging_material"
+    packaging_recycling = "packaging_recycling"
