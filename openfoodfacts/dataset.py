@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+from typing import Optional
 
 from .types import DatasetType, Environment, Flavor
 from .utils import (
@@ -14,15 +15,10 @@ from .utils import (
 logger = get_logger(__name__)
 
 
-CACHE_DIR = Path("~/.cache/openfoodfacts/datasets").expanduser()
+DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/datasets").expanduser()
 DATASET_FILE_NAMES = {
     DatasetType.jsonl: "openfoodfacts-products.jsonl.gz",
     DatasetType.csv: "en.openfoodfacts.org.products.csv.gz",
-}
-
-JSONL_DATASET_FILE_PATHS = {
-    DatasetType.jsonl: CACHE_DIR / DATASET_FILE_NAMES[DatasetType.jsonl],
-    DatasetType.csv: CACHE_DIR / DATASET_FILE_NAMES[DatasetType.csv],
 }
 
 
@@ -30,6 +26,7 @@ def get_dataset(
     dataset_type: DatasetType = DatasetType.jsonl,
     force_download: bool = False,
     download_newer: bool = False,
+    cache_dir: Optional[Path] = None,
 ) -> Path:
     """Download (and cache) Open Food Facts dataset.
 
@@ -41,16 +38,19 @@ def get_dataset(
         cached, defaults to False
     :param download_newer: if True, download the dataset if a more recent
         version is available (based on file Etag)
+    :param cache_dir: the cache directory to use, defaults to
+        ~/.cache/openfoodfacts/taxonomy
     :return: the path of the dataset
     """
-    dataset_path = JSONL_DATASET_FILE_PATHS[dataset_type]
+    cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
     file_name = DATASET_FILE_NAMES[dataset_type]
+    dataset_path = cache_dir / file_name
     url = f"{URLBuilder.static(Flavor.off, Environment.org)}/data/{file_name}"
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
     if not should_download_file(url, dataset_path, force_download, download_newer):
         return dataset_path
 
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
     logger.info("Downloading dataset, saving it in %s", dataset_path)
     download_file(url, dataset_path)
     return dataset_path

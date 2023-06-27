@@ -16,7 +16,7 @@ from .utils import (
 logger = get_logger(__name__)
 
 
-CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
+DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
 
 
 # Only available for Open Food Facts for now (not other flavors)
@@ -284,6 +284,7 @@ def get_taxonomy(
     taxonomy_type: Union[TaxonomyType, str],
     force_download: bool = False,
     download_newer: bool = False,
+    cache_dir: Optional[Path] = None,
 ) -> Taxonomy:
     """Return the taxonomy of the provided type.
 
@@ -294,17 +295,21 @@ def get_taxonomy(
         cached, defaults to False
     :param download_newer: if True, download the taxonomy if a more recent
         version is available (based on file Etag)
+    :param cache_dir: the cache directory to use, defaults to
+        ~/.cache/openfoodfacts/taxonomy
     :return: a Taxonomy
     """
     taxonomy_type = TaxonomyType[taxonomy_type]
     filename = f"{taxonomy_type.name}.json"
-    taxonomy_path = CACHE_DIR / filename
+
+    cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
+    taxonomy_path = cache_dir / filename
     url = TAXONOMY_URLS[taxonomy_type]
 
     if not should_download_file(url, taxonomy_path, force_download, download_newer):
         return Taxonomy.from_path(taxonomy_path)
 
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_dir.mkdir(parents=True, exist_ok=True)
     logger.info("Downloading taxonomy, saving it in %s", taxonomy_path)
     download_file(url, taxonomy_path)
     return Taxonomy.from_path(taxonomy_path)
