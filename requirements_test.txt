@@ -6,3 +6,4 @@ isort==5.12.0
 coverage[toml]==7.2.7
 pytest==7.3.2
 types-requests
+types-tqdm

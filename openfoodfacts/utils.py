@@ -4,7 +4,7 @@ import logging
 import shutil
 import time
 from pathlib import Path
-from typing import Callable, Iterable, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Union
 
 import requests
 import tqdm
@@ -111,7 +111,7 @@ def configure_root_logger(
     return logger
 
 
-def jsonl_iter(jsonl_path: Union[str, Path]) -> Iterable[dict]:
+def jsonl_iter(jsonl_path: Union[str, Path]) -> Iterable[Dict]:
     """Iterate over elements of a JSONL file.
 
     :param jsonl_path: the path of the JSONL file. Both plain (.jsonl) and
@@ -132,7 +132,7 @@ def get_open_fn(filepath: Union[str, Path]) -> Callable:
         return open
 
 
-def jsonl_iter_fp(fp) -> Iterable[dict]:
+def jsonl_iter_fp(fp) -> Iterable[Dict]:
     for line in fp:
         line = line.strip("\n")
         if line:
@@ -142,7 +142,7 @@ def jsonl_iter_fp(fp) -> Iterable[dict]:
                 yield json.loads(line)
 
 
-def load_json(filepath: Union[str, Path]) -> Union[dict, list]:
+def load_json(filepath: Union[str, Path]) -> Union[Dict, List]:
     """Load a JSON file, support gzipped JSON files.
 
     :param path: the path of the file

@@ -5,7 +5,7 @@ import math
 import operator
 import re
 from collections import Counter, defaultdict
-from typing import Callable, Optional, Union
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import requests
 
@@ -74,7 +74,7 @@ class OrientationResult:
         else:
             self.orientation = ImageOrientation.unknown
 
-        self.count: dict[str, int] = {key.name: value for key, value in count.items()}
+        self.count: Dict[str, int] = {key.name: value for key, value in count.items()}
 
     def to_json(self) -> JSONType:
         return {
@@ -106,10 +106,10 @@ class OCRResult:
     )
 
     def __init__(self, data: JSONType):
-        self.text_annotations: list[OCRTextAnnotation] = []
+        self.text_annotations: List[OCRTextAnnotation] = []
         self.full_text_annotation: Optional[OCRFullTextAnnotation] = None
-        self.logo_annotations: list[LogoAnnotation] = []
-        self.label_annotations: list[LabelAnnotation] = []
+        self.logo_annotations: List[LogoAnnotation] = []
+        self.label_annotations: List[LabelAnnotation] = []
         self.safe_search_annotation: Optional[SafeSearchAnnotation] = None
 
         for text_annotation_data in data.get("textAnnotations", []):
@@ -174,10 +174,10 @@ class OCRResult:
         """
         return self._get_text(ocr_regex.field)
 
-    def get_logo_annotations(self) -> list["LogoAnnotation"]:
+    def get_logo_annotations(self) -> List["LogoAnnotation"]:
         return self.logo_annotations
 
-    def get_label_annotations(self) -> list["LabelAnnotation"]:
+    def get_label_annotations(self) -> List["LabelAnnotation"]:
         return self.label_annotations
 
     def get_safe_search_annotation(self):
@@ -208,7 +208,7 @@ class OCRResult:
         except Exception as e:
             raise OCRParsingException("Error during OCR parsing") from e
 
-    def get_languages(self) -> Optional[dict[str, int]]:
+    def get_languages(self) -> Optional[Dict[str, int]]:
         if self.full_text_annotation is not None:
             return self.full_text_annotation.get_languages()
 
@@ -216,7 +216,7 @@ class OCRResult:
 
     def get_match_bounding_box(
         self, start_idx: int, end_idx: int, raises: bool = True
-    ) -> Optional[tuple[int, int, int, int]]:
+    ) -> Optional[Tuple[int, int, int, int]]:
         """Return a bounding box that include all words that span from
         `start_idx` to `end_idx`.
 
@@ -246,7 +246,7 @@ class OCRResult:
 
     def get_words_from_indices(
         self, start_idx: int, end_idx: int, raises: bool = True
-    ) -> Optional[list["Word"]]:
+    ) -> Optional[List["Word"]]:
         """Return Word(s) that span from `start_idx` to `end_idx` in the
         OCR text.
 
@@ -352,7 +352,7 @@ def get_text(
 
 def get_match_bounding_box(
     content: Union[OCRResult, str], start_idx: int, end_idx: int
-) -> Optional[tuple[int, int, int, int]]:
+) -> Optional[Tuple[int, int, int, int]]:
     """Return a bounding box that include all words that span from
     `start_idx` to `end_idx` if `content` is an OCRResult and None otherwise.
     """
@@ -383,12 +383,12 @@ class OCRFullTextAnnotation:
         # page -> block -> paragraph -> word -> symbol, as it allows us to
         # know the location of every matched string
         self.api_text: str = data["text"]
-        self.pages: list[TextAnnotationPage] = []
+        self.pages: List[TextAnnotationPage] = []
         # `initial_offset` is used to keep track of how many string characters
         # were in the previous page, this is necessary to know where the words
         # are located on the image during matching
         initial_offset = 0
-        text_list: list[str] = []
+        text_list: List[str] = []
         for page_data in data["pages"]:
             page = TextAnnotationPage(page_data, initial_offset=initial_offset)
             # we add + 1 to offset as we introduce a `|` character to split
@@ -412,8 +412,8 @@ class OCRFullTextAnnotation:
             t.replace("|", " ").replace("\n", " ") for t in text_list
         )
 
-    def get_languages(self) -> dict[str, int]:
-        counts: dict[str, int] = defaultdict(int)
+    def get_languages(self) -> Dict[str, int]:
+        counts: Dict[str, int] = defaultdict(int)
         for page in self.pages:
             page_counts = page.get_languages()
 
@@ -423,7 +423,7 @@ class OCRFullTextAnnotation:
         return dict(counts)
 
     def detect_orientation(self) -> OrientationResult:
-        word_orientations: list[ImageOrientation] = []
+        word_orientations: List[ImageOrientation] = []
 
         for page in self.pages:
             word_orientations += page.detect_words_orientation()
@@ -433,7 +433,7 @@ class OCRFullTextAnnotation:
 
     def get_words_from_indices(
         self, start_idx: int, end_idx: int, raises: bool = True
-    ) -> list["Word"]:
+    ) -> List["Word"]:
         """Return Word(s) that span from `start_idx` to `end_idx` in the
         FullTextAnnotation.
 
@@ -505,8 +505,8 @@ class TextAnnotationPage:
         """
         self.width = data["width"]
         self.height = data["height"]
-        self.blocks: list[Block] = []
-        text_list: list[str] = []
+        self.blocks: List[Block] = []
+        text_list: List[str] = []
         for block_data in data["blocks"]:
             block = Block(block_data, initial_offset)
             # We add a '|' between each block, so that it's not possible to
@@ -516,8 +516,8 @@ class TextAnnotationPage:
             self.blocks.append(block)
         self.text = "|".join(text_list)
 
-    def get_languages(self) -> dict[str, int]:
-        counts: dict[str, int] = defaultdict(int)
+    def get_languages(self) -> Dict[str, int]:
+        counts: Dict[str, int] = defaultdict(int)
         for block in self.blocks:
             block_counts = block.get_languages()
 
@@ -526,8 +526,8 @@ class TextAnnotationPage:
 
         return dict(counts)
 
-    def detect_words_orientation(self) -> list[ImageOrientation]:
-        word_orientations: list[ImageOrientation] = []
+    def detect_words_orientation(self) -> List[ImageOrientation]:
+        word_orientations: List[ImageOrientation] = []
 
         for block in self.blocks:
             word_orientations += block.detect_words_orientation()
@@ -536,7 +536,7 @@ class TextAnnotationPage:
 
     def get_words_from_indices(
         self, start_idx: int, end_idx: int
-    ) -> tuple[list["Word"], bool]:
+    ) -> Tuple[List["Word"], bool]:
         """Return Word(s) that span from `start_idx` to `end_idx` in the
         Page.
 
@@ -574,7 +574,7 @@ class Block:
             Defaults to 0.
         """
         self.type = data["blockType"]
-        self.paragraphs: list[Paragraph] = []
+        self.paragraphs: List[Paragraph] = []
         text_list = []
         add_space_prefix = False
         for paragraph_data in data["paragraphs"]:
@@ -607,8 +607,8 @@ class Block:
             )
         )
 
-    def get_languages(self) -> dict[str, int]:
-        counts: dict[str, int] = defaultdict(int)
+    def get_languages(self) -> Dict[str, int]:
+        counts: Dict[str, int] = defaultdict(int)
         for paragraph in self.paragraphs:
             paragraph_counts = paragraph.get_languages()
 
@@ -623,8 +623,8 @@ class Block:
 
         return None
 
-    def detect_words_orientation(self) -> list[ImageOrientation]:
-        word_orientations: list[ImageOrientation] = []
+    def detect_words_orientation(self) -> List[ImageOrientation]:
+        word_orientations: List[ImageOrientation] = []
 
         for paragraph in self.paragraphs:
             word_orientations += paragraph.detect_words_orientation()
@@ -633,7 +633,7 @@ class Block:
 
     def get_words_from_indices(
         self, start_idx: int, end_idx: int
-    ) -> tuple[list["Word"], bool]:
+    ) -> Tuple[List["Word"], bool]:
         """Return Word(s) that span from `start_idx` to `end_idx` in the
         Block.
 
@@ -666,7 +666,7 @@ class Paragraph:
             were contained in previous paragraphs, it's used for matching.
             Defaults to 0.
         """
-        self.words: list[Word] = []
+        self.words: List[Word] = []
 
         offset = initial_offset
         for word_data in data["words"]:
@@ -679,8 +679,8 @@ class Paragraph:
         if "boundingBox" in data:
             self.bounding_poly = BoundingPoly(data["boundingBox"])
 
-    def get_languages(self) -> dict[str, int]:
-        counts: dict[str, int] = defaultdict(int)
+    def get_languages(self) -> Dict[str, int]:
+        counts: Dict[str, int] = defaultdict(int)
 
         for word in self.words:
             if word.languages is not None:
@@ -698,7 +698,7 @@ class Paragraph:
 
         return None
 
-    def detect_words_orientation(self) -> list[ImageOrientation]:
+    def detect_words_orientation(self) -> List[ImageOrientation]:
         return [word.detect_orientation() for word in self.words]
 
     def get_text(self) -> str:
@@ -707,7 +707,7 @@ class Paragraph:
 
     def get_words_from_indices(
         self, start_idx: int, end_idx: int
-    ) -> tuple[list["Word"], bool]:
+    ) -> Tuple[List["Word"], bool]:
         """Return Word(s) that span from `start_idx` to `end_idx` in the
         Paragraph.
 
@@ -750,9 +750,9 @@ class Word:
             Defaults to 0.
         """
         self.bounding_poly = BoundingPoly(data["boundingBox"])
-        self.symbols: list[Symbol] = [Symbol(s) for s in data["symbols"]]
+        self.symbols: List[Symbol] = [Symbol(s) for s in data["symbols"]]
 
-        self.languages: Optional[list[DetectedLanguage]] = None
+        self.languages: Optional[List[DetectedLanguage]] = None
         word_property = data.get("property", {})
 
         if "detectedLanguages" in word_property:
@@ -895,7 +895,7 @@ class BoundingPoly:
             (point.get("x", 0), point.get("y", 0)) for point in data["vertices"]
         ]
 
-    def get_direction_vector(self) -> list[tuple[int, int]]:
+    def get_direction_vector(self) -> List[Tuple[int, int]]:
         left_point = (
             (self.vertices[0][0] + self.vertices[3][0]) / 2,
             (self.vertices[0][1] + self.vertices[3][1]) / 2,
@@ -907,7 +907,7 @@ class BoundingPoly:
 
         return [left_point, right_point]
 
-    def get_direction_vector_alpha_distance(self) -> tuple[float, float]:
+    def get_direction_vector_alpha_distance(self) -> Tuple[float, float]:
         left_point, right_point = self.get_direction_vector()
         alpha = (right_point[1] - left_point[1]) / (right_point[0] - left_point[0])
         distance = math.sqrt(
@@ -978,7 +978,7 @@ class BoundingPoly:
             return ImageOrientation.unknown
 
 
-def compute_words_union_bounding_box(words: list[Word]) -> tuple[int, int, int, int]:
+def compute_words_union_bounding_box(words: List[Word]) -> Tuple[int, int, int, int]:
     """Generate a bounding box that include all words.
 
     :param words: a list of words

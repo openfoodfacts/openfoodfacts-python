@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Set, Union
 
 import requests
 
@@ -44,12 +44,12 @@ class TaxonomyNode:
     def __init__(
         self,
         identifier: str,
-        names: dict[str, str],
-        synonyms: Optional[dict[str, List[str]]],
-        properties: Optional[dict[str, Any]] = None,
+        names: Dict[str, str],
+        synonyms: Optional[Dict[str, List[str]]],
+        properties: Optional[Dict[str, Any]] = None,
     ):
         self.id: str = identifier
-        self.names: dict[str, str] = names
+        self.names: Dict[str, str] = names
         self.parents: List["TaxonomyNode"] = []
         self.children: List["TaxonomyNode"] = []
         self.properties = properties or {}
@@ -97,7 +97,7 @@ class TaxonomyNode:
     def get_parents_hierarchy(self) -> List["TaxonomyNode"]:
         """Return the list of all parent nodes (direct and indirect)."""
         all_parents = []
-        seen: set[str] = set()
+        seen: Set[str] = set()
 
         if not self.parents:
             return []
@@ -151,7 +151,7 @@ class TaxonomyNode:
 
 class Taxonomy:
     def __init__(self) -> None:
-        self.nodes: dict[str, TaxonomyNode] = {}
+        self.nodes: Dict[str, TaxonomyNode] = {}
 
     def add(self, key: str, node: TaxonomyNode) -> None:
         self.nodes[key] = node
@@ -181,7 +181,7 @@ class Taxonomy:
         ['fish', 'salmon'] -> ['salmon'] ['fish', 'smoked-salmon'] ->
         [smoked-salmon']
         """
-        excluded: set[str] = set()
+        excluded: Set[str] = set()
 
         for node in nodes:
             for second_node in (
@@ -212,7 +212,7 @@ class Taxonomy:
             else:
                 return False
 
-        to_check_nodes: set[TaxonomyNode] = set()
+        to_check_nodes: Set[TaxonomyNode] = set()
 
         for candidate in candidates:
             candidate_node = self[candidate]
