@@ -39,6 +39,21 @@ TAXONOMY_URLS = {
 
 
 class TaxonomyNode:
+    """A taxonomy element.
+
+    Each node has 0+ parents and 0+ children. Each node has the following
+    attributes:
+
+    - `id`: the node identifier, it starts with a language prefix (ex: `en:`)
+    - `names`: a dict mapping language 2-letter code to the node name for this
+      language
+    - `parents`: the list of the node parents
+    - `children`: the list of the node children
+    - `properties`: additional properties of the node (taxonomy-dependent)
+    - `synonyms`: a dict mapping language 2-letter code to a list of synonyms
+      for this language
+    """
+
     __slots__ = ("id", "names", "parents", "children", "synonyms", "properties")
 
     def __init__(
@@ -150,26 +165,44 @@ class TaxonomyNode:
 
 
 class Taxonomy:
+    """A class representing a taxonomy.
+
+    For more information about taxonomy, see
+    https://wiki.openfoodfacts.org/Global_taxonomies.
+
+    A Taxonomy instance has only a single `nodes` attribute, that maps the
+    node identifier to a `TaxonomyNode`.
+    """
+
     def __init__(self) -> None:
         self.nodes: Dict[str, TaxonomyNode] = {}
 
     def add(self, key: str, node: TaxonomyNode) -> None:
+        """Add a node to the taxonomy under the id `key`.
+
+        :param key: The node id
+        :param node: the TaxonomyNode
+        """
         self.nodes[key] = node
 
     def __contains__(self, item: str):
+        """Return True if `item` (a taxonomy id) is in the taxonomy, False
+        otherwise."""
         return item in self.nodes
 
     def __getitem__(self, item: str):
         return self.nodes.get(item)
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """Return the number of items in the taxonomy."""
         return len(self.nodes)
 
     def iter_nodes(self) -> Iterable[TaxonomyNode]:
         """Iterate over the nodes of the taxonomy."""
         return iter(self.nodes.values())
 
-    def keys(self):
+    def keys(self) -> Iterable[str]:
+        """Return all node IDs from the taxonomy."""
         return self.nodes.keys()
 
     def find_deepest_nodes(self, nodes: List[TaxonomyNode]) -> List[TaxonomyNode]:
@@ -223,12 +256,22 @@ class Taxonomy:
         return node.is_parent_of_any(to_check_nodes)
 
     def get_localized_name(self, key: str, lang: str) -> str:
+        """Return the name of a taxonomy element in a given language.
+
+        If `key` is not in the taxonomy or if no name is available for the
+        requested language, return `key`.
+
+        :param key: the taxonomy element id
+        :param lang: the 2-letter language code
+        :return: the localized name
+        """
         if key not in self.nodes:
             return key
 
         return self.nodes[key].get_localized_name(lang)
 
     def to_dict(self) -> JSONType:
+        """Generate a dict from the Taxonomy."""
         export = {}
 
         for key, node in self.nodes.items():
@@ -238,6 +281,11 @@ class Taxonomy:
 
     @classmethod
     def from_dict(cls, data: JSONType) -> "Taxonomy":
+        """Create a Taxonomy from `data`.
+
+        :param data: the taxonomy as a dict
+        :return: a Taxonomy
+        """
         taxonomy = Taxonomy()
 
         for key, key_data in data.items():
@@ -263,12 +311,24 @@ class Taxonomy:
 
     @classmethod
     def from_path(cls, file_path: Union[str, Path]) -> "Taxonomy":
+        """Create a Taxonomy from a JSON file.
+
+        :param file_path: a JSON file, gzipped (.json.gz) files are supported
+        :return: a Taxonomy
+        """
         return cls.from_dict(load_json(file_path))  # type: ignore
 
     @classmethod
     def from_url(
         cls, url: str, session: Optional[requests.Session] = None, timeout: int = 120
     ) -> "Taxonomy":
+        """Create a Taxonomy from a taxonomy file hosted at `url`.
+
+        :param url: the URL of the taxonomy
+        :param session: the requests session, use a default session if None
+        :param timeout: the request timeout, defaults to 120
+        :return: a Taxonomy
+        """
         session = http_session if session is None else session
         r = session.get(url, timeout=timeout)
         data = r.json()
@@ -276,6 +336,12 @@ class Taxonomy:
 
     @classmethod
     def from_type(cls, taxonomy_type: TaxonomyType) -> "Taxonomy":
+        """Create a Taxonomy from a taxonomy file hosted online from a
+        taxonomy type.
+
+        :param taxonomy_type: the taxonomy type
+        :return: a Taxonomy
+        """
         url = TAXONOMY_URLS[TaxonomyType[taxonomy_type]]
         return cls.from_url(url)
 
