@@ -6,6 +6,9 @@ authors = ["The Open Food Facts team"]
 license = "Apache 2.0"
 readme = "README.md"
 
+[tool.mypy]
+ignore_missing_imports = true
+
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 requests = ">=2.20.0"
