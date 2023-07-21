@@ -1,31 +1,21 @@
-name: Publish PyPI Package
-
+name: Publish PyPI package
 on:
-  # Triggers the workflow on a new release
-  release:
-    types: [created]
+  push:
+    tags:
+      - v*.*.*
 
 jobs:
-  deploy:
+  push_to_pypi:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v3
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with: 
-        python-version: 3.8
-    - name: Install dependencies
-      run: |
-        rm -rf dist build *.egg-info
-        python3 -m pip install --upgrade pip
-        python3 -m pip install setuptools wheel twine
-    - name: Build package
-      run: |
-        python3 setup.py sdist bdist_wheel 
-    - name: Publish package to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_TOKEN }}
-
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Set up python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+      - uses: abatilo/actions-poetry@v2.1.4
+      - name: Run poetry build
+        run:  poetry build
+      - name: Run poetry publish
+        run: POETRY_PYPI_TOKEN_PYPI=${{ secrets.PYPI_TOKEN }} poetry publish
