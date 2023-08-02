@@ -35,6 +35,8 @@ TAXONOMY_URLS = {
     + "/data/taxonomies/packaging_materials.full.json",
     TaxonomyType.packaging_recycling: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/packaging_recycling.full.json",
+    TaxonomyType.country: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/countries.full.json",
 }
 
 
