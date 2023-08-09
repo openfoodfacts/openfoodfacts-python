@@ -37,6 +37,28 @@ TAXONOMY_URLS = {
     + "/data/taxonomies/packaging_recycling.full.json",
     TaxonomyType.country: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/countries.full.json",
+    TaxonomyType.additive: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/additives.full.json",
+    TaxonomyType.vitamin: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/vitamins.full.json",
+    TaxonomyType.mineral: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/minerals.full.json",
+    TaxonomyType.amino_acid: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/amino_acids.full.json",
+    TaxonomyType.nucleotide: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/nucleotides.full.json",
+    TaxonomyType.allergen: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/allergens.full.json",
+    TaxonomyType.state: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/states.full.json",
+    TaxonomyType.origin: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/origins.full.json",
+    TaxonomyType.language: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/languages.full.json",
+    TaxonomyType.other_nutritional_substance: URLBuilder.static(
+        Flavor.off, Environment.org
+    )
+    + "/data/taxonomies/other_nutritional_substances.full.json",
 }
 
 
