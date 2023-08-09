@@ -151,10 +151,10 @@ class API:
             to Environment.org
         """
         if not isinstance(country, Country):
-            country = Country.get_from_2_letter_code(country)
+            country = Country[country]
 
         self.api_config = APIConfig(
-            country=country,  # type: ignore
+            country=country,
             flavor=Flavor[flavor],
             version=APIVersion[version],
             environment=Environment[environment],
