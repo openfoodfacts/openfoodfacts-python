@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.6](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.5...v0.1.6) (2023-08-09)
+
+
+### Bug Fixes
+
+* add country taxonomy ([06f0c16](https://github.com/openfoodfacts/openfoodfacts-python/commit/06f0c1622185f08a2ae05262a2c136521c45efba))
+* add more taxonomies ([d6da4e1](https://github.com/openfoodfacts/openfoodfacts-python/commit/d6da4e1268204e49b0e46c2dd63cb0cb568e6dc1))
+* fix api.py code ([27a9140](https://github.com/openfoodfacts/openfoodfacts-python/commit/27a9140589fe50b0fe82cd34a6e6bb969e8af19e))
+* update Country enum to use functional syntax instead ([633add8](https://github.com/openfoodfacts/openfoodfacts-python/commit/633add8bcd8b22faacf495cf6d651f44cfd7647b))
+
 ## [0.1.5](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.4...v0.1.5) (2023-07-21)
 
 
