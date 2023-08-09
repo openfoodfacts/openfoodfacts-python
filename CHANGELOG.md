@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.7...v0.1.8) (2023-08-09)
+
+
+### Bug Fixes
+
+* add Lang enum ([ef5b32c](https://github.com/openfoodfacts/openfoodfacts-python/commit/ef5b32ca65e92a753a5cdc794868c1f87e1d5187))
+
 ## [0.1.7](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.6...v0.1.7) (2023-08-09)
 
 
