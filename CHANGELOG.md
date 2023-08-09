@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.6...v0.1.7) (2023-08-09)
+
+
+### Bug Fixes
+
+* fix Country enum ([8c0e926](https://github.com/openfoodfacts/openfoodfacts-python/commit/8c0e9260a6a73f662ade73d4f562d7feb5223566))
+
 ## [0.1.6](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.5...v0.1.6) (2023-08-09)
 
 
