@@ -9,7 +9,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Union
 import requests
 import tqdm
 
-from .types import Environment, Flavor
+from .types import COUNTRY_CODE_TO_NAME, Country, Environment, Flavor
 
 _orjson_available = True
 try:
@@ -253,3 +253,8 @@ def should_download_file(
                 return False
 
     return True
+
+
+def get_country_name(country: Country) -> str:
+    """Return country name code (ex: `en:portugal`) from `Country`."""
+    return COUNTRY_CODE_TO_NAME[country]
