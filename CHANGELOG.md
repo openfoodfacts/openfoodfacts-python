@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.9](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.8...v0.1.9) (2023-08-17)
+
+
+### Bug Fixes
+
+* add `get_country_name` function ([d59e546](https://github.com/openfoodfacts/openfoodfacts-python/commit/d59e54608464739f1cb06a7d793b874e7a771187))
+* add more imports in __init__.py ([92937d0](https://github.com/openfoodfacts/openfoodfacts-python/commit/92937d0bb07f27349a98ad9c48ae7db58c6fce62))
+
 ## [0.1.8](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.7...v0.1.8) (2023-08-09)
 
 
