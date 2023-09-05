@@ -11,7 +11,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Set up python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9
       - uses: abatilo/actions-poetry@v2.3.0
