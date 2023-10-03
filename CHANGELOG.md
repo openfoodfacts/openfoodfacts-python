@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.9...v0.1.10) (2023-10-03)
+
+
+### Bug Fixes
+
+* fix undefined func in ocr.py ([ff5eaa2](https://github.com/openfoodfacts/openfoodfacts-python/commit/ff5eaa26b77f59717d7f28453fcd78029aae3b0f))
+
 ## [0.1.9](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.8...v0.1.9) (2023-08-17)
 
 
