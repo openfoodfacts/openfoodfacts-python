@@ -267,7 +267,7 @@ class OCRResult:
     def pprint(self):
         """Pretty print the full text annotation, if it is not null."""
         if self.full_text_annotation:
-            print(self._generate_pretty_print_string())
+            print(self.full_text_annotation._generate_pretty_print_string())
         else:
             print("No full text annotation available")
 
