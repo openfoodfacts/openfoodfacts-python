@@ -58,6 +58,7 @@ or manually from source:
 *Get information about a product*
 
 ```python
+api = openfoodfacts.API(version="v2")
 code = "3017620422003"
 api.product.get(code)
 ```
@@ -65,12 +66,14 @@ api.product.get(code)
 *Perform text search*
 
 ```python
+api = openfoodfacts.API(version="v2")
 results = api.product.text_search("mineral water")
 ```
 
 *Create a new product or update an existing one*
 
 ```python
+api = openfoodfacts.API(version="v2")
 results = api.product.update(CODE, body)
 ```
 
