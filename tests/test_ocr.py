@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Tuple
 
 import pytest
 
@@ -37,9 +37,10 @@ from openfoodfacts.ocr import OCRResult
     ],
 )
 def test_get_words_in_area(
-    ocr_url: str, bounding_box: list[int, int, int, int], expected_text: Optional[str]
+    ocr_url: str, bounding_box: Tuple[int, int, int, int], expected_text: Optional[str]
 ):
     ocr_result = OCRResult.from_url(ocr_url)
+    assert ocr_result is not None
     words = ocr_result.get_words_in_area(bounding_box)
 
     if expected_text is None:
