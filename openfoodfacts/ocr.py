@@ -264,6 +264,20 @@ class OCRResult:
             start_idx, end_idx, raises
         )
 
+    def get_words_in_area(
+        self, bounding_box: Tuple[int, int, int, int]
+    ) -> Optional[List["Word"]]:
+        """Return the list of words that are in the provided area.
+
+        :param bounding_box: a bounding box with absolute coordinates
+        :return: the list of words that are included in `bounding_box` or None
+          if full text annotation is not available
+        """
+        if self.full_text_annotation:
+            return self.full_text_annotation.get_words_in_area(bounding_box)
+
+        return None
+
     def pprint(self):
         """Pretty print the full text annotation, if it is not null."""
         if self.full_text_annotation:
@@ -484,6 +498,19 @@ class OCRFullTextAnnotation:
                     strings.append(f"    {repr(text)}")
         return "\n".join(strings)
 
+    def get_words_in_area(
+        self, bounding_box: Tuple[int, int, int, int]
+    ) -> List["Word"]:
+        """Return the list of words that are in the provided area.
+
+        :param bounding_box: a bounding box with absolute coordinates
+        :return: the list of words that are included in `bounding_box`
+        """
+        words = []
+        for page in self.pages:
+            words += page.get_words_in_area(bounding_box)
+        return words
+
 
 class TextAnnotationPage:
     """Detected page from OCR."""
@@ -553,6 +580,19 @@ class TextAnnotationPage:
             if not remaining:
                 break
         return selected, remaining
+
+    def get_words_in_area(
+        self, bounding_box: Tuple[int, int, int, int]
+    ) -> List["Word"]:
+        """Return the list of words of the page that are in the provided area.
+
+        :param bounding_box: a bounding box with absolute coordinates
+        :return: the list of words that are included in `bounding_box`
+        """
+        words = []
+        for block in self.blocks:
+            words += block.get_words_in_area(bounding_box)
+        return words
 
 
 class Block:
@@ -651,6 +691,19 @@ class Block:
                 break
         return selected, remaining
 
+    def get_words_in_area(
+        self, bounding_box: Tuple[int, int, int, int]
+    ) -> List["Word"]:
+        """Return the list of words of the block that are in the provided area.
+
+        :param bounding_box: a bounding box with absolute coordinates
+        :return: the list of words that are included in `bounding_box`
+        """
+        words = []
+        for paragraph in self.paragraphs:
+            words += paragraph.get_words_in_area(bounding_box)
+        return words
+
 
 class Paragraph:
     """Structural unit of text representing a number of words in certain
@@ -727,6 +780,17 @@ class Paragraph:
                 break
 
         return selected, remaining
+
+    def get_words_in_area(
+        self, bounding_box: Tuple[int, int, int, int]
+    ) -> List["Word"]:
+        """Return the list of words of the paragraph that are in the provided
+        area.
+
+        :param bounding_box: a bounding box with absolute coordinates
+        :return: the list of words that are included in `bounding_box`
+        """
+        return get_words_in_area(self.words, bounding_box)
 
 
 class Word:
@@ -1002,6 +1066,35 @@ def compute_words_union_bounding_box(words: List[Word]) -> Tuple[int, int, int, 
                 y_max = y
 
     return (y_min, x_min, y_max, x_max)  # type: ignore
+
+
+def get_words_in_area(
+    words: List[Word], bounding_box: Tuple[int, int, int, int]
+) -> List[Word]:
+    """Return the list of words that are in the provided area.
+
+    :param words: a list of words
+    :param bounding_box: a bounding box with absolute coordinates
+    :return: the list of words that are included in `bounding_box`
+    """
+    bb_y_min, bb_x_min, bb_y_max, bb_x_max = bounding_box
+    selected = []
+    for word in words:
+        vertices = word.bounding_poly.vertices
+        x_min = min(v[0] for v in vertices)
+        y_min = min(v[1] for v in vertices)
+        x_max = max(v[0] for v in vertices)
+        y_max = max(v[1] for v in vertices)
+
+        if (
+            x_min >= bb_x_min
+            and x_max <= bb_x_max
+            and y_min >= bb_y_min
+            and y_max <= bb_y_max
+        ):
+            selected.append(word)
+
+    return selected
 
 
 class OCRTextAnnotation:
