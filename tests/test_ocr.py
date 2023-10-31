@@ -9,7 +9,8 @@ from openfoodfacts.ocr import OCRResult
     "ocr_url, bounding_box, expected_text",
     [
         (
-            # It corresponds to this OCR crop: https://robotoff.openfoodfacts.org/api/v1/images/crop?image_url=https://images.openfoodfacts.org/images/products/089/000/000/1202/1.jpg&y_min=0.08416666666666667&x_min=0.30077691453940064&y_max=0.09583333333333334&x_max=0.37735849056603776
+            # It corresponds to this OCR crop:
+            # https://robotoff.openfoodfacts.org/api/v1/images/crop?image_url=https://images.openfoodfacts.org/images/products/089/000/000/1202/1.jpg&y_min=0.08416666666666667&x_min=0.30077691453940064&y_max=0.09583333333333334&x_max=0.37735849056603776
             "https://raw.githubusercontent.com/openfoodfacts/test-data/main/openfoodfacts-python/tests/unit/0890000001202_1.json",
             [101, 271, 115, 340],
             "Materne",
