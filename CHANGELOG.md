@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.11](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.10...v0.1.11) (2023-10-31)
+
+
+### Bug Fixes
+
+* add get_words_in_area function for OCR ([2ea5e27](https://github.com/openfoodfacts/openfoodfacts-python/commit/2ea5e27654bccb99ca01d394fda073ade52bafbf))
+* fix mypy issues ([7bf9f67](https://github.com/openfoodfacts/openfoodfacts-python/commit/7bf9f67edbbbfa293d4bb4949479f5cdbd8b17b1))
+
 ## [0.1.10](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.9...v0.1.10) (2023-10-03)
 
 
