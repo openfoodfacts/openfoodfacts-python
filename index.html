@@ -434,14 +434,17 @@ python setup.py install
 </code></pre>
 <h2 id="examples">Examples</h2>
 <p><em>Get information about a product</em></p>
-<pre><code class="language-python">code = &quot;3017620422003&quot;
+<pre><code class="language-python">api = openfoodfacts.API(version=&quot;v2&quot;)
+code = &quot;3017620422003&quot;
 api.product.get(code)
 </code></pre>
 <p><em>Perform text search</em></p>
-<pre><code class="language-python">results = api.product.text_search(&quot;mineral water&quot;)
+<pre><code class="language-python">api = openfoodfacts.API(version=&quot;v2&quot;)
+results = api.product.text_search(&quot;mineral water&quot;)
 </code></pre>
 <p><em>Create a new product or update an existing one</em></p>
-<pre><code class="language-python">results = api.product.update(CODE, body)
+<pre><code class="language-python">api = openfoodfacts.API(version=&quot;v2&quot;)
+results = api.product.update(CODE, body)
 </code></pre>
 <p>with <code>CODE</code> the product barcode and <code>body</code> the update body.</p>
 <p>To see all possible capabilities, check out the <a href="https://openfoodfacts.github.io/openfoodfacts-python/usage/">usage guide</a>.</p>
