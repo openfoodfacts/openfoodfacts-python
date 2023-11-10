@@ -26,14 +26,20 @@ def send_get_request(
 def send_for_urlencoded_post_request(
     url: str, body: Dict[str, Any], api_config: APIConfig
 ) -> requests.Response:
+    cookies = None
     if api_config.username and api_config.password:
         body["user_id"] = api_config.username
         body["password"] = api_config.password
+    elif api_config.session_cookie:
+        cookies = {
+            "session": api_config.session_cookie,
+        }
     r = http_session.post(
         url,
         data=body,
         timeout=api_config.timeout,
         auth=get_http_auth(api_config.environment),
+        cookies=cookies,
     )
     r.raise_for_status()
     return r
