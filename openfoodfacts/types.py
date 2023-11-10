@@ -1,7 +1,7 @@
 import enum
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 #: A precise expectation of what mappings looks like in json.
 #: (dict where keys are always of type `str`).
@@ -820,7 +820,24 @@ class APIConfig(BaseModel):
     version: APIVersion = APIVersion.v2
     username: Optional[str] = None
     password: Optional[str] = None
+    session_cookie: Optional[str] = None
     timeout: float = 10.0
+
+    @model_validator(mode="after")
+    def check_credentials(self):
+        """Check that username and password are provided together, and that
+        either username/password or session_cookie is provided."""
+        if (self.username and not self.password) or (
+            self.password and not self.username
+        ):
+            raise ValueError("username and password must be provided together")
+
+        if self.username and self.session_cookie:
+            raise ValueError(
+                "username/password and session_cookie are mutually exclusive"
+            )
+
+        return self
 
 
 class DatasetType(str, enum.Enum):

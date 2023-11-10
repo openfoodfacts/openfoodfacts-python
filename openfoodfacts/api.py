@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 
-from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor
+from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor, JSONType
 from .utils import URLBuilder, http_session
 
 
@@ -128,6 +128,82 @@ class ProductResource:
         url = f"{self.base_url}/cgi/product_jqm2.pl"
         return send_for_urlencoded_post_request(url, body, self.api_config)
 
+    def select_image(
+        self,
+        code: str,
+        image_id: str,
+        image_key: str,
+        rotate: Optional[int] = None,
+        crop_bounding_box: Optional[tuple[float, float, float, float]] = None,
+    ):
+        """Select an image (front/ingredients/nutrition/packaging) for a
+        product.
+
+        It's possible to rotate and crop the selection.
+
+        :param code: the product barcode
+        :param image_id: the raw image ID, it must be a digit (ex: 1, 2, 3, 4)
+        :param image_key: the image field name (one of `front`, `ingredients`,
+            `nutrition`, `packaging`) and the language code, separated by a
+            `_`. Example: `front_fr`, `ingredients_en`, `nutrition_es`, etc.
+        :param rotate: rotation angle in degrees (90, 180, 270), defaults to
+            None (no rotation)
+        :param crop_bounding_box: a tuple of 4 floats
+            (y_min, x_min, y_max, x_max) that defines the bounding box of the
+            crop, defaults to None (no crop)
+        :raises ValueError: if the rotation angle is invalid or if no password
+            or session cookie is provided
+        :return: the API response
+        """
+        url = f"{self.base_url}/cgi/product_image_crop.pl"
+        params: JSONType = {
+            "code": code,
+            "imgid": image_id,
+            # We need to tell Product Opener that the bounding box coordinates
+            # are related to the full image
+            "coordinates_image_size": "full",
+        }
+
+        if rotate is not None and rotate != 0:
+            if rotate not in (90, 180, 270):
+                raise ValueError(f"invalid value for rotation angle: {rotate}")
+            params["angle"] = str(rotate)
+
+        if crop_bounding_box is not None:
+            y_min, x_min, y_max, x_max = crop_bounding_box
+            params["x1"] = x_min
+            params["y1"] = y_min
+            params["x2"] = x_max
+            params["y2"] = y_max
+
+        if image_key is not None:
+            params["id"] = image_key
+
+        cookies = None
+        if self.api_config.session_cookie:
+            cookies = {
+                "session": self.api_config.session_cookie,
+            }
+        elif self.api_config.username:
+            params["user_id"] = self.api_config.username
+            params["password"] = self.api_config.password
+
+        if cookies is None and not params.get("password"):
+            raise ValueError(
+                "a password or a session cookie is required to select an image"
+            )
+
+        r = http_session.post(
+            url,
+            data=params,
+            timeout=self.api_config.timeout,
+            auth=get_http_auth(self.api_config.environment),
+            cookies=cookies,
+        )
+
+        r.raise_for_status()
+        return r
+
 
 class API:
     def __init__(
@@ -138,6 +214,7 @@ class API:
         flavor: Union[Flavor, str] = Flavor.off,
         version: Union[APIVersion, str] = APIVersion.v2,
         environment: Union[Environment, str] = Environment.org,
+        session_cookie: Optional[str] = None,
     ) -> None:
         """Initialize the API instance.
 
@@ -152,6 +229,8 @@ class API:
         :param version: the API version to use, defaults to APIVersion.v2
         :param environment: what environment (prod/staging) to use, defaults
             to Environment.org
+        :param session_cookie: a session cookie, only used for write requests,
+            defaults to None
         """
         if not isinstance(country, Country):
             country = Country[country]
@@ -163,6 +242,7 @@ class API:
             environment=Environment[environment],
             username=username,
             password=password,
+            session_cookie=session_cookie,
         )
         self.password = password
         self.country = country
