@@ -26,6 +26,9 @@ def send_get_request(
 def send_for_urlencoded_post_request(
     url: str, body: Dict[str, Any], api_config: APIConfig
 ) -> requests.Response:
+    if api_config.username and api_config.password:
+        body["user_id"] = api_config.username
+        body["password"] = api_config.password
     r = http_session.post(
         url,
         data=body,
