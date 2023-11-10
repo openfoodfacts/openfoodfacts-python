@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.12](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.11...v0.1.12) (2023-11-10)
+
+
+### Bug Fixes
+
+* add select_image function to API.product ([d2d0805](https://github.com/openfoodfacts/openfoodfacts-python/commit/d2d0805bcd77cc5ee06dd7994f8e76fb74237a09))
+* add session cookies to all update queries (if needed) ([e3b0de0](https://github.com/openfoodfacts/openfoodfacts-python/commit/e3b0de0aa217672161107b0bbf189e09474a4345))
+* provide authentification in POST requests ([545bbe9](https://github.com/openfoodfacts/openfoodfacts-python/commit/545bbe9b40cf9fa2169e11810f8aec9bcf537d00))
+
 ## [0.1.11](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.10...v0.1.11) (2023-10-31)
 
 
