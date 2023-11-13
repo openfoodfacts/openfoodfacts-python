@@ -5,10 +5,11 @@ import requests_mock
 
 import openfoodfacts
 
-
+TEST_USER_AGENT = "test_off_python"
 class TestProducts(unittest.TestCase):
+
     def test_get_product(self):
-        api = openfoodfacts.API(version="v2")
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
         code = "1223435"
         response_data = {"product": {"code": "1223435"}}
         with requests_mock.mock() as mock:
@@ -20,7 +21,7 @@ class TestProducts(unittest.TestCase):
             self.assertEqual(res, response_data)
 
     def test_text_search(self):
-        api = openfoodfacts.API(version="v2")
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
         with requests_mock.mock() as mock:
             response_data = {"products": ["kinder bueno"], "count": 1}
             mock.get(

@@ -814,6 +814,7 @@ Lang = enum.Enum(
 
 
 class APIConfig(BaseModel):
+    user_agent: str
     country: Country = Country.world
     environment: Environment = Environment.org
     flavor: Flavor = Flavor.off
@@ -839,6 +840,11 @@ class APIConfig(BaseModel):
 
         return self
 
+    @model_validator(mode="after")
+    def check_user_agent(self):
+        if not isinstance(self.user_agent, str) or not self.user_agent.strip():
+            raise ValueError("User agent must be a string and cannot be empty.")
+        return self
 
 class DatasetType(str, enum.Enum):
     csv = "csv"
