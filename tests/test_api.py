@@ -6,6 +6,8 @@ import requests_mock
 import openfoodfacts
 
 TEST_USER_AGENT = "test_off_python"
+
+
 class TestProducts(unittest.TestCase):
 
     def test_get_product(self):
