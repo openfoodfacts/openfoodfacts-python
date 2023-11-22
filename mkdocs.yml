@@ -6,6 +6,7 @@ site_dir: gh_pages
 nav:
   - Home: 'index.md'
   - Usage: 'usage.md'
+  - "Handle taxonomies": 'handle_taxonomies.md'
 
 theme:
   name: material

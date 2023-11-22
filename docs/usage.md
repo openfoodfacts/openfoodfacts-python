@@ -74,4 +74,4 @@ The `jsonl` dataset type is used by default.
 
 ## Taxonomies
 
-For a deep dive on how to handle taxonomies, check out the [dedicated page](./use_taxonomy.md).
+For a deep dive on how to handle taxonomies, check out the [dedicated page](./handle_taxonomies.md).
