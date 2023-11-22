@@ -8,10 +8,8 @@
       
       
       
-        <link rel="canonical" href="https://openfoodfacts.github.io/openfoodfacts-python/usage/">
+        <link rel="canonical" href="https://openfoodfacts.github.io/openfoodfacts-python/use_taxonomy/">
       
-      
-        <link rel="prev" href="..">
       
       
       
@@ -20,7 +18,7 @@
     
     
       
-        <title>Usage - openfoodfacts-python</title>
+        <title>Handle taxonomies - openfoodfacts-python</title>
       
     
     
@@ -65,7 +63,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#usage-guide" class="md-skip">
+        <a href="#handle-taxonomies" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +99,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage
+              Handle taxonomies
             
           </span>
         </div>
@@ -207,29 +205,9 @@
       
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Usage
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -238,53 +216,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
-    <span class="md-ellipsis">
-      API
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-the-dataset" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using the dataset
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#taxonomies" class="md-nav__link">
-    <span class="md-ellipsis">
-      Taxonomies
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -316,29 +247,50 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#api" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
-      API
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-information-about-a-taxonomy-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Get information about a taxonomy item
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#using-the-dataset" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#the-taxonomy-object" class="md-nav__link">
     <span class="md-ellipsis">
-      Using the dataset
+      The Taxonomy object
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Taxonomy object">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#find-leaf-nodes-in-the-taxonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Find leaf nodes in the taxonomy
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#taxonomies" class="md-nav__link">
-    <span class="md-ellipsis">
-      Taxonomies
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -357,56 +309,88 @@
                   
 
 
-<h1 id="usage-guide">Usage Guide</h1>
-<p>This guide provides information on the methods available within the Open Food Facts Python SDK.</p>
-<h2 id="api">API</h2>
-<p>The SDK can be used to access Open Food Facts API.</p>
-<p>First, instantiate an API object:</p>
-<pre><code class="language-python">from openfoodfacts import API, APIVersion, Country, Environment, Flavor
+<h1 id="handle-taxonomies">Handle taxonomies</h1>
+<p>The Python SDK provides an easy way to access and handle the taxonomies available on Open Food Facts.</p>
+<p>Taxonomies are at the heart of Open Food Facts. They are used to structure knowledge about ingredients, categories, labels, additives, countries, brands, etc.</p>
+<p>To have a better understanding of how taxonomies work, you can read the <a href="https://wiki.openfoodfacts.org/Global_taxonomies">wiki page about taxonomies</a>.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="get-information-about-a-taxonomy-item">Get information about a taxonomy item</h3>
+<p>First, instantiate a Taxonomy object:</p>
+<pre><code class="language-python">from openfoodfacts.taxonomy import get_taxonomy
 
-api = API(
-    username=None,
-    password=None,
-    country=Country.world,
-    flavor=Flavor.off,
-    version=APIVersion.v2,
-    environment=Environment.org,
-)
+# Use the singular form of the taxonomy name
+taxonomy = get_taxonomy(&quot;category&quot;)
+print(taxonomy)
+# &lt;openfoodfacts.taxonomy.Taxonomy object at 0x7fe9d3f44940&gt;
 </code></pre>
-<p>All parameters are optional, but here is a description of the parameters you can tweak:</p>
-<ul>
-<li><code>username</code> and <code>password</code> are used to provide authentication (required for write requests)</li>
-<li><code>country</code> is used to specify the country, which is used by the API to return product specific to the country or to infer which language to use by default. <code>world</code> (all products) is the default value</li>
-<li><code>flavor</code>: the Open*Facts project you want to interact with: <code>off</code> (Open Food Facts, default), <code>obf</code> (Open Beauty Facts),...</li>
-<li><code>version</code>: API version (v2 is the default)</li>
-<li><code>environment</code>: either <code>org</code> for production environment (openfoodfacts.org) or <code>net</code> for staging (openfoodfacts.net)</li>
-</ul>
-<p><em>Get information about a product</em></p>
-<pre><code class="language-python">code = &quot;3017620422003&quot;
-api.product.get(code)
+<p>The taxonomy object provides a way to access the taxonomy data. For example, if you want to get the node <code>en:biscuits</code>:</p>
+<pre><code class="language-python">node = taxonomy[&quot;en:biscuits&quot;]
+print(node)
+# &lt;TaxonomyNode en:biscuits&gt;
 </code></pre>
-<p><em>Perform text search</em></p>
-<pre><code class="language-python">results = api.product.text_search(&quot;mineral water&quot;)
+<p>If the node does not exist, <code>None</code> is returned.</p>
+<p>You can get the the translation in a specific language:</p>
+<pre><code class="language-python">print(node.get_localized_name(&quot;it&quot;))
+# Biscotti
 </code></pre>
-<p><em>Create a new product or update an existing one</em></p>
-<pre><code class="language-python">results = api.product.update(CODE, body)
+<p>Each node has one or more parents, stored in the <code>parents</code> field:</p>
+<pre><code class="language-python">print(node.parents)
+# [&lt;TaxonomyNode en:biscuits-and-cakes&gt;]
 </code></pre>
-<p>with <code>CODE</code> the product barcode and <code>body</code> the update body.</p>
-<h2 id="using-the-dataset">Using the dataset</h2>
-<p>If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump.
-Fortunately it can be done really easily using the SDK:</p>
-<pre><code class="language-python">from openfoodfacts import ProductDataset
+<p>Likewise, children can be accessed using the <code>children</code> field.</p>
+<p>To get the full parent hierarchy (that includes all parents found recursively), use the <code>get_parents_hierarchy</code> method:</p>
+<pre><code class="language-python">print(node.get_parents_hierarchy())
+# [&lt;TaxonomyNode en:biscuits-and-cakes&gt;, &lt;TaxonomyNode en:sweet-snacks&gt;, &lt;TaxonomyNode en:snacks&gt;]
+</code></pre>
+<p>Beside the main translation that can be accessed using <code>get_localized_name</code>, each node may have synonyms. This information can be easily accessed as well:</p>
+<pre><code class="language-python"># synonyms is a dict mapping language codes to a list of
+# synonyms in that language. The key is missing if there are
+# no synonyms.
+print(node.synonyms[&quot;es&quot;])
+# [&quot;Galletas&quot;, &quot;galleta&quot;]
+</code></pre>
+<p>Taxonomy node properties are stored in the <code>properties</code> field:</p>
+<pre><code class="language-python">print(node.properties)
+# {
+#    &quot;wikipedia&quot;: {&quot;en&quot;: &quot;https://en.wikipedia.org/wiki/Biscuit&quot;},
+#    &quot;carbon_footprint_fr_foodges_ingredient&quot;: {&quot;fr&quot;: &quot;Biscuit au beurre&quot;},
+#    &quot;agribalyse_proxy_food_code&quot;: {&quot;en&quot;: &quot;24000&quot;},
+#    &quot;ciqual_proxy_food_name&quot;: {
+#        &quot;en&quot;: &quot;Biscuit -cookie-&quot;,
+#        &quot;fr&quot;: &quot;Biscuit sec, sans précision&quot;,
+#    },
+#    &quot;wikidata&quot;: {&quot;en&quot;: &quot;Q13270&quot;},
+#    &quot;ciqual_proxy_food_code&quot;: {&quot;en&quot;: &quot;24000&quot;},
+#}
+</code></pre>
+<h3 id="the-taxonomy-object">The Taxonomy object</h3>
+<p>The <code>Taxonomy</code> object is a dictionary-like object that maps node IDs to <code>TaxonomyNode</code> objects.</p>
+<p>It also provides a way to iterate over all nodes:</p>
+<pre><code class="language-python">for node in taxonomy.iter_nodes():
+    print(node)
+# &lt;TaxonomyNode fr:beaune-premier-cru-belissand-blanc&gt;
+# &lt;TaxonomyNode fr:pommard-les-rugiens-bas&gt;
+# &lt;TaxonomyNode en:hazelnut-butters&gt;
+# &lt;TaxonomyNode fr:pernand-vergelesses&gt;
+# &lt;TaxonomyNode it:terre-di-pisa&gt;
+# &lt;TaxonomyNode en:creamy-quark&gt;
+# ...
+</code></pre>
+<h4 id="find-leaf-nodes-in-the-taxonomy">Find leaf nodes in the taxonomy</h4>
+<p>One very common usecase is to find the leafs nodes among a list of nodes, i.e. the nodes that have no children.
+For example, in Open Food Facts, the <code>categories_tags</code> field contains the categories submitted by the user and all their parents. If you're only interested in the most precise categories, you need to filter out the categories that have children:</p>
+<pre><code class="language-python"># Let's say you have a product that has the following categories:
+categories_tags = [&quot;en:plant-based-foods-and-beverages&quot;,&quot;en:plant-based-foods&quot;,&quot;en:breakfasts&quot;,&quot;en:cereals-and-potatoes&quot;,&quot;en:fruits-and-vegetables-based-foods&quot;,&quot;en:cereals-and-their-products&quot;,&quot;en:fruits-based-foods&quot;,&quot;en:breakfast-cereals&quot;,&quot;en:mueslis&quot;,&quot;en:cereals-with-nuts&quot;,&quot;en:crunchy-cereal-clusters&quot;,&quot;en:cereal-clusters-with-nuts&quot;]
 
-dataset = ProductDataset(&quot;csv&quot;)
+# Convert the ID to TaxonomyNode objects:
+categories_nodes = [taxonomy[tag] for tag in categories_tags if tag in taxonomy]
 
-for product in dataset:
-    print(product[&quot;product_name&quot;])
+# Let's find the leaf nodes using find_deepest_nodes method:
+leaf_nodes = taxonomy.find_deepest_nodes(categories_nodes)
+print(leaf_nodes)
+# [&lt;TaxonomyNode en:fruits-based-foods&gt;, &lt;TaxonomyNode en:mueslis&gt;, &lt;TaxonomyNode en:cereal-clusters-with-nuts&gt;]
 </code></pre>
-<p>With <code>dataset = ProductDataset("csv")</code>, we automatically download (and cache) the dataset. We can then iterate over it to get information about products.</p>
-<p>Two dataset types are available <code>csv</code> and <code>jsonl</code>. The <code>jsonl</code> dataset contains all the Open Food Facts database information but takes much more storage (&gt;5 GB), while the <code>csv</code> dataset is much ligher (~700 MB) but only contains the most important fields.</p>
-<p>The <code>jsonl</code> dataset type is used by default.</p>
-<h2 id="taxonomies">Taxonomies</h2>
-<p>For a deep dive on how to handle taxonomies, check out the <a href="../use_taxonomy/">dedicated page</a>.</p>
+<p>As you can see, the parent categories were removed, and only the leaf nodes remain.</p>
 
 
 
