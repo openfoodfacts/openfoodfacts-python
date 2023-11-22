@@ -70,3 +70,8 @@ With `dataset = ProductDataset("csv")`, we automatically download (and cache) th
 Two dataset types are available `csv` and `jsonl`. The `jsonl` dataset contains all the Open Food Facts database information but takes much more storage (>5 GB), while the `csv` dataset is much ligher (~700 MB) but only contains the most important fields.
 
 The `jsonl` dataset type is used by default.
+
+
+## Taxonomies
+
+For a deep dive on how to handle taxonomies, check out the [dedicated page](./use_taxonomy.md).
