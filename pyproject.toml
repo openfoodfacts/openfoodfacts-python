@@ -32,7 +32,7 @@ isort = "5.12.0"
 coverage = {version = "7.2.7", extras = ["toml"]}
 pytest = "7.4.2"
 types-requests = "2.31.0.2"
-types-tqdm = "4.65.0.1"
+types-tqdm = "4.66.0.5"
 
 [build-system]
 requires = ["poetry-core"]
