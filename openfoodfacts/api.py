@@ -16,7 +16,7 @@ def send_get_request(
     r = http_session.get(
         url,
         params=params,
-        headers={'User-Agent': api_config.user_agent},
+        headers={"User-Agent": api_config.user_agent},
         timeout=api_config.timeout,
         auth=get_http_auth(api_config.environment),
     )
@@ -38,7 +38,7 @@ def send_for_urlencoded_post_request(
     r = http_session.post(
         url,
         data=body,
-        headers={'User-Agent': api_config.user_agent},
+        headers={"User-Agent": api_config.user_agent},
         timeout=api_config.timeout,
         auth=get_http_auth(api_config.environment),
         cookies=cookies,
@@ -204,7 +204,7 @@ class ProductResource:
         r = http_session.post(
             url,
             data=params,
-            headers={'User-Agent': self.api_config.user_agent},
+            headers={"User-Agent": self.api_config.user_agent},
             timeout=self.api_config.timeout,
             auth=get_http_auth(self.api_config.environment),
             cookies=cookies,

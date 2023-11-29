@@ -9,7 +9,6 @@ TEST_USER_AGENT = "test_off_python"
 
 
 class TestProducts(unittest.TestCase):
-
     def test_get_product(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
         code = "1223435"
