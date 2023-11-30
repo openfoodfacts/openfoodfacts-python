@@ -67,7 +67,7 @@ api.product.get(code)
 
 ```python
 api = openfoodfacts.API()
-results = api.product.text_search("mineral water")
+results = api.product.text_search("pizza")
 ```
 
 *Create a new product or update an existing one*
