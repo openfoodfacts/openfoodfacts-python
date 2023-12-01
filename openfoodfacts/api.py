@@ -255,6 +255,7 @@ class API:
         version: Union[APIVersion, str] = APIVersion.v2,
         environment: Union[Environment, str] = Environment.org,
         session_cookie: Optional[str] = None,
+        timeout: int = 10,
     ) -> None:
         """Initialize the API instance.
 
@@ -271,6 +272,7 @@ class API:
             to Environment.org
         :param session_cookie: a session cookie, only used for write requests,
             defaults to None
+        :param timeout: the timeout for HTTP requests, defaults to 10 seconds
         """
         if not isinstance(country, Country):
             country = Country[country]
@@ -284,6 +286,7 @@ class API:
             username=username,
             password=password,
             session_cookie=session_cookie,
+            timeout=timeout,
         )
         self.password = password
         self.country = country
