@@ -24,7 +24,7 @@ class TestProducts(unittest.TestCase):
         with requests_mock.mock() as mock:
             response_data = {"products": ["kinder bueno"], "count": 1}
             mock.get(
-                "https://world.openfoodfacts.org/api/v2/search?"
+                "https://world.openfoodfacts.org/cgi/search.pl?"
                 + "search_terms=kinder+bueno&json=1&page="
                 + "1&page_size=20",
                 text=json.dumps(response_data),
@@ -33,7 +33,7 @@ class TestProducts(unittest.TestCase):
             self.assertEqual(res["products"], ["kinder bueno"])
             response_data = {"products": ["banania", "banania big"], "count": 2}
             mock.get(
-                "https://world.openfoodfacts.org/api/v2/search?"
+                "https://world.openfoodfacts.org/cgi/search.pl?"
                 + "search_terms=banania&json=1&page="
                 + "2&page_size=10&sort_by=unique_scans",
                 text=json.dumps(response_data),
