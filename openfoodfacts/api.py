@@ -289,3 +289,78 @@ class API:
         self.country = country
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
+
+
+def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:
+    """Parse ingredients text using Product Opener API.
+
+    It is only available for `off` flavor (food).
+
+    The result is a list of ingredients, each ingredient is a dict with the
+    following keys:
+
+    - id: the ingredient ID. Having an ID does not means that the ingredient
+        is recognized, you must check if it exists in the taxonomy.
+    - text: the ingredient text (as it appears in the input ingredients list)
+    - percent_min: the minimum percentage of the ingredient in the product
+    - percent_max: the maximum percentage of the ingredient in the product
+    - percent_estimate: the estimated percentage of the ingredient in the
+        product
+    - vegan (bool): optional key indicating if the ingredient is vegan
+    - vegetarian (bool): optional key indicating if the ingredient is
+        vegetarian
+
+
+    :param text: the ingredients text to parse
+    :param lang: the language of the text (used for parsing) as a 2-letter code
+    :param api_config: the API configuration
+    :raises RuntimeError: a RuntimeError is raised if the parsing fails
+    :return: the list of parsed ingredients
+    """
+    base_url = URLBuilder.country(
+        Flavor.off,
+        environment=api_config.environment,
+        country_code=api_config.country.name,
+    )
+    # by using "test" as code, we don't save any information to database
+    # This endpoint is specifically designed for testing purposes
+    url = f"{base_url}/api/v3/product/test"
+
+    if len(text) == 0:
+        raise ValueError("text must be a non-empty string")
+
+    try:
+        r = http_session.patch(
+            url,
+            auth=get_http_auth(api_config.environment),
+            json={
+                "fields": "ingredients",
+                "lc": lang,
+                "tags_lc": lang,
+                "product": {
+                    "lang": lang,
+                    f"ingredients_text_{lang}": text,
+                },
+            },
+            timeout=api_config.timeout,
+        )
+    except (
+        requests.exceptions.ConnectionError,
+        requests.exceptions.SSLError,
+        requests.exceptions.Timeout,
+    ) as e:
+        raise RuntimeError(
+            f"Unable to parse ingredients: error during HTTP request: {e}"
+        )
+
+    if not r.ok:
+        raise RuntimeError(
+            f"Unable to parse ingredients (non-200 status code): {r.status_code}, {r.text}"
+        )
+
+    response_data = r.json()
+
+    if response_data.get("status") != "success":
+        raise RuntimeError(f"Unable to parse ingredients: {response_data}")
+
+    return response_data["product"]["ingredients"]
