@@ -7,6 +7,7 @@ from .types import (
     Country,
     DatasetType,
     Environment,
+    Facet,
     Flavor,
     Lang,
 )
@@ -17,6 +18,7 @@ __all__ = [
     "APIVersion",
     "Country",
     "DatasetType",
+    "Facet",
     "Flavor",
     "Environment",
     "Lang",
