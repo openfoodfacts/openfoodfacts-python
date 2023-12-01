@@ -105,7 +105,7 @@ class ProductResource:
             country_code=self.api_config.country.name,
         )
 
-    def get(self, code: str, fields: Optional[List[str]] = None) -> Optional[dict]:
+    def get(self, code: str, fields: Optional[List[str]] = None) -> Optional[JSONType]:
         """Return a product.
 
         :param code: barcode of the product
@@ -114,7 +114,7 @@ class ProductResource:
         :return: the API response
         """
         fields = fields or []
-        url = f"{self.base_url}/api/{self.api_config.version}/product/{code}"
+        url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
 
         if fields:
             # requests escape comma in URLs, as expected, but openfoodfacts
