@@ -56,11 +56,11 @@ class FacetResource:
             country_code=self.api_config.country.name,
         )
 
-    def get(self, facet: Union[Facet, str]):
-        if facet not in list(Facet):
-            raise ValueError("unknown Facet: %s", facet)
+    def get(self, facet_name: Union[Facet, str]) -> JSONType:
+        facet = Facet.from_str_or_enum(facet_name)
+        facet_plural = facet.value.replace("_", "-")
         return send_get_request(
-            url=f"{self.base_url}/{facet}",
+            url=f"{self.base_url}/{facet_plural}",
             params={"json": "1"},
             api_config=self.api_config,
         )
