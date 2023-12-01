@@ -85,7 +85,7 @@ class FacetResource:
         """
         facet = Facet.from_str_or_enum(facet_name)
         facet_singular = facet.name.replace("_", "-")
-        params = {"page": page, page_size: page_size}
+        params = {"page": page, "page_size": page_size}
         if fields is not None:
             params["fields"] = ",".join(fields)
 
