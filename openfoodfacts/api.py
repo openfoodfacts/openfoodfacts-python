@@ -65,6 +65,36 @@ class FacetResource:
             api_config=self.api_config,
         )
 
+    def get_products(
+        self,
+        facet_name: Union[Facet, str],
+        facet_value: str,
+        page: int = 1,
+        page_size: int = 25,
+        fields: Optional[List[str]] = None,
+    ) -> JSONType:
+        """Return products for a given facet value.
+
+        :param facet_name: the facet name, e.g. "labels"
+        :param facet_value: the facet value, e.g. "en:organic"
+        :param page: the page number, defaults to 1
+        :param page_size: the number of items per page, defaults to 25
+        :param fields: a list of fields to return. If None, all fields are
+            returned.
+        :return: the API response
+        """
+        facet = Facet.from_str_or_enum(facet_name)
+        facet_singular = facet.name.replace("_", "-")
+        params = {"page": page, page_size: page_size}
+        if fields is not None:
+            params["fields"] = ",".join(fields)
+
+        return send_get_request(
+            url=f"{self.base_url}/{facet_singular}/{facet_value}.json",
+            params=params,
+            api_config=self.api_config,
+        )
+
 
 class ProductResource:
     def __init__(self, api_config: APIConfig):
