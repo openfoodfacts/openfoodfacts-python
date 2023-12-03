@@ -73,11 +73,13 @@ results = api.product.text_search("mineral water")
 *Create a new product or update an existing one*
 
 ```python
-api = openfoodfacts.API()
-results = api.product.update(CODE, body)
+results = api.product.update(body)
 ```
 
-with `CODE` the product barcode and `body` the update body.
+with `body` the update body. It is a dictionary. It should contain 
+the key "code" and its value, corresponding to the product that we
+want to update. Example:
+```body = {'code': '3850334341389', 'product_name': 'Mlinci'}```
 
 To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/usage/).
 
