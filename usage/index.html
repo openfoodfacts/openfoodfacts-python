@@ -414,9 +414,12 @@ api.product.get(code)
 <pre><code class="language-python">results = api.product.text_search(&quot;mineral water&quot;)
 </code></pre>
 <p><em>Create a new product or update an existing one</em></p>
-<pre><code class="language-python">results = api.product.update(CODE, body)
+<pre><code class="language-python">results = api.product.update(body)
 </code></pre>
-<p>with <code>CODE</code> the product barcode and <code>body</code> the update body.</p>
+<p>with <code>body</code> the update body. It is a dictionary. It should contain 
+the key "code" and its value, corresponding to the product that we
+want to update. Example:
+<code>body = {'code': '3850334341389', 'product_name': 'Mlinci'}</code></p>
 <h2 id="using-the-dataset">Using the dataset</h2>
 <p>If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump.
 Fortunately it can be done really easily using the SDK:</p>
