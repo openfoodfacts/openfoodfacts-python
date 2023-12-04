@@ -295,6 +295,9 @@ class API:
     ) -> None:
         """Initialize the API instance.
 
+        :param user_agent: the user agent to use for HTTP requests, this is
+            mandatory. Give a meaningful user agent that describes your
+            app/script.
         :param username: user username, only used for write requests, defaults
             to None
         :param password: user password, only used for write requests, defaults
