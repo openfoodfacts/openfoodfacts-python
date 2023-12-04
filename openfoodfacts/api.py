@@ -153,6 +153,10 @@ class ProductResource:
             url=url, api_config=self.api_config, return_none_on_404=True
         )
 
+        if resp is None:
+            # product not found
+            return None
+
         if resp["status"] == 0:
             # invalid barcode
             if raise_if_invalid:
