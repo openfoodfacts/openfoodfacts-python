@@ -18,6 +18,7 @@ except ImportError:
     _orjson_available = False
 
 http_session = requests.Session()
+http_session.headers.update({"User-Agent": "openfoodfacts-python"})
 
 
 class URLBuilder:

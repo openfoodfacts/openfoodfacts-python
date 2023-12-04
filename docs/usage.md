@@ -12,6 +12,7 @@ First, instantiate an API object:
 from openfoodfacts import API, APIVersion, Country, Environment, Flavor
 
 api = API(
+    user_agent="<application name>",
     username=None,
     password=None,
     country=Country.world,
@@ -21,7 +22,7 @@ api = API(
 )
 ```
 
-All parameters are optional, but here is a description of the parameters you can tweak:
+All parameters are optional with the exception of user_agent, but here is a description of the parameters you can tweak:
 
 - `username` and `password` are used to provide authentication (required for write requests)
 - `country` is used to specify the country, which is used by the API to return product specific to the country or to infer which language to use by default. `world` (all products) is the default value
@@ -46,10 +47,13 @@ results = api.product.text_search("pizza")
 *Create a new product or update an existing one*
 
 ```python
-results = api.product.update(CODE, body)
+results = api.product.update(body)
 ```
 
-with `CODE` the product barcode and `body` the update body.
+with `body` the update body. It is a dictionary. It should contain 
+the key "code" and its value, corresponding to the product that we
+want to update. Example:
+```body = {'code': '3850334341389', 'product_name': 'Mlinci'}```
 
 ## Using the dataset
 

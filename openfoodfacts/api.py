@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
 
@@ -11,14 +11,29 @@ def get_http_auth(environment: Environment) -> Optional[Tuple[str, str]]:
 
 
 def send_get_request(
-    url: str, api_config: APIConfig, params: Optional[Dict[str, Any]] = None
-) -> dict:
+    url: str,
+    api_config: APIConfig,
+    params: Optional[Dict[str, Any]] = None,
+    return_none_on_404: bool = False,
+) -> Optional[JSONType]:
+    """Send a GET request to the given URL.
+
+    :param url: the URL to send the request to
+    :param api_config: the API configuration
+    :param params: the query parameters, defaults to None
+    :param return_none_on_404: if True, None is returned if the response
+        status code is 404, defaults to False
+    :return: the API response
+    """
     r = http_session.get(
         url,
         params=params,
+        headers={"User-Agent": api_config.user_agent},
         timeout=api_config.timeout,
         auth=get_http_auth(api_config.environment),
     )
+    if r.status_code == 404 and return_none_on_404:
+        return None
     r.raise_for_status()
     return r.json()
 
@@ -37,6 +52,7 @@ def send_for_urlencoded_post_request(
     r = http_session.post(
         url,
         data=body,
+        headers={"User-Agent": api_config.user_agent},
         timeout=api_config.timeout,
         auth=get_http_auth(api_config.environment),
         cookies=cookies,
@@ -54,14 +70,48 @@ class FacetResource:
             country_code=self.api_config.country.name,
         )
 
-    def get(self, facet: Union[Facet, str]):
-        if facet not in list(Facet):
-            raise ValueError("unknown Facet: %s", facet)
-        return send_get_request(
-            url=f"{self.base_url}/{facet}",
+    def get(self, facet_name: Union[Facet, str]) -> JSONType:
+        facet = Facet.from_str_or_enum(facet_name)
+        facet_plural = facet.value.replace("_", "-")
+        resp = send_get_request(
+            url=f"{self.base_url}/{facet_plural}",
             params={"json": "1"},
             api_config=self.api_config,
         )
+        resp = cast(JSONType, resp)
+        return resp
+
+    def get_products(
+        self,
+        facet_name: Union[Facet, str],
+        facet_value: str,
+        page: int = 1,
+        page_size: int = 25,
+        fields: Optional[List[str]] = None,
+    ) -> JSONType:
+        """Return products for a given facet value.
+
+        :param facet_name: the facet name, e.g. "labels"
+        :param facet_value: the facet value, e.g. "en:organic"
+        :param page: the page number, defaults to 1
+        :param page_size: the number of items per page, defaults to 25
+        :param fields: a list of fields to return. If None, all fields are
+            returned.
+        :return: the API response
+        """
+        facet = Facet.from_str_or_enum(facet_name)
+        facet_singular = facet.name.replace("_", "-")
+        params: JSONType = {"page": page, "page_size": page_size}
+        if fields is not None:
+            params["fields"] = ",".join(fields)
+
+        resp = send_get_request(
+            url=f"{self.base_url}/{facet_singular}/{facet_value}.json",
+            params=params,
+            api_config=self.api_config,
+        )
+        resp = cast(JSONType, resp)
+        return resp
 
 
 class ProductResource:
@@ -73,16 +123,28 @@ class ProductResource:
             country_code=self.api_config.country.name,
         )
 
-    def get(self, code: str, fields: Optional[List[str]] = None) -> Optional[dict]:
+    def get(
+        self,
+        code: str,
+        fields: Optional[List[str]] = None,
+        raise_if_invalid: bool = False,
+    ) -> Optional[JSONType]:
         """Return a product.
+
+        If the product does not exist, None is returned.
 
         :param code: barcode of the product
         :param fields: a list of fields to return. If None, all fields are
             returned.
+        :param raise_if_invalid: if True, a ValueError is raised if the
+            barcode is invalid, defaults to False.
         :return: the API response
         """
+        if len(code) == 0:
+            raise ValueError("code must be a non-empty string")
+
         fields = fields or []
-        url = f"{self.base_url}/api/{self.api_config.version}/product/{code}"
+        url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
 
         if fields:
             # requests escape comma in URLs, as expected, but openfoodfacts
@@ -91,7 +153,21 @@ class ProductResource:
             # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
             url += "?fields={}".format(",".join(fields))
 
-        return send_get_request(url=url, api_config=self.api_config)
+        resp = send_get_request(
+            url=url, api_config=self.api_config, return_none_on_404=True
+        )
+
+        if resp is None:
+            # product not found
+            return None
+
+        if resp["status"] == 0:
+            # invalid barcode
+            if raise_if_invalid:
+                raise ValueError(f"invalid barcode: {code}")
+            return None
+
+        return resp["product"] if resp is not None else None
 
     def text_search(
         self,
@@ -127,7 +203,7 @@ class ProductResource:
         )
 
     def update(self, body: Dict[str, Any]):
-        """Create a new product or create it if it doesn't exist yet."""
+        """Create a new product or update an existing one."""
         if not body.get("code"):
             raise ValueError("missing code from body")
 
@@ -202,6 +278,7 @@ class ProductResource:
         r = http_session.post(
             url,
             data=params,
+            headers={"User-Agent": self.api_config.user_agent},
             timeout=self.api_config.timeout,
             auth=get_http_auth(self.api_config.environment),
             cookies=cookies,
@@ -214,6 +291,7 @@ class ProductResource:
 class API:
     def __init__(
         self,
+        user_agent: str,
         username: Optional[str] = None,
         password: Optional[str] = None,
         country: Union[Country, str] = Country.world,
@@ -221,9 +299,13 @@ class API:
         version: Union[APIVersion, str] = APIVersion.v2,
         environment: Union[Environment, str] = Environment.org,
         session_cookie: Optional[str] = None,
+        timeout: int = 10,
     ) -> None:
         """Initialize the API instance.
 
+        :param user_agent: the user agent to use for HTTP requests, this is
+            mandatory. Give a meaningful user agent that describes your
+            app/script.
         :param username: user username, only used for write requests, defaults
             to None
         :param password: user password, only used for write requests, defaults
@@ -237,11 +319,13 @@ class API:
             to Environment.org
         :param session_cookie: a session cookie, only used for write requests,
             defaults to None
+        :param timeout: the timeout for HTTP requests, defaults to 10 seconds
         """
         if not isinstance(country, Country):
             country = Country[country]
 
         self.api_config = APIConfig(
+            user_agent=user_agent,
             country=country,
             flavor=Flavor[flavor],
             version=APIVersion[version],
@@ -249,8 +333,84 @@ class API:
             username=username,
             password=password,
             session_cookie=session_cookie,
+            timeout=timeout,
         )
         self.password = password
         self.country = country
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
+
+
+def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:
+    """Parse ingredients text using Product Opener API.
+
+    It is only available for `off` flavor (food).
+
+    The result is a list of ingredients, each ingredient is a dict with the
+    following keys:
+
+    - id: the ingredient ID. Having an ID does not means that the ingredient
+        is recognized, you must check if it exists in the taxonomy.
+    - text: the ingredient text (as it appears in the input ingredients list)
+    - percent_min: the minimum percentage of the ingredient in the product
+    - percent_max: the maximum percentage of the ingredient in the product
+    - percent_estimate: the estimated percentage of the ingredient in the
+        product
+    - vegan (bool): optional key indicating if the ingredient is vegan
+    - vegetarian (bool): optional key indicating if the ingredient is
+        vegetarian
+
+
+    :param text: the ingredients text to parse
+    :param lang: the language of the text (used for parsing) as a 2-letter code
+    :param api_config: the API configuration
+    :raises RuntimeError: a RuntimeError is raised if the parsing fails
+    :return: the list of parsed ingredients
+    """
+    base_url = URLBuilder.country(
+        Flavor.off,
+        environment=api_config.environment,
+        country_code=api_config.country.name,
+    )
+    # by using "test" as code, we don't save any information to database
+    # This endpoint is specifically designed for testing purposes
+    url = f"{base_url}/api/v3/product/test"
+
+    if len(text) == 0:
+        raise ValueError("text must be a non-empty string")
+
+    try:
+        r = http_session.patch(
+            url,
+            auth=get_http_auth(api_config.environment),
+            json={
+                "fields": "ingredients",
+                "lc": lang,
+                "tags_lc": lang,
+                "product": {
+                    "lang": lang,
+                    f"ingredients_text_{lang}": text,
+                },
+            },
+            timeout=api_config.timeout,
+        )
+    except (
+        requests.exceptions.ConnectionError,
+        requests.exceptions.SSLError,
+        requests.exceptions.Timeout,
+    ) as e:
+        raise RuntimeError(
+            f"Unable to parse ingredients: error during HTTP request: {e}"
+        )
+
+    if not r.ok:
+        raise RuntimeError(
+            f"Unable to parse ingredients (non-200 status code): {r.status_code}, {r.text}"
+        )
+
+    response_data = r.json()
+
+    if response_data.get("status") != "success":
+        raise RuntimeError(f"Unable to parse ingredients: {response_data}")
+
+    return response_data["product"]["ingredients"]

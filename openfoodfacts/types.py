@@ -1,5 +1,5 @@
 import enum
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, model_validator
 
@@ -75,26 +75,46 @@ class APIVersion(str, enum.Enum):
 
 
 class Facet(str, enum.Enum):
-    additives = "additives"
-    allergens = "allergens"
-    brands = "brands"
-    categories = "categories"
-    countries = "countries"
-    contributors = "contributors"
-    code = "code"
-    entry_dates = "entry_dates"
-    ingredients = "ingredients"
-    label = "label"
-    languages = "languages"
-    nutrition_grade = "nutrition_grade"
+    """An enum representing the facets available on Open Food Facts.
+
+    The enum name is the singular form of the facet name, and the enum value is
+    the plural form. Please note that we use underscores instead of dashes (as
+    used in Open Food Facts API) in the enum name and value. The conversion
+    will be performed automatically when using the API.
+    """
+
+    additive = "additives"
+    allergen = "allergens"
+    brand = "brands"
+    category = "categories"
+    country = "countries"
+    contributor = "contributors"
+    entry_date = "entry_dates"
+    ingredient = "ingredients"
+    label = "labels"
+    language = "languages"
+    nutrition_grade = "nutrition_grades"
     packaging = "packaging"
-    packaging_codes = "packaging_codes"
-    purchase_places = "purchase_places"
-    photographer = "photographer"
-    informer = "informer"
-    states = "states"
-    stores = "stores"
-    traces = "traces"
+    packager_code = "packager_codes"
+    purchase_place = "purchase_places"
+    photographer = "photographers"
+    informer = "informers"
+    state = "states"
+    store = "stores"
+    trace = "traces"
+    data_quality_warning = "data_quality_warnings"
+    data_quality_error = "data_quality_errors"
+
+    @classmethod
+    def from_str_or_enum(cls, value: Union[str, "Facet"]) -> "Facet":
+        """Convert a string to an enum value."""
+        if isinstance(value, cls):
+            return value
+
+        elif isinstance(value, str):
+            if value not in Facet.__members__:
+                raise ValueError("unknown Facet: %s", value)
+            return cls[value]
 
 
 class Environment(str, enum.Enum):
@@ -814,6 +834,7 @@ Lang = enum.Enum(
 
 
 class APIConfig(BaseModel):
+    user_agent: str
     country: Country = Country.world
     environment: Environment = Environment.org
     flavor: Flavor = Flavor.off
@@ -837,6 +858,12 @@ class APIConfig(BaseModel):
                 "username/password and session_cookie are mutually exclusive"
             )
 
+        return self
+
+    @model_validator(mode="after")
+    def check_user_agent(self):
+        if not isinstance(self.user_agent, str) or not self.user_agent.strip():
+            raise ValueError("User agent must be a string and cannot be empty.")
         return self
 
 
