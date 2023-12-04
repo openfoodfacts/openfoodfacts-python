@@ -12,14 +12,18 @@ class TestProducts(unittest.TestCase):
     def test_get_product(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
         code = "1223435"
-        response_data = {"product": {"code": "1223435"}}
+        response_data = {
+            "product": {"code": "1223435"},
+            "status": 1,
+            "status_verbose": "product found",
+        }
         with requests_mock.mock() as mock:
             mock.get(
                 f"https://world.openfoodfacts.org/api/v2/product/{code}",
                 text=json.dumps(response_data),
             )
             res = api.product.get(code)
-            self.assertEqual(res, response_data)
+            self.assertEqual(res, response_data["product"])
 
     def test_text_search(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
