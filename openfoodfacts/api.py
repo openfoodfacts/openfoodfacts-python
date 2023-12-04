@@ -203,7 +203,7 @@ class ProductResource:
         )
 
     def update(self, body: Dict[str, Any]):
-        """Create a new product or create it if it doesn't exist yet."""
+        """Create a new product or update an existing one."""
         if not body.get("code"):
             raise ValueError("missing code from body")
 
