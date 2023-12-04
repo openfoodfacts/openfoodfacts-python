@@ -11,8 +11,20 @@ def get_http_auth(environment: Environment) -> Optional[Tuple[str, str]]:
 
 
 def send_get_request(
-    url: str, api_config: APIConfig, params: Optional[Dict[str, Any]] = None
-) -> dict:
+    url: str,
+    api_config: APIConfig,
+    params: Optional[Dict[str, Any]] = None,
+    return_none_on_404: bool = False,
+) -> JSONType:
+    """Send a GET request to the given URL.
+
+    :param url: the URL to send the request to
+    :param api_config: the API configuration
+    :param params: the query parameters, defaults to None
+    :param return_none_on_404: if True, None is returned if the response
+        status code is 404, defaults to False
+    :return: the API response
+    """
     r = http_session.get(
         url,
         params=params,
@@ -20,6 +32,8 @@ def send_get_request(
         timeout=api_config.timeout,
         auth=get_http_auth(api_config.environment),
     )
+    if r.status_code == 404 and return_none_on_404:
+        return None
     r.raise_for_status()
     return r.json()
 
@@ -105,14 +119,26 @@ class ProductResource:
             country_code=self.api_config.country.name,
         )
 
-    def get(self, code: str, fields: Optional[List[str]] = None) -> Optional[JSONType]:
+    def get(
+        self,
+        code: str,
+        fields: Optional[List[str]] = None,
+        raise_if_invalid: bool = False,
+    ) -> Optional[JSONType]:
         """Return a product.
+
+        If the product does not exist, None is returned.
 
         :param code: barcode of the product
         :param fields: a list of fields to return. If None, all fields are
             returned.
+        :param raise_if_invalid: if True, a ValueError is raised if the
+            barcode is invalid, defaults to False.
         :return: the API response
         """
+        if len(code) == 0:
+            raise ValueError("code must be a non-empty string")
+
         fields = fields or []
         url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
 
@@ -123,7 +149,17 @@ class ProductResource:
             # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
             url += "?fields={}".format(",".join(fields))
 
-        return send_get_request(url=url, api_config=self.api_config)
+        resp = send_get_request(
+            url=url, api_config=self.api_config, return_none_on_404=True
+        )
+
+        if resp["status"] == 0:
+            # invalid barcode
+            if raise_if_invalid:
+                raise ValueError(f"invalid barcode: {code}")
+            return None
+
+        return resp["product"] if resp is not None else None
 
     def text_search(
         self,
