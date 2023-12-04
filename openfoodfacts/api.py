@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
 
@@ -15,7 +15,7 @@ def send_get_request(
     api_config: APIConfig,
     params: Optional[Dict[str, Any]] = None,
     return_none_on_404: bool = False,
-) -> JSONType:
+) -> Optional[JSONType]:
     """Send a GET request to the given URL.
 
     :param url: the URL to send the request to
@@ -73,11 +73,13 @@ class FacetResource:
     def get(self, facet_name: Union[Facet, str]) -> JSONType:
         facet = Facet.from_str_or_enum(facet_name)
         facet_plural = facet.value.replace("_", "-")
-        return send_get_request(
+        resp = send_get_request(
             url=f"{self.base_url}/{facet_plural}",
             params={"json": "1"},
             api_config=self.api_config,
         )
+        resp = cast(JSONType, resp)
+        return resp
 
     def get_products(
         self,
@@ -99,15 +101,17 @@ class FacetResource:
         """
         facet = Facet.from_str_or_enum(facet_name)
         facet_singular = facet.name.replace("_", "-")
-        params = {"page": page, "page_size": page_size}
+        params: JSONType = {"page": page, "page_size": page_size}
         if fields is not None:
             params["fields"] = ",".join(fields)
 
-        return send_get_request(
+        resp = send_get_request(
             url=f"{self.base_url}/{facet_singular}/{facet_value}.json",
             params=params,
             api_config=self.api_config,
         )
+        resp = cast(JSONType, resp)
+        return resp
 
 
 class ProductResource:
