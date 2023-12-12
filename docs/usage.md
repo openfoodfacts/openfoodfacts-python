@@ -41,7 +41,7 @@ api.product.get(code)
 *Perform text search*
 
 ```python
-results = api.product.text_search("mineral water")
+results = api.product.text_search("pizza")
 ```
 
 *Create a new product or update an existing one*

@@ -197,7 +197,7 @@ class ProductResource:
             params["sort_by"] = sort_by
 
         return send_get_request(
-            url=f"{self.base_url}/api/v2/search",
+            url=f"{self.base_url}/cgi/search.pl",
             api_config=self.api_config,
             params=params,
         )
