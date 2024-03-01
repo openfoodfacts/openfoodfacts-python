@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.12...v0.2.0) (2024-03-01)
+
+
+### Features
+
+* add PEP 561 compliance (typing in installed package) ([#215](https://github.com/openfoodfacts/openfoodfacts-python/issues/215)) ([ca7fc41](https://github.com/openfoodfacts/openfoodfacts-python/commit/ca7fc41ec9b3a7610af28db5683ec6344e3c3022))
+* Force user agent in API ([#184](https://github.com/openfoodfacts/openfoodfacts-python/issues/184)) ([34024be](https://github.com/openfoodfacts/openfoodfacts-python/commit/34024beb0c4323cfa575b95f93d75d37bcc34784))
+
+
+### Bug Fixes
+
+* add a function to parse ingredients ([d0aa579](https://github.com/openfoodfacts/openfoodfacts-python/commit/d0aa579653ae21c433a24600fc5ca72742e44986))
+* add add_ingredient_in_taxonomy_field function from Robotoff ([64ee295](https://github.com/openfoodfacts/openfoodfacts-python/commit/64ee295f51da60be73327f8ffb8cabcba9df2669))
+* add custom headers when performing requests with the API ([163b33b](https://github.com/openfoodfacts/openfoodfacts-python/commit/163b33bf74ce08fa747cab2ff305d154af552557))
+* add FacetResource.get_products method ([d790389](https://github.com/openfoodfacts/openfoodfacts-python/commit/d790389e246a5e0e93ec789d93eb5c64bc61898d))
+* add timeout parameter to API ([b08b9d0](https://github.com/openfoodfacts/openfoodfacts-python/commit/b08b9d049d17ddc8804301c756aabaa455a6d755))
+* fix Facet class ([82ab808](https://github.com/openfoodfacts/openfoodfacts-python/commit/82ab80809729aae40d4e1e65c5c2ab98c685baf2))
+* fix FacetResource.get method ([d562063](https://github.com/openfoodfacts/openfoodfacts-python/commit/d562063ca28b8c06e993179f2929c4b2b4ff4fef))
+* fix page_size parameter in facet.get_products ([9d99e6c](https://github.com/openfoodfacts/openfoodfacts-python/commit/9d99e6cae9745a72753e4726d17475a1ff910c9b))
+* fixed search products by text ([#191](https://github.com/openfoodfacts/openfoodfacts-python/issues/191)) ([94c5600](https://github.com/openfoodfacts/openfoodfacts-python/commit/94c5600bb2babbd4fa80355f9e71d4847d896c27))
+* improve sdk ([#193](https://github.com/openfoodfacts/openfoodfacts-python/issues/193)) ([07f224c](https://github.com/openfoodfacts/openfoodfacts-python/commit/07f224ca7bb55f38401ef3faa1b324094d9fdfc0))
+* minor fix in ProductResource.get ([54a8809](https://github.com/openfoodfacts/openfoodfacts-python/commit/54a88096afa6961d332d749853fceb67c17ccbf6))
+
+
+### Documentation
+
+* add documentation about taxonomy handling ([26cd3e5](https://github.com/openfoodfacts/openfoodfacts-python/commit/26cd3e5c32a0d33494aa2efb793fb98dc7cf6871))
+* add mkdocs .pages file ([3533d29](https://github.com/openfoodfacts/openfoodfacts-python/commit/3533d2965f8892d403da304e6afc40ac8055547e))
+* fix nav ([925e7e5](https://github.com/openfoodfacts/openfoodfacts-python/commit/925e7e5a440cbaa826dc1388972e7bf3ca461c46))
+
 ## [0.1.12](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.11...v0.1.12) (2023-11-10)
 
 
