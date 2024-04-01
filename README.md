@@ -110,6 +110,6 @@ Contributors:
 
 ## Copyright and License
 
-    Copyright 2016-2022 Open Food Facts
+    Copyright 2016-2024 Open Food Facts
 
 The Open Food Facts Python SDK is licensed under the [MIT License](https://github.com/openfoodfacts/openfoodfacts-python/blob/develop/LICENSE).
