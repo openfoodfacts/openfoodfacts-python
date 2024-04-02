@@ -17,12 +17,27 @@ logger = get_logger(__name__)
 
 DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/datasets").expanduser()
 DATASET_FILE_NAMES = {
-    DatasetType.jsonl: "openfoodfacts-products.jsonl.gz",
-    DatasetType.csv: "en.openfoodfacts.org.products.csv.gz",
+    Flavor.off: {
+        DatasetType.jsonl: "openfoodfacts-products.jsonl.gz",
+        DatasetType.csv: "en.openfoodfacts.org.products.csv.gz",
+    },
+    Flavor.obf: {
+        DatasetType.jsonl: "openbeautyfacts-products.jsonl.gz",
+        DatasetType.csv: "en.openbeautyfacts.org.products.csv",
+    },
+    Flavor.opff: {
+        DatasetType.jsonl: "openpetfoodfacts-products.jsonl.gz",
+        DatasetType.csv: "en.openpetfoodfacts.org.products.csv",
+    },
+    Flavor.opf: {
+        DatasetType.jsonl: "openproductsfacts-products.jsonl.gz",
+        DatasetType.csv: "en.openproductsfacts.org.products.csv",
+    },
 }
 
 
 def get_dataset(
+    flavor: Flavor = Flavor.off,
     dataset_type: DatasetType = DatasetType.jsonl,
     force_download: bool = False,
     download_newer: bool = False,
@@ -33,7 +48,8 @@ def get_dataset(
     The dataset is downloaded the first time and subsequently cached in
     `~/.cache/openfoodfacts/datasets`.
 
-    :param dataset_type: The, defaults to DatasetType.jsonl
+    :param flavor: The data source, defaults to Flavor.off
+    :param dataset_type: The returned format, defaults to DatasetType.jsonl
     :param force_download: if True, (re)download the dataset even if it was
         cached, defaults to False
     :param download_newer: if True, download the dataset if a more recent
@@ -43,9 +59,9 @@ def get_dataset(
     :return: the path of the dataset
     """
     cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
-    file_name = DATASET_FILE_NAMES[dataset_type]
+    file_name = DATASET_FILE_NAMES[flavor][dataset_type]
     dataset_path = cache_dir / file_name
-    url = f"{URLBuilder.static(Flavor.off, Environment.org)}/data/{file_name}"
+    url = f"{URLBuilder.static(flavor, Environment.org)}/data/{file_name}"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     if not should_download_file(url, dataset_path, force_download, download_newer):
@@ -57,7 +73,12 @@ def get_dataset(
 
 
 class ProductDataset:
-    def __init__(self, dataset_type: DatasetType = DatasetType.jsonl, **kwargs):
+    def __init__(
+        self,
+        flavor: Flavor = Flavor.off,
+        dataset_type: DatasetType = DatasetType.jsonl,
+        **kwargs,
+    ):
         """A product dataset.
 
         This class is used to iterate over the Open Food Facts dataset.
@@ -66,7 +87,7 @@ class ProductDataset:
             to DatasetType.jsonl
         """
         self.dataset_type = dataset_type
-        self.dataset_path = get_dataset(dataset_type, **kwargs)
+        self.dataset_path = get_dataset(flavor, dataset_type, **kwargs)
 
     def __iter__(self):
         if self.dataset_type is DatasetType.jsonl:
@@ -86,5 +107,4 @@ class ProductDataset:
         count = 0
         for _ in self:
             count += 1
-
         return count
