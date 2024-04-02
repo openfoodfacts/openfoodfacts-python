@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.16">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
     
     
       
@@ -402,7 +402,7 @@ api = API(
 <ul>
 <li><code>username</code> and <code>password</code> are used to provide authentication (required for write requests)</li>
 <li><code>country</code> is used to specify the country, which is used by the API to return product specific to the country or to infer which language to use by default. <code>world</code> (all products) is the default value</li>
-<li><code>flavor</code>: the Open*Facts project you want to interact with: <code>off</code> (Open Food Facts, default), <code>obf</code> (Open Beauty Facts),...</li>
+<li><code>flavor</code>: the Open*Facts project you want to interact with: <code>off</code> (Open Food Facts, default), <code>obf</code> (Open Beauty Facts), <code>opff</code> (Open Pet Food Facts), <code>opf</code> (Open Products Facts)</li>
 <li><code>version</code>: API version (v2 is the default)</li>
 <li><code>environment</code>: either <code>org</code> for production environment (openfoodfacts.org) or <code>net</code> for staging (openfoodfacts.net)</li>
 </ul>
@@ -421,18 +421,24 @@ the key "code" and its value, corresponding to the product that we
 want to update. Example:
 <code>body = {'code': '3850334341389', 'product_name': 'Mlinci'}</code></p>
 <h2 id="using-the-dataset">Using the dataset</h2>
-<p>If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump.
-Fortunately it can be done really easily using the SDK:</p>
+<p>If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump. Fortunately it can be done really easily using the SDK:</p>
 <pre><code class="language-python">from openfoodfacts import ProductDataset
 
-dataset = ProductDataset(&quot;csv&quot;)
+dataset = ProductDataset(dataset_type=&quot;csv&quot;)
 
 for product in dataset:
     print(product[&quot;product_name&quot;])
 </code></pre>
-<p>With <code>dataset = ProductDataset("csv")</code>, we automatically download (and cache) the dataset. We can then iterate over it to get information about products.</p>
-<p>Two dataset types are available <code>csv</code> and <code>jsonl</code>. The <code>jsonl</code> dataset contains all the Open Food Facts database information but takes much more storage (&gt;5 GB), while the <code>csv</code> dataset is much ligher (~700 MB) but only contains the most important fields.</p>
-<p>The <code>jsonl</code> dataset type is used by default.</p>
+<p>With <code>dataset = ProductDataset(dataset_type="csv")</code>, we automatically download (and cache) the food dataset. We can then iterate over it to get information about products.</p>
+<p>Two dataset types are available <code>csv</code> and <code>jsonl</code>. The <code>jsonl</code> dataset contains all the Open Food Facts database information but takes much more storage (&gt;5 GB), while the <code>csv</code> dataset is much ligher (~800 MB) but only contains the most important fields. The <code>jsonl</code> dataset type is used by default.</p>
+<p>You can also use <code>ProductDataset</code> to fetch other non-food datasets:</p>
+<pre><code class="language-python">from openfoodfacts import ProductDataset
+
+dataset = ProductDataset(dataset_type=&quot;csv&quot;)
+
+for product in dataset:
+    print(product[&quot;product_name&quot;])
+</code></pre>
 <h2 id="taxonomies">Taxonomies</h2>
 <p>For a deep dive on how to handle taxonomies, check out the <a href="../handle_taxonomies/">dedicated page</a>.</p>
 
@@ -484,7 +490,7 @@ for product in dataset:
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
       
     
   </body>
