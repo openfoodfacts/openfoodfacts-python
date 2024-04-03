@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.2.0...v0.2.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* fix Flavor.opf domain ([acdd9f7](https://github.com/openfoodfacts/openfoodfacts-python/commit/acdd9f709ab8dc9bbd9bfcc71fe25a21b7933497))
+* update copyright year ([3c80d59](https://github.com/openfoodfacts/openfoodfacts-python/commit/3c80d5918fa03a66d0618a5a6f50937973ca33aa))
+
 ## [0.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.1.12...v0.2.0) (2024-03-01)
 
 
