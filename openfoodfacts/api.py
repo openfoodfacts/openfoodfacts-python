@@ -78,7 +78,7 @@ class RobotoffResource:
         return http_session.post(
             url=f"{self.base_url}/api/v1/predict/lang",
             data={"text": text, "k": k, "threshold": threshold},
-        )
+        ).json()
 
 
 class FacetResource:
