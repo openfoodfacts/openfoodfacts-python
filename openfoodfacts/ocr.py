@@ -1173,11 +1173,11 @@ def get_base64_from_image(
     :return: the base64 representation of the image
     """
     if _pillow_available and isinstance(image, Image.Image):
-        image_bytes = io.BytesIO()
-        image.save(image_bytes, format="PNG")
-        image_bytes = image_bytes.getvalue()
+        image_bytes_fp = io.BytesIO()
+        image.save(image_bytes_fp, format="PNG")
+        image_bytes = image_bytes_fp.getvalue()
     elif isinstance(image, Path):
-        image_bytes = image.read_bytes("rb")
+        image_bytes = image.read_bytes()
     elif isinstance(image, str):
         if not session:
             session = http_session
