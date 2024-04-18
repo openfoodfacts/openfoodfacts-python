@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.2.1...v0.3.0) (2024-04-18)
+
+
+### Features
+
+* add get_image_from_url function in utils.py ([db35751](https://github.com/openfoodfacts/openfoodfacts-python/commit/db357510e7f092d5fc3d922465fcaa1c032b324a))
+* add Robotoff resource ([953ae41](https://github.com/openfoodfacts/openfoodfacts-python/commit/953ae419d613b874e109217e6764ef63bf2fdb44))
+* add run_ocr_on_image_batch function ([decd94d](https://github.com/openfoodfacts/openfoodfacts-python/commit/decd94d8d1830dcef4b4e8c76e840fe753084c4c))
+
+
+### Bug Fixes
+
+* fix ProductResource.update method ([29c40ad](https://github.com/openfoodfacts/openfoodfacts-python/commit/29c40ad1360f20178bd6b23bce1acf9c99847847))
+* fix typing error ([dd51e71](https://github.com/openfoodfacts/openfoodfacts-python/commit/dd51e710e924396f2273dc70c2dbcbcf3c730778))
+* make predict_lang compatible with signature ([757cab9](https://github.com/openfoodfacts/openfoodfacts-python/commit/757cab9f104f2b5ff54cd44ad901b68779c4c20a))
+
 ## [0.2.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.2.0...v0.2.1) (2024-04-02)
 
 
