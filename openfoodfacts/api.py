@@ -61,6 +61,26 @@ def send_form_urlencoded_post_request(
     return r
 
 
+class RobotoffResource:
+    def __init__(self, api_config: APIConfig):
+        self.api_config = api_config
+        self.base_url = URLBuilder.robotoff(environment=api_config.environment)
+
+    def predict_lang(self, text: str, k: int = 10, threshold: float = 0.01) -> JSONType:
+        """Predict the language of a text.
+
+        :param text: the text to predict the language of
+        :param k: the number of predictions to return, defaults to 10
+        :param threshold: the minimum probability for a prediction to be
+            returned, defaults to 0.01
+        :return: the API response
+        """
+        return http_session.post(
+            url=f"{self.base_url}/api/v1/predict/lang",
+            data={"text": text, "k": k, "threshold": threshold},
+        )
+
+
 class FacetResource:
     def __init__(self, api_config: APIConfig):
         self.api_config = api_config
@@ -339,6 +359,7 @@ class API:
         self.country = country
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
+        self.robotoff = RobotoffResource(self.api_config)
 
 
 def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:
