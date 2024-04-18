@@ -38,7 +38,7 @@ def send_get_request(
     return r.json()
 
 
-def send_for_urlencoded_post_request(
+def send_form_urlencoded_post_request(
     url: str, body: Dict[str, Any], api_config: APIConfig
 ) -> requests.Response:
     cookies = None
@@ -208,7 +208,7 @@ class ProductResource:
             raise ValueError("missing code from body")
 
         url = f"{self.base_url}/cgi/product_jqm2.pl"
-        return send_for_urlencoded_post_request(url, body, self.api_config)
+        return send_form_urlencoded_post_request(url, body, self.api_config)
 
     def select_image(
         self,
