@@ -3,6 +3,7 @@ import json
 import logging
 import shutil
 import time
+from io import BytesIO
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List, Optional, Union
 
@@ -17,8 +18,46 @@ try:
 except ImportError:
     _orjson_available = False
 
+_pillow_available = True
+try:
+    import PIL
+    from PIL import Image
+except ImportError:
+    _pillow_available = False
+
 http_session = requests.Session()
 http_session.headers.update({"User-Agent": "openfoodfacts-python"})
+
+
+def configure_root_logger(
+    logger: logging.Logger,
+    level: int = logging.INFO,
+    formatter_string: Optional[str] = None,
+):
+    logger.setLevel(level)
+    handler = logging.StreamHandler()
+
+    if formatter_string is None:
+        formatter_string = "%(asctime)s :: %(levelname)s :: %(message)s"
+
+    formatter = logging.Formatter(formatter_string)
+    handler.setFormatter(formatter)
+    handler.setLevel(level)
+    logger.addHandler(handler)
+    return logger
+
+
+def get_logger(name=None, level: int = logging.INFO) -> logging.Logger:
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+
+    if name is None:
+        configure_root_logger(logger, level)
+
+    return logger
+
+
+logger = get_logger(__name__)
 
 
 class URLBuilder:
@@ -82,34 +121,6 @@ class URLBuilder:
             tld=environment.value,
             base_domain=flavor.get_base_domain(),
         )
-
-
-def get_logger(name=None, level: int = logging.INFO) -> logging.Logger:
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-
-    if name is None:
-        configure_root_logger(logger, level)
-
-    return logger
-
-
-def configure_root_logger(
-    logger: logging.Logger,
-    level: int = logging.INFO,
-    formatter_string: Optional[str] = None,
-):
-    logger.setLevel(level)
-    handler = logging.StreamHandler()
-
-    if formatter_string is None:
-        formatter_string = "%(asctime)s :: %(levelname)s :: %(message)s"
-
-    formatter = logging.Formatter(formatter_string)
-    handler.setFormatter(formatter)
-    handler.setLevel(level)
-    logger.addHandler(handler)
-    return logger
 
 
 def jsonl_iter(jsonl_path: Union[str, Path]) -> Iterable[Dict]:
@@ -259,3 +270,84 @@ def should_download_file(
 def get_country_name(country: Country) -> str:
     """Return country name code (ex: `en:portugal`) from `Country`."""
     return COUNTRY_CODE_TO_NAME[country]
+
+
+class AssetLoadingException(Exception):
+    """Exception raised by `get_asset_from_url` when an asset cannot be fetched
+    from URL or if loading failed.
+    """
+
+    pass
+
+
+def get_asset_from_url(
+    asset_url: str,
+    error_raise: bool = True,
+    session: Optional[requests.Session] = None,
+    auth: Optional[tuple[str, str]] = None,
+) -> Optional[requests.Response]:
+    try:
+        if session:
+            r = session.get(asset_url, auth=auth)
+        else:
+            r = requests.get(asset_url, auth=auth)
+    except (
+        requests.exceptions.ConnectionError,
+        requests.exceptions.SSLError,
+        requests.exceptions.Timeout,
+    ) as e:
+        error_message = "Cannot download %s"
+        if error_raise:
+            raise AssetLoadingException(error_message % asset_url) from e
+        logger.info(error_message, asset_url, exc_info=e)
+        return None
+
+    if not r.ok:
+        error_message = "Cannot download %s: HTTP %s"
+        error_args = (asset_url, r.status_code)
+        if error_raise:
+            raise AssetLoadingException(error_message % error_args)
+        logger.log(
+            logging.INFO if r.status_code < 500 else logging.WARNING,
+            error_message,
+            *error_args,
+        )
+        return None
+
+    return r
+
+
+def get_image_from_url(
+    image_url: str, error_raise: bool = True, session: Optional[requests.Session] = None
+) -> Optional["Image.Image"]:
+    """Fetch an image from `image_url` and load it.
+
+    :param image_url: URL of the image to load
+    :param error_raise: if True, raises a `AssetLoadingException` if an error
+      occured, defaults to False. If False, None is returned if an error
+      occured.
+    :param session: requests Session to use, by default no session is used.
+    :return: the Pillow Image or None.
+    """
+    if not _pillow_available:
+        raise ImportError("Pillow is required to load images")
+
+    r = get_asset_from_url(image_url, error_raise, session)
+    if r is None:
+        return None
+    content_bytes = r.content
+
+    try:
+        return Image.open(BytesIO(content_bytes))
+    except PIL.UnidentifiedImageError:
+        error_message = f"Cannot identify image {image_url}"
+        if error_raise:
+            raise AssetLoadingException(error_message)
+        logger.info(error_message)
+    except PIL.Image.DecompressionBombError:
+        error_message = f"Decompression bomb error for image {image_url}"
+        if error_raise:
+            raise AssetLoadingException(error_message)
+        logger.info(error_message)
+
+    return None
