@@ -1,16 +1,22 @@
+import base64
 import enum
+import io
 import itertools
 import json
 import math
 import operator
 import re
 from collections import Counter, defaultdict
+from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
 import requests
 
 from .types import JSONType
-from .utils import get_logger, http_session
+from .utils import _pillow_available, get_logger, http_session
+
+if _pillow_available:
+    from PIL import Image
 
 # Some classes documentation were adapted from Google documentation on
 # https://cloud.google.com/vision/docs/reference/rpc/google.cloud.vision.v1#google.cloud.vision.v1.Symbol
@@ -1152,3 +1158,83 @@ class SafeSearchAnnotationLikelihood(enum.IntEnum):
     POSSIBLE = 4
     LIKELY = 5
     VERY_LIKELY = 6
+
+
+def get_base64_from_image(
+    image: Union["Image.Image", Path, str], session: Optional[requests.Session] = None
+) -> str:
+    """Return the base64 representation of an image.
+
+    :param image: the image to convert to base64. Can be a PIL Image, a Path
+        object, or a URL
+    :param session: the requests Session to use to download the image if
+        `image` is a URL, optional (the default session is used if not set)
+    :raises TypeError: if `image` is not a PIL Image, a Path object, or a URL
+    :return: the base64 representation of the image
+    """
+    if _pillow_available and isinstance(image, Image.Image):
+        image_bytes = io.BytesIO()
+        image.save(image_bytes, format="PNG")
+        image_bytes = image_bytes.getvalue()
+    elif isinstance(image, Path):
+        image_bytes = image.read_bytes("rb")
+    elif isinstance(image, str):
+        if not session:
+            session = http_session
+        image_bytes = session.get(image).content
+    else:
+        raise TypeError(f"Invalid type: {type(image)}")
+
+    return base64.b64encode(image_bytes).decode("utf-8")
+
+
+class OCRFeature(str, enum.Enum):
+    """The OCR features supported by Google Cloud Vision API."""
+
+    TEXT_DETECTION = enum.auto()
+    LOGO_DETECTION = enum.auto()
+    LABEL_DETECTION = enum.auto()
+    SAFE_SEARCH_DETECTION = enum.auto()
+    FACE_DETECTION = enum.auto()
+
+
+def run_ocr_on_image_batch(
+    images: list[Union["Image.Image", Path, str]],
+    api_key: str,
+    features: Optional[list[OCRFeature]] = None,
+    session: Optional[requests.Session] = None,
+) -> requests.Response:
+    """Run Google Cloud Vision OCR on a batch of images.
+
+    :param images: a list of images to run OCR on. Can be PIL Images, Path
+        or URLs
+    :param api_key: the Google Cloud Vision API key to use
+    :param features: the list of OCR features to use, defaults to
+        [OCRFeature.TEXT_DETECTION]
+    :param session: the requests Session to use to download the images if
+        `images` contains URLs, optional (the default session is used if not
+        set)
+    :return: the requests Response object
+    """
+    if session is None:
+        session = http_session
+
+    if features is None:
+        features = [OCRFeature.TEXT_DETECTION]
+    else:
+        features = list(set(features))
+
+    base64_images = [get_base64_from_image(image, session=session) for image in images]
+    r = session.post(
+        f"https://vision.googleapis.com/v1/images:annotate?key={api_key}",
+        json={
+            "requests": [
+                {
+                    "features": [{"type": feature.name} for feature in features],
+                    "image": {"content": base64_image},
+                }
+                for base64_image in base64_images
+            ]
+        },
+    )
+    return r
