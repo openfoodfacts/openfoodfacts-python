@@ -31,7 +31,7 @@ mypy = "1.3.0"
 isort = "5.12.0"
 coverage = {version = "7.2.7", extras = ["toml"]}
 pytest = "7.4.2"
-types-requests = "2.31.0.2"
+types-requests = "2.32.0.20240622"
 types-tqdm = "4.66.0.20240417"
 
 [build-system]
