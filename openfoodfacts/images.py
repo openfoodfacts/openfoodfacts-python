@@ -187,7 +187,7 @@ def download_image(
     :return: the loaded image or None if an error occured. If `return_bytes`
         is True, a tuple with the image and the image bytes is returned.
 
-    >>> download_image("https://images.openfoodfacts.org/images/products/324/227/210/2359/4.jpg")
+    >>> download_image("https://images.openfoodfacts.org/images/products/324/227/210/2359/4.jpg")  # noqa
     <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1244x1500>
 
     >>> download_image(("3242272102359", "4"))
