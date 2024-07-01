@@ -5,7 +5,7 @@ import shutil
 import time
 from io import BytesIO
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Union
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import requests
 import tqdm
@@ -110,7 +110,7 @@ class URLBuilder:
     @staticmethod
     def image_url(flavor: Flavor, environment: Environment, image_path: str) -> str:
         prefix = URLBuilder._get_url(
-            prefix="images", tld=environment.value, base_domain=flavor.get_base_domain()
+            prefix="static", tld=environment.value, base_domain=flavor.get_base_domain()
         )
         return prefix + f"/images/products{image_path}"
 
@@ -318,8 +318,11 @@ def get_asset_from_url(
 
 
 def get_image_from_url(
-    image_url: str, error_raise: bool = True, session: Optional[requests.Session] = None
-) -> Optional["Image.Image"]:
+    image_url: str,
+    error_raise: bool = True,
+    session: Optional[requests.Session] = None,
+    return_bytes: bool = False,
+) -> Union[None, "Image.Image", Tuple[Optional["Image.Image"], bytes]]:
     """Fetch an image from `image_url` and load it.
 
     :param image_url: URL of the image to load
@@ -327,7 +330,10 @@ def get_image_from_url(
       occured, defaults to False. If False, None is returned if an error
       occured.
     :param session: requests Session to use, by default no session is used.
-    :return: the Pillow Image or None.
+    :param return_bytes: if True, return the image bytes as well, defaults to
+        False.
+    :return: the loaded image or None if an error occured. If `return_bytes`
+        is True, a tuple with the image and the image bytes is returned.
     """
     if not _pillow_available:
         raise ImportError("Pillow is required to load images")
@@ -338,7 +344,10 @@ def get_image_from_url(
     content_bytes = r.content
 
     try:
-        return Image.open(BytesIO(content_bytes))
+        image = Image.open(BytesIO(content_bytes))
+        if return_bytes:
+            return image, content_bytes
+        return image
     except PIL.UnidentifiedImageError:
         error_message = f"Cannot identify image {image_url}"
         if error_raise:
