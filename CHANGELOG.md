@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.3.0...v0.4.0) (2024-07-01)
+
+
+### Features
+
+* add download_image function ([#243](https://github.com/openfoodfacts/openfoodfacts-python/issues/243)) ([265f10b](https://github.com/openfoodfacts/openfoodfacts-python/commit/265f10bfa9047c48874255fbc66d9bab32fa61c5))
+
 ## [0.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.2.1...v0.3.0) (2024-04-18)
 
 
