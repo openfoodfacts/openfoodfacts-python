@@ -1,12 +1,21 @@
+import logging
 import re
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple, Union
 from urllib.parse import urlparse
 
+import requests
+from PIL import Image
+
 from openfoodfacts.types import Environment, Flavor
-from openfoodfacts.utils import URLBuilder
+from openfoodfacts.utils import URLBuilder, get_image_from_url
+
+logger = logging.getLogger(__name__)
+
 
 BARCODE_PATH_REGEX = re.compile(r"^(...)(...)(...)(.*)$")
+# Base URL of the public Open Food Facts S3 bucket
+AWS_S3_BASE_URL = "https://openfoodfacts-images.s3.eu-west-3.amazonaws.com/data"
 
 
 def split_barcode(barcode: str) -> List[str]:
@@ -156,3 +165,60 @@ def extract_source_from_url(url: str) -> str:
         url_path = str(Path(url_path).with_suffix(".jpg"))
 
     return url_path
+
+
+def download_image(
+    image: Union[str, Tuple[str, str]],
+    use_cache: bool = True,
+    error_raise: bool = True,
+    session: Optional[requests.Session] = None,
+    return_bytes: bool = False,
+) -> Union[None, Image.Image, Tuple[Optional[Image.Image], bytes]]:
+    """Download an Open Food Facts image.
+
+    :param image: the image URL or a tuple containing the barcode and the
+        image ID
+    :param use_cache: whether to use the S3 dataset cache, defaults to True
+    :param error_raise: whether to raise an error if the download fails,
+        defaults to True
+    :param session: the requests session to use, defaults to None
+    :param return_bytes: if True, return the image bytes as well, defaults to
+        False.
+    :return: the loaded image or None if an error occured. If `return_bytes`
+        is True, a tuple with the image and the image bytes is returned.
+
+    >>> download_image("https://images.openfoodfacts.org/images/products/324/227/210/2359/4.jpg")
+    <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1244x1500>
+
+    >>> download_image(("3242272102359", "4"))
+    <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1244x1500>
+    """
+    if isinstance(image, str):
+        if use_cache:
+            image_path = extract_source_from_url(image)
+            image_url = f"{AWS_S3_BASE_URL}{image_path}"
+
+            if requests.head(image_url).status_code != 200:
+                logger.debug(f"Image not found in cache: {image_url}")
+                image_url = image
+        else:
+            image_url = image
+
+    if isinstance(image, tuple):
+        if use_cache:
+            image_path = generate_image_path(*image)
+            image_url = f"{AWS_S3_BASE_URL}{image_path}"
+
+            if requests.head(image_url).status_code != 200:
+                logger.debug(f"Image not found in cache: {image_url}")
+                image_url = generate_image_url(*image)
+        else:
+            image_url = generate_image_url(*image)
+
+    logger.debug(f"Downloading image from {image_url}")
+    return get_image_from_url(
+        image_url,
+        error_raise=error_raise,
+        session=session,
+        return_bytes=return_bytes,
+    )
