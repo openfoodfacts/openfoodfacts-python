@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.4.0...v1.0.0) (2024-07-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* improve asset and image download functions
+
+### Features
+
+* add helper functions for Redis stream ([6fedef7](https://github.com/openfoodfacts/openfoodfacts-python/commit/6fedef784b569c453d8d1a352195edb787e83eea))
+* improve asset and image download functions ([f5b4f90](https://github.com/openfoodfacts/openfoodfacts-python/commit/f5b4f90efb56e2ec775a8e11453818a6d6d8ef75))
+
+
+### Bug Fixes
+
+* add Pillow as optional dependency (+ extra) ([5ba7719](https://github.com/openfoodfacts/openfoodfacts-python/commit/5ba77194060ef203e739fb30395f89d12ef358bb))
+
 ## [0.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.3.0...v0.4.0) (2024-07-01)
 
 
