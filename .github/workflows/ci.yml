@@ -32,9 +32,6 @@ jobs:
       run: poetry install --with=dev --all-extras
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
-    - name: Install dependencies
-      run:
-        poetry install
     - name: Launch quality checks
       run: |
         poetry run flake8 .
