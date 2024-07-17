@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 import requests
 
 from openfoodfacts.types import Environment, Flavor
-from openfoodfacts.utils import URLBuilder, get_image_from_url
+from openfoodfacts.utils import ImageDownloadItem, URLBuilder, get_image_from_url
 
 logger = logging.getLogger(__name__)
 
@@ -178,8 +178,8 @@ def download_image(
     use_cache: bool = True,
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
-    return_bytes: bool = False,
-) -> Union[None, "Image.Image", Tuple[Optional["Image.Image"], bytes]]:
+    return_struct: bool = False,
+) -> Union[None, "Image.Image", ImageDownloadItem]:
     """Download an Open Food Facts image.
 
     :param image: the image URL or a tuple containing the barcode and the
@@ -188,10 +188,10 @@ def download_image(
     :param error_raise: whether to raise an error if the download fails,
         defaults to True
     :param session: the requests session to use, defaults to None
-    :param return_bytes: if True, return the image bytes as well, defaults to
-        False.
-    :return: the loaded image or None if an error occured. If `return_bytes`
-        is True, a tuple with the image and the image bytes is returned.
+    :param return_struct: if True, return a `ImageDownloadItem` object
+        containing the image, image bytes and the response object.
+    :return: the downloaded image, or an `ImageDownloadItem` object if
+        `return_struct` is True.
 
     >>> download_image("https://images.openfoodfacts.org/images/products/324/227/210/2359/4.jpg")  # noqa
     <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1244x1500>
@@ -229,5 +229,5 @@ def download_image(
         image_url,
         error_raise=error_raise,
         session=session,
-        return_bytes=return_bytes,
+        return_struct=return_struct,
     )

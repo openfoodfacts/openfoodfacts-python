@@ -1,3 +1,4 @@
+import dataclasses
 import gzip
 import json
 import logging
@@ -5,7 +6,7 @@ import shutil
 import time
 from io import BytesIO
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, List, Optional, Union
 
 import requests
 import tqdm
@@ -280,12 +281,38 @@ class AssetLoadingException(Exception):
     pass
 
 
+@dataclasses.dataclass
+class AssetDownloadItem:
+    """ "The result of a asset download operation.
+
+    :param url: the URL of the asset
+    :param response: the requests response object (or None)
+    :param error: the error message if an error occured (or None)
+    """
+
+    url: str
+    response: Optional[requests.Response] = None
+    error: Optional[str] = None
+
+
+@dataclasses.dataclass
+class ImageDownloadItem(AssetDownloadItem):
+    """The result of a image download operation.
+
+    :param image: the loaded PIL image, or None if an error occured
+    :param image_bytes: the image bytes, or None if an error occured
+    """
+
+    image: Optional["Image.Image"] = None
+    image_bytes: Optional[bytes] = None
+
+
 def get_asset_from_url(
     asset_url: str,
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
     auth: Optional[tuple[str, str]] = None,
-) -> Optional[requests.Response]:
+) -> AssetDownloadItem:
     try:
         if session:
             r = session.get(asset_url, auth=auth)
@@ -300,7 +327,7 @@ def get_asset_from_url(
         if error_raise:
             raise AssetLoadingException(error_message % asset_url) from e
         logger.info(error_message, asset_url, exc_info=e)
-        return None
+        return AssetDownloadItem(asset_url, error=error_message % asset_url)
 
     if not r.ok:
         error_message = "Cannot download %s: HTTP %s"
@@ -312,41 +339,55 @@ def get_asset_from_url(
             error_message,
             *error_args,
         )
-        return None
+        return AssetDownloadItem(
+            asset_url, response=r, error=error_message % error_args
+        )
 
-    return r
+    return AssetDownloadItem(asset_url, response=r)
 
 
 def get_image_from_url(
     image_url: str,
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
-    return_bytes: bool = False,
-) -> Union[None, "Image.Image", Tuple[Optional["Image.Image"], bytes]]:
+    return_struct: bool = False,
+) -> Union[ImageDownloadItem, Image.Image, None]:
     """Fetch an image from `image_url` and load it.
 
-    :param image_url: URL of the image to load
+    :param image_url: URL of the image to load.
     :param error_raise: if True, raises a `AssetLoadingException` if an error
       occured, defaults to False. If False, None is returned if an error
       occured.
     :param session: requests Session to use, by default no session is used.
-    :param return_bytes: if True, return the image bytes as well, defaults to
-        False.
-    :return: the loaded image or None if an error occured. If `return_bytes`
-        is True, a tuple with the image and the image bytes is returned.
+    :param return_struct: if True, return a `ImageDownloadItem` object
+        containing the image, image bytes and the response object.
+    :return: the loaded image, or None if an error occured and `error_raise`
+        is False. If `return_struct` is True, return a `ImageDownloadItem`
+        object.
     """
     if not _pillow_available:
         raise ImportError("Pillow is required to load images")
 
-    r = get_asset_from_url(image_url, error_raise, session)
-    if r is None:
-        return None
-    content_bytes = r.content
+    asset_item = get_asset_from_url(image_url, error_raise, session)
+    response = asset_item.response
+    if response is None or asset_item.error:
+        if return_struct:
+            return ImageDownloadItem(
+                url=image_url, response=response, error=asset_item.error
+            )
+        else:
+            return None
 
+    content_bytes = response.content
     try:
         image = Image.open(BytesIO(content_bytes))
-        if return_bytes:
-            return image, content_bytes
+        if return_struct:
+            return ImageDownloadItem(
+                url=image_url,
+                response=response,
+                image=image,
+                image_bytes=content_bytes,
+            )
         return image
     except PIL.UnidentifiedImageError:
         error_message = f"Cannot identify image {image_url}"
@@ -358,5 +399,8 @@ def get_image_from_url(
         if error_raise:
             raise AssetLoadingException(error_message)
         logger.info(error_message)
+
+    if return_struct:
+        return ImageDownloadItem(url=image_url, response=response, error=error_message)
 
     return None
