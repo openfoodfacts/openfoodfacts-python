@@ -1,2 +1,25 @@
 github_actions:
-- .github/**/*
+- changed-files:
+  - any-glob-to-any-file: '.github/**/*'
+
+REDIS:
+- changed-files:
+  - any-glob-to-any-file: 'tests/test_redis.py'
+  - any-glob-to-any-file: 'openfoodfacts/redis.py'
+
+images:
+- changed-files:
+  - any-glob-to-any-file: 'openfoodfacts/images.py'
+
+tests:
+- changed-files:
+  - any-glob-to-any-file: 'tests/test_utils.py'
+
+utils:
+- changed-files:
+  - any-glob-to-any-file: 'openfoodfacts/utils.py'
+  - any-glob-to-any-file: 'tests/test_utils.py'
+
+dependancies:
+- changed-files:
+  - any-glob-to-any-file: 'poetry.lock'
