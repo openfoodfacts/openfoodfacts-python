@@ -30,7 +30,7 @@ utils:
   - any-glob-to-any-file: 'openfoodfacts/utils.py'
   - any-glob-to-any-file: 'tests/test_utils.py'
 
-dependancies:
+dependencies:
 - changed-files:
   - any-glob-to-any-file: 'poetry.lock'
 
