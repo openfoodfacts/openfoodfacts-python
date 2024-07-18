@@ -102,7 +102,7 @@ def get_processed_since(
 def get_new_updates(
     redis_client: Redis,
     stream_name: str,
-    min_id: Union[str, datetime.datetime] = "$",
+    min_id: Union[str, datetime.datetime, None] = "$",
     batch_size: int = 100,
 ) -> Iterator[RedisUpdate]:
     """Reads new updates from a Redis Stream, starting from the moment this
@@ -128,7 +128,7 @@ def get_new_updates(
 def get_new_updates_multistream(
     redis_client: Redis,
     stream_names: list[str],
-    min_id: Union[str, datetime.datetime] = "$",
+    min_id: Union[str, datetime.datetime, None] = "$",
     batch_size: int = 100,
 ) -> Iterator[RedisUpdate]:
     """Reads new updates from Redis Stream, starting from the moment this
@@ -142,7 +142,9 @@ def get_new_updates_multistream(
     :param batch_size: the size of the batch to fetch, defaults to 100.
     :yield: a RedisUpdate instance for each update.
     """
-    if isinstance(min_id, datetime.datetime):
+    if min_id is None:
+        min_id = "$"
+    elif isinstance(min_id, datetime.datetime):
         min_id = f"{int(min_id.timestamp() * 1000)}-0"
 
     # We start from the last ID
