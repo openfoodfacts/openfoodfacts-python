@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.0...v1.1.1) (2024-07-18)
+
+
+### Bug Fixes
+
+* fix bug when min_id=None was provided ([d55db32](https://github.com/openfoodfacts/openfoodfacts-python/commit/d55db32d5c01ce79fbc9cf2a7d93ac9eb058826e))
+
 ## [1.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.0.2...v1.1.0) (2024-07-18)
 
 
