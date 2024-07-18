@@ -19,14 +19,35 @@ def get_redis_client(**kwargs) -> Redis:
 class RedisUpdate(BaseModel):
     """A class representing a product update from a Redis Stream."""
 
+    # The Redis ID of the update
+    id: str
+    # The name of the Redis stream where the update was published
     stream: str
+    # The timestamp of the update
     timestamp: datetime.datetime
+    # The code of the product
     code: str
+    # The flavor of the product (off, obf, opff, off_pro)
     flavor: str
+    # The user ID of the user who performed the action
     user_id: str
+    # The action performed by the user (either updated or deleted)
     action: str
+    # A comment provided by the user
     comment: str
+    # A JSON object representing the differences between the old and new
+    # product data
     diffs: Optional[Json[Any]] = None
+    # the type of the product (food, petfood, beauty,...)
+    product_type: Optional[str] = None
+
+    def is_image_upload(self) -> bool:
+        """Returns True if the update is an image upload."""
+        return bool(
+            self.diffs is not None
+            and "uploaded_images" in self.diffs
+            and "add" in self.diffs["uploaded_images"]
+        )
 
 
 def get_processed_since(
@@ -70,6 +91,7 @@ def get_processed_since(
             # Get the timestamp from the ID
             timestamp = int(timestamp_id.split("-")[0])
             yield RedisUpdate(
+                id=timestamp_id,
                 timestamp=timestamp,  # type: ignore
                 stream=redis_stream_name,
                 code=item["code"],
@@ -139,6 +161,7 @@ def get_new_updates_multistream(
                 # Get the timestamp from the ID
                 timestamp = int(timestamp_id.split("-")[0])
                 yield RedisUpdate(
+                    id=timestamp_id,
                     timestamp=timestamp,  # type: ignore
                     stream=stream_name,
                     code=item["code"],
