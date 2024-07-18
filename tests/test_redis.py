@@ -43,7 +43,8 @@ def test_get_processed_since():
     results = list(
         get_processed_since(
             redis_client,
-            start_timestamp_ms,
+            stream_name=stream_name,
+            min_id=start_timestamp_ms,
         )
     )
 
@@ -117,7 +118,7 @@ def test_get_new_updates():
     redis_client = cast(Redis, RedisXreadClient(return_values))
 
     # Call the function and iterate over the results
-    updates_iter = get_new_updates(redis_client, redis_stream_name)
+    updates_iter = get_new_updates(redis_client, stream_name=redis_stream_name)
 
     results = next(updates_iter)
     assert results == RedisUpdate(

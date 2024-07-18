@@ -52,34 +52,30 @@ class RedisUpdate(BaseModel):
 
 def get_processed_since(
     redis_client: Redis,
-    start_timestamp: Union[int, datetime.datetime],
-    redis_stream_name: str = "product_updates_off",
+    stream_name: str,
+    min_id: Union[str, datetime.datetime],
     batch_size: int = 100,
 ) -> Iterator[RedisUpdate]:
     """Fetches all the updates that have been published since the given
     timestamp.
 
     :param redis_client: the Redis client
-    :param start_timestamp: the timestamp to start from, in milliseconds, or a
-        datetime
-    :param redis_stream_name: the name of the Redis stream to read from
+    :param stream_name: the name of the Redis stream to read from
+    :param min_id: the minimum ID to start from, or a datetime object
     :param batch_size: the size of the batch to fetch, defaults to 100
     :yield: a RedisUpdate instance for each update
     """
-    if isinstance(start_timestamp, datetime.datetime):
-        start_timestamp = int(start_timestamp.timestamp() * 1000)
-
-    # We start from the given timestamp
-    min_id = f"{start_timestamp}-0"
+    if isinstance(min_id, datetime.datetime):
+        min_id = f"{int(min_id.timestamp() * 1000)}-0"
 
     while True:
         logger.debug(
             "Fetching batch from Redis, stream %s, min_id %s, count %d",
-            redis_stream_name,
+            stream_name,
             min_id,
             batch_size,
         )
-        batch = redis_client.xrange(redis_stream_name, min=min_id, count=batch_size)
+        batch = redis_client.xrange(stream_name, min=min_id, count=batch_size)
         if not batch:
             # We reached the end of the stream
             break
@@ -93,7 +89,7 @@ def get_processed_since(
             yield RedisUpdate(
                 id=timestamp_id,
                 timestamp=timestamp,  # type: ignore
-                stream=redis_stream_name,
+                stream=stream_name,
                 code=item["code"],
                 flavor=item["flavor"],
                 user_id=item["user_id"],
@@ -105,7 +101,7 @@ def get_processed_since(
 
 def get_new_updates(
     redis_client: Redis,
-    stream_name: str = "product_updates_off",
+    stream_name: str,
     min_id: Union[str, datetime.datetime] = "$",
     batch_size: int = 100,
 ) -> Iterator[RedisUpdate]:
@@ -117,12 +113,13 @@ def get_new_updates(
     :param redis_client: the Redis client
     :param stream_name: the name of the Redis stream to read from
     :param min_id: the minimum ID to start from, defaults to "$".
+        A datetime object can also be passed.
     :param batch_size: the size of the batch to fetch, defaults to 100
     :yield: a RedisUpdate instance for each update
     """
     yield from get_new_updates_multistream(
-        redis_client,
-        [stream_name],
+        redis_client=redis_client,
+        stream_names=[stream_name],
         min_id=min_id,
         batch_size=batch_size,
     )
