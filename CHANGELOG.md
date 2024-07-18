@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.0.1...v1.0.2) (2024-07-18)
+
+
+### Bug Fixes
+
+* add min_id parameter to get_new_updates ([a19aeb5](https://github.com/openfoodfacts/openfoodfacts-python/commit/a19aeb51cbfe65756dba3db5ae975484834bf8a2))
+
 ## [1.0.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.0.0...v1.0.1) (2024-07-18)
 
 
