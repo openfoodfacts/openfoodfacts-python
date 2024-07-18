@@ -2,9 +2,11 @@ name: Python SDK quality checks and unit tests
 
 on:
   push:
-    branches: [ '*' ]
-  pull_request:
-    branches: [ '*' ]
+    paths:
+      - "openfoodfacts/**"
+      - "pyproject.toml"
+      - "poetry.lock"
+      - "tests/**"
 
 jobs:
   build:
