@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.0.2...v1.1.0) (2024-07-18)
+
+
+### Features
+
+* improve Redis API ([8f421e2](https://github.com/openfoodfacts/openfoodfacts-python/commit/8f421e20f1c8366f63578f123bc32565aca5b750))
+
 ## [1.0.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.0.1...v1.0.2) (2024-07-18)
 
 
