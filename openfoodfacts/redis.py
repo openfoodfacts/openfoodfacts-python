@@ -106,6 +106,7 @@ def get_processed_since(
 def get_new_updates(
     redis_client: Redis,
     stream_name: str = "product_updates_off",
+    min_id: Union[str, datetime.datetime] = "$",
     batch_size: int = 100,
 ) -> Iterator[RedisUpdate]:
     """Reads new updates from a Redis Stream, starting from the moment this
@@ -115,12 +116,14 @@ def get_new_updates(
 
     :param redis_client: the Redis client
     :param stream_name: the name of the Redis stream to read from
+    :param min_id: the minimum ID to start from, defaults to "$".
     :param batch_size: the size of the batch to fetch, defaults to 100
     :yield: a RedisUpdate instance for each update
     """
     yield from get_new_updates_multistream(
         redis_client,
         [stream_name],
+        min_id=min_id,
         batch_size=batch_size,
     )
 
@@ -128,6 +131,7 @@ def get_new_updates(
 def get_new_updates_multistream(
     redis_client: Redis,
     stream_names: list[str],
+    min_id: Union[str, datetime.datetime] = "$",
     batch_size: int = 100,
 ) -> Iterator[RedisUpdate]:
     """Reads new updates from Redis Stream, starting from the moment this
@@ -135,14 +139,18 @@ def get_new_updates_multistream(
 
     The function will block until new updates are available.
 
-    :param redis_client: the Redis client
-    :param stream_names: the names of the Redis streams to read from
+    :param redis_client: the Redis client.
+    :param stream_names: the names of the Redis streams to read from.
+    :param min_id: the minimum ID to start from, defaults to "$".
     :param batch_size: the size of the batch to fetch, defaults to 100.
-    :yield: a RedisUpdate instance for each update
+    :yield: a RedisUpdate instance for each update.
     """
+    if isinstance(min_id, datetime.datetime):
+        min_id = f"{int(min_id.timestamp() * 1000)}-0"
+
     # We start from the last ID
     min_ids: dict[Union[bytes, str, memoryview], Union[int, bytes, str, memoryview]] = {
-        stream_name: "$" for stream_name in stream_names
+        stream_name: min_id for stream_name in stream_names
     }
     while True:
         logger.debug(
@@ -155,8 +163,8 @@ def get_new_updates_multistream(
 
         for stream_name, batch in response:
             # We update the min_id to the last ID of the batch
-            min_id = batch[-1][0]
-            min_ids[stream_name] = min_id
+            new_min_id = batch[-1][0]
+            min_ids[stream_name] = new_min_id
             for timestamp_id, item in batch:
                 # Get the timestamp from the ID
                 timestamp = int(timestamp_id.split("-")[0])
