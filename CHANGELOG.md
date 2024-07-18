@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.0.0...v1.0.1) (2024-07-18)
+
+
+### Bug Fixes
+
+* improve RedisUpdate class ([1b90084](https://github.com/openfoodfacts/openfoodfacts-python/commit/1b9008463200c9a3a598669c4636ff9af9cd137c))
+
 ## [1.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v0.4.0...v1.0.0) (2024-07-17)
 
 
