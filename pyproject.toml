@@ -22,7 +22,7 @@ python = ">=3.8.1,<4.0"
 requests = ">=2.20.0"
 pydantic = ">=2.0.0,<3.0.0"
 tqdm = ">=4.0.0,<5.0.0"
-redis = { version = "^5.0.0", optional = true, extras = ["hiredis"] }
+redis = { version = "~5.1.0", optional = true, extras = ["hiredis"] }
 Pillow = { version = ">=9.3,<10.4", optional = true }
 
 [tool.poetry.group.dev.dependencies]
