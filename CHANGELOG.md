@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.1...v1.1.2) (2024-10-04)
+
+
+### Bug Fixes
+
+* improve ProductDataset class ([c777d0f](https://github.com/openfoodfacts/openfoodfacts-python/commit/c777d0f383e5b423b85e7853080ef383921844c2))
+* only add HTTP auth headers when it's needed ([5c81025](https://github.com/openfoodfacts/openfoodfacts-python/commit/5c8102598d352f025298b41ff960d1ea1e87c6f4))
+* use new barcode normalization ([b49b362](https://github.com/openfoodfacts/openfoodfacts-python/commit/b49b362f5fcbc422aef724688d7d4622b2a993fc))
+
 ## [1.1.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.0...v1.1.1) (2024-07-18)
 
 
