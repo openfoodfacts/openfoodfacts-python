@@ -111,7 +111,7 @@ class URLBuilder:
     @staticmethod
     def image_url(flavor: Flavor, environment: Environment, image_path: str) -> str:
         prefix = URLBuilder._get_url(
-            prefix="static", tld=environment.value, base_domain=flavor.get_base_domain()
+            prefix="images", tld=environment.value, base_domain=flavor.get_base_domain()
         )
         return prefix + f"/images/products{image_path}"
 
