@@ -77,17 +77,44 @@ class ProductDataset:
         self,
         flavor: Flavor = Flavor.off,
         dataset_type: DatasetType = DatasetType.jsonl,
+        dataset_path: Optional[Path] = None,
         **kwargs,
     ):
         """A product dataset.
 
-        This class is used to iterate over the Open Food Facts dataset.
+        This class is used to iterate over the Open Food Facts dataset and
+        to retrieve the information about products as dict.
 
+        If dataset_path is None (default), the dataset is downloaded and
+        cached in `~/.cache/openfoodfacts/datasets`.
+
+        Otherwise, the dataset is loaded from the provided path.
+
+        :param flavor: the dataset flavor to use (off, obf, opff or opf),
+            defaults to Flavor.off. This parameter is ignored if dataset_path
+            is provided.
         :param dataset_type: the dataset type to use (csv or jsonl), defaults
-            to DatasetType.jsonl
+            to DatasetType.jsonl. This parameter is ignored if dataset_path is
+            provided.
+        :param dataset_path: the path of the dataset, defaults to None.
+        :param kwargs: additional arguments passed to `get_dataset` when
+            downloading the dataset
         """
         self.dataset_type = dataset_type
-        self.dataset_path = get_dataset(flavor, dataset_type, **kwargs)
+
+        if dataset_path is not None:
+            self.dataset_path = dataset_path
+
+            # We infer the dataset type from the file extension
+            full_suffix = "".join(dataset_path.suffixes)
+            if full_suffix in (".jsonl.gz", ".jsonl"):
+                self.dataset_type = DatasetType.jsonl
+            elif full_suffix in (".csv.gz", ".csv"):
+                self.dataset_type = DatasetType.csv
+            else:
+                raise ValueError(f"Unknown dataset type: {full_suffix}")
+        else:
+            self.dataset_path = get_dataset(flavor, dataset_type, **kwargs)
 
     def __iter__(self):
         if self.dataset_type is DatasetType.jsonl:
