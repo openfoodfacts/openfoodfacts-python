@@ -351,7 +351,7 @@ def get_image_from_url(
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
     return_struct: bool = False,
-) -> Union[ImageDownloadItem, Image.Image, None]:
+) -> Union[ImageDownloadItem, "Image.Image", None]:
     """Fetch an image from `image_url` and load it.
 
     :param image_url: URL of the image to load.
