@@ -1,5 +1,4 @@
 import logging
-import re
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 from urllib.parse import urlparse
@@ -12,7 +11,6 @@ from openfoodfacts.utils import ImageDownloadItem, URLBuilder, get_image_from_ur
 logger = logging.getLogger(__name__)
 
 
-BARCODE_PATH_REGEX = re.compile(r"^(...)(...)(...)(.*)$")
 # Base URL of the public Open Food Facts S3 bucket
 AWS_S3_BASE_URL = "https://openfoodfacts-images.s3.eu-west-3.amazonaws.com/data"
 
@@ -43,15 +41,21 @@ def split_barcode(barcode: str) -> List[str]:
     if not barcode.isdigit():
         raise ValueError(f"unknown barcode format: {barcode}")
 
-    match = BARCODE_PATH_REGEX.fullmatch(barcode)
+    # Pad the barcode with zeros to ensure it has 13 digits
+    barcode = barcode.zfill(13)
+    # Split the first 9 digits of the barcode into 3 groups of 3 digits to
+    # get the first 3 folder names
+    splits = [barcode[0:3], barcode[3:6], barcode[6:9], barcode[9:13]]
 
-    splits = [x for x in match.groups() if x] if match else [barcode]
+    # use the rest of the barcode as the last folder name
+    if len(barcode) > 13:
+        splits.append(barcode[13:])
 
     if org_id is not None:
         # For the pro platform only, images and OCRs belonging to an org
         # are stored in a folder named after the org for all its products, ex:
         # https://images.pro.openfoodfacts.org/images/products/org-lea-nature/330/713/080/3004/1.jpg
-        splits.append(org_id)
+        splits.insert(0, org_id)
 
     return splits
 
@@ -103,9 +107,8 @@ def generate_json_ocr_url(
         Environment.org
     :return: the generated JSON URL
     """
-    return (
-        URLBuilder.static(flavor, environment)
-        + f"/images/products{generate_json_ocr_path(code, image_id)}"
+    return URLBuilder.image_url(
+        flavor, environment, generate_json_ocr_path(code, image_id)
     )
 
 
@@ -141,6 +144,17 @@ def extract_barcode_from_url(url: str) -> Optional[str]:
 
 
 def extract_barcode_from_path(path: str) -> Optional[str]:
+    """Extract a product barcode from an image/OCR path.
+
+    The barcode is normalized using the following rules:
+
+    - all leading zeros are stripped
+    - if the barcode is less than 8 digits, it is left-padded with zeros up to
+      8 digits
+    - if the barcode is more than 8 digits but less than 13 digits, it is
+      left-padded with zeros up to 13 digits
+    - if the barcode has 13 digits or more, it's returned as it
+    """
     barcode = ""
 
     for parent in Path(path).parents:
@@ -149,7 +163,18 @@ def extract_barcode_from_path(path: str) -> Optional[str]:
         else:
             break
 
-    return barcode or None
+    # Strip leading zeros
+    barcode = barcode.lstrip("0")
+
+    if not barcode:
+        return None
+
+    if len(barcode) <= 8:
+        barcode = barcode.zfill(8)
+        return barcode
+
+    barcode = barcode.zfill(13)
+    return barcode
 
 
 def extract_source_from_url(url: str) -> str:
