@@ -15,6 +15,7 @@ def send_get_request(
     api_config: APIConfig,
     params: Optional[Dict[str, Any]] = None,
     return_none_on_404: bool = False,
+    auth: Optional[Tuple[str, str]] = None,
 ) -> Optional[JSONType]:
     """Send a GET request to the given URL.
 
@@ -30,7 +31,7 @@ def send_get_request(
         params=params,
         headers={"User-Agent": api_config.user_agent},
         timeout=api_config.timeout,
-        auth=get_http_auth(api_config.environment),
+        auth=auth,
     )
     if r.status_code == 404 and return_none_on_404:
         return None
@@ -97,6 +98,7 @@ class FacetResource:
             url=f"{self.base_url}/{facet_plural}",
             params={"json": "1"},
             api_config=self.api_config,
+            auth=get_http_auth(self.api_config.environment),
         )
         resp = cast(JSONType, resp)
         return resp
@@ -129,6 +131,7 @@ class FacetResource:
             url=f"{self.base_url}/{facet_singular}/{facet_value}.json",
             params=params,
             api_config=self.api_config,
+            auth=get_http_auth(self.api_config.environment),
         )
         resp = cast(JSONType, resp)
         return resp
@@ -220,6 +223,7 @@ class ProductResource:
             url=f"{self.base_url}/cgi/search.pl",
             api_config=self.api_config,
             params=params,
+            auth=get_http_auth(self.api_config.environment),
         )
 
     def update(self, body: Dict[str, Any]):
