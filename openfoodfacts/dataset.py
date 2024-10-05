@@ -14,6 +14,10 @@ from .utils import (
 
 logger = get_logger(__name__)
 
+# Increase field_size to accommodate large fields.
+# sys.maxsize will overflow on windows so using max 32-bit integer instead.
+csv.field_size_limit(pow(2, 31) - 1)
+
 
 DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/datasets").expanduser()
 DATASET_FILE_NAMES = {
