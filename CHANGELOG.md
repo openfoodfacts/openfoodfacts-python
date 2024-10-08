@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.4](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.3...v1.1.4) (2024-10-08)
+
+
+### Bug Fixes
+
+* add new functions related to barcodes ([6faadc1](https://github.com/openfoodfacts/openfoodfacts-python/commit/6faadc1ea00b9ade6dfad50ba9cd5c261a4dcf8a))
+* increase csv field_size_limit to accommodate large fields ([94be4d3](https://github.com/openfoodfacts/openfoodfacts-python/commit/94be4d3cda2adf2967062cfedc289337c5e99842))
+* make RedisUpdate.product_type mandatory ([3cb66b1](https://github.com/openfoodfacts/openfoodfacts-python/commit/3cb66b1971b92514df9c965a2b9f9e7b51e5053f))
+
 ## [1.1.3](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.2...v1.1.3) (2024-10-04)
 
 
