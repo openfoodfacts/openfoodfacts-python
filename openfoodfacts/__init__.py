@@ -1,3 +1,5 @@
+from openfoodfacts.barcode import normalize_barcode
+
 from .api import API
 from .dataset import ProductDataset, get_dataset
 from .ocr import OCRResult
@@ -25,6 +27,7 @@ __all__ = [
     "OCRResult",
     "ProductDataset",
     "get_dataset",
+    "normalize_barcode",
 ]
 
 __version__ = "1.1.3"
