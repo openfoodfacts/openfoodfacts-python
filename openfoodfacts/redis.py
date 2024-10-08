@@ -35,11 +35,11 @@ class RedisUpdate(BaseModel):
     action: str
     # A comment provided by the user
     comment: str
+    # the type of the product (food, product, petfood, beauty)
+    product_type: str
     # A JSON object representing the differences between the old and new
     # product data
     diffs: Optional[Json[Any]] = None
-    # the type of the product (food, petfood, beauty,...)
-    product_type: Optional[str] = None
 
     def is_image_upload(self) -> bool:
         """Returns True if the update is an image upload."""
@@ -95,6 +95,7 @@ def get_processed_since(
                 user_id=item["user_id"],
                 action=item["action"],
                 comment=item["comment"],
+                product_type=item["product_type"],
                 diffs=item.get("diffs"),
             )
 
@@ -176,5 +177,6 @@ def get_new_updates_multistream(
                     user_id=item["user_id"],
                     action=item["action"],
                     comment=item["comment"],
+                    product_type=item["product_type"],
                     diffs=item.get("diffs"),
                 )

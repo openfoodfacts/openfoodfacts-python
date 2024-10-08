@@ -29,6 +29,7 @@ def test_get_processed_since():
         "user_id": "user1",
         "action": "updated",
         "comment": "comment",
+        "product_type": "food",
     }
     return_values = [
         [
@@ -88,6 +89,7 @@ def test_get_new_updates():
         "user_id": "user1",
         "action": "updated",
         "comment": "comment",
+        "product_type": "beauty",
     }
     return_values = [
         [
