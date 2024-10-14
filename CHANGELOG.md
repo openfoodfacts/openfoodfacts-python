@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.4...v1.1.5) (2024-10-14)
+
+
+### Bug Fixes
+
+* fix barcode splitting bug for image URL generation ([7250afb](https://github.com/openfoodfacts/openfoodfacts-python/commit/7250afb203fc9fc9d80315e0681f604e32a6b193))
+
 ## [1.1.4](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.3...v1.1.4) (2024-10-08)
 
 
