@@ -62,6 +62,13 @@ def test_get_source_from_url(url: str, output: str):
             "https://images.openfoodfacts.org/images/products/541/012/672/6954/1.jpg",
         ),
         (
+            "990530101113758685",
+            "2",
+            Flavor.off,
+            Environment.org,
+            "https://images.openfoodfacts.org/images/products/990/530/101/113758685/2.jpg",
+        ),
+        (
             "6539",
             "1",
             Flavor.off,

@@ -44,12 +44,9 @@ def split_barcode(barcode: str) -> List[str]:
     # Pad the barcode with zeros to ensure it has 13 digits
     barcode = barcode.zfill(13)
     # Split the first 9 digits of the barcode into 3 groups of 3 digits to
-    # get the first 3 folder names
-    splits = [barcode[0:3], barcode[3:6], barcode[6:9], barcode[9:13]]
-
-    # use the rest of the barcode as the last folder name
-    if len(barcode) > 13:
-        splits.append(barcode[13:])
+    # get the first 3 folder names and use the rest of the barcode as the
+    # last folder name
+    splits = [barcode[0:3], barcode[3:6], barcode[6:9], barcode[9:]]
 
     if org_id is not None:
         # For the pro platform only, images and OCRs belonging to an org
