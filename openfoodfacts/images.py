@@ -192,7 +192,7 @@ def extract_source_from_url(url: str) -> str:
     if url_path.endswith(".json"):
         url_path = str(Path(url_path).with_suffix(".jpg"))
 
-    return url_path
+    return url_path.replace("\\", "/")
 
 
 def download_image(
