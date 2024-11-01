@@ -24,6 +24,7 @@ DATASET_FILE_NAMES = {
     Flavor.off: {
         DatasetType.jsonl: "openfoodfacts-products.jsonl.gz",
         DatasetType.csv: "en.openfoodfacts.org.products.csv.gz",
+        DatasetType.obsolete: "openfoodfacts-products_obsolete.jsonl.gz",
     },
     Flavor.obf: {
         DatasetType.jsonl: "openbeautyfacts-products.jsonl.gz",
