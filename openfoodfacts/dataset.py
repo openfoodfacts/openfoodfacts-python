@@ -46,6 +46,7 @@ def get_dataset(
     force_download: bool = False,
     download_newer: bool = False,
     cache_dir: Optional[Path] = None,
+    obsolete: bool = False,
 ) -> Path:
     """Download (and cache) Open Food Facts dataset.
 
@@ -60,10 +61,13 @@ def get_dataset(
         version is available (based on file Etag)
     :param cache_dir: the cache directory to use, defaults to
         ~/.cache/openfoodfacts/taxonomy
+    :param obsolete: if True, download the obsolete dataset, defaults to False
     :return: the path of the dataset
     """
     cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
     file_name = DATASET_FILE_NAMES[flavor][dataset_type]
+    if obsolete:
+        file_name = file_name.replace(".jsonl.gz", "_obsolete.jsonl.gz")
     dataset_path = cache_dir / file_name
     url = f"{URLBuilder.static(flavor, Environment.org)}/data/{file_name}"
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -82,6 +86,7 @@ class ProductDataset:
         flavor: Flavor = Flavor.off,
         dataset_type: DatasetType = DatasetType.jsonl,
         dataset_path: Optional[Path] = None,
+        obsolete: bool = False,
         **kwargs,
     ):
         """A product dataset.
@@ -101,6 +106,7 @@ class ProductDataset:
             to DatasetType.jsonl. This parameter is ignored if dataset_path is
             provided.
         :param dataset_path: the path of the dataset, defaults to None.
+        :param obsolete: if True, download the obsolete dataset, defaults to False.
         :param kwargs: additional arguments passed to `get_dataset` when
             downloading the dataset
         """
@@ -118,7 +124,7 @@ class ProductDataset:
             else:
                 raise ValueError(f"Unknown dataset type: {full_suffix}")
         else:
-            self.dataset_path = get_dataset(flavor, dataset_type, **kwargs)
+            self.dataset_path = get_dataset(flavor, dataset_type, obsolete=obsolete, **kwargs)
 
     def __iter__(self):
         if self.dataset_type is DatasetType.jsonl:
