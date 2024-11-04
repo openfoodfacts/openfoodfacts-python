@@ -870,7 +870,6 @@ class APIConfig(BaseModel):
 class DatasetType(str, enum.Enum):
     csv = "csv"
     jsonl = "jsonl"
-    obsolete = "obsolete"
 
 
 class TaxonomyType(str, enum.Enum):
