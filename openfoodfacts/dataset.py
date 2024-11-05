@@ -58,7 +58,9 @@ def get_dataset(
     :param force_download: if True, (re)download the dataset even if it was
         cached, defaults to False
     :param download_newer: if True, download the dataset if a more recent
-        version is available (based on file Etag)
+        version compared to the cached version is available (based on file
+        Etag). This parameter if ignored if force_download is True, defaults
+        to False.
     :param cache_dir: the cache directory to use, defaults to
         ~/.cache/openfoodfacts/taxonomy
     :param obsolete: if True, download the obsolete dataset, defaults to False
@@ -106,7 +108,8 @@ class ProductDataset:
             to DatasetType.jsonl. This parameter is ignored if dataset_path is
             provided.
         :param dataset_path: the path of the dataset, defaults to None.
-        :param obsolete: if True, download the obsolete dataset, defaults to False.
+        :param obsolete: if True, download the obsolete dataset, defaults to
+            False.
         :param kwargs: additional arguments passed to `get_dataset` when
             downloading the dataset
         """
@@ -124,7 +127,9 @@ class ProductDataset:
             else:
                 raise ValueError(f"Unknown dataset type: {full_suffix}")
         else:
-            self.dataset_path = get_dataset(flavor, dataset_type, obsolete=obsolete, **kwargs)
+            self.dataset_path = get_dataset(
+                flavor, dataset_type, obsolete=obsolete, **kwargs
+            )
 
     def __iter__(self):
         if self.dataset_type is DatasetType.jsonl:

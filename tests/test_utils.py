@@ -1,10 +1,16 @@
 import io
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 import requests
 from PIL import Image
 
-from openfoodfacts.utils import AssetLoadingException, get_image_from_url
+from openfoodfacts.utils import (
+    AssetLoadingException,
+    get_image_from_url,
+    should_download_file,
+)
 
 
 def test_get_image_from_url(requests_mock):
@@ -66,3 +72,58 @@ def test_get_image_from_url(requests_mock):
     requests_mock.get(http_error_url, status_code=404)
     with pytest.raises(AssetLoadingException):
         get_image_from_url(http_error_url)
+
+
+def test_should_download_file():
+    url = "https://example.com/file"
+    filepath = Path("/path/to/file")
+
+    # Test case 1: File does not exist
+    with patch.object(Path, "is_file", return_value=False):
+        assert (
+            should_download_file(
+                url, filepath, force_download=False, download_newer=False
+            )
+            is True
+        )
+
+    # Test case 2: Force download
+    with patch.object(Path, "is_file", return_value=True):
+        assert (
+            should_download_file(
+                url, filepath, force_download=True, download_newer=False
+            )
+            is True
+        )
+
+    # Test case 3: Download newer with same ETag
+    with patch.object(Path, "is_file", return_value=True), patch(
+        "openfoodfacts.utils.get_file_etag", return_value="etag123"
+    ), patch("openfoodfacts.utils.fetch_etag", return_value="etag123"):
+        assert (
+            should_download_file(
+                url, filepath, force_download=False, download_newer=True
+            )
+            is False
+        )
+
+    # Test case 4: Download newer with different ETag
+    with patch.object(Path, "is_file", return_value=True), patch(
+        "openfoodfacts.utils.get_file_etag", return_value="etag123"
+    ), patch("openfoodfacts.utils.fetch_etag", return_value="etag456"):
+        assert (
+            should_download_file(
+                url, filepath, force_download=False, download_newer=True
+            )
+            is True
+        )
+
+    # Test case 5: No force download and no download newer, the file
+    # exists so we don't download it again
+    with patch.object(Path, "is_file", return_value=True):
+        assert (
+            should_download_file(
+                url, filepath, force_download=False, download_newer=False
+            )
+            is False
+        )

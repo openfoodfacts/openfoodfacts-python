@@ -242,28 +242,31 @@ def fetch_etag(url: str) -> str:
 def should_download_file(
     url: str, filepath: Path, force_download: bool, download_newer: bool
 ) -> bool:
-    """Return True if the file located at `url` should be downloaded again
-    based on file Etag.
+    """Return True if the file located at `url` should be downloaded again.
 
     :param url: the file URL
     :param filepath: the file cached location
     :param force_download: if True, (re)download the file even if it was
         cached, defaults to False
-    :param download_newer: if True, download the file if a more recent
-        version is available (based on file Etag)
+    :param download_newer: if True, download the dataset if a more recent
+        version compared to the cached version is available (based on file
+        Etag). This parameter if ignored if force_download is True, defaults
+        to False.
     :return: True if the file should be downloaded again, False otherwise
     """
     if filepath.is_file():
-        if not force_download:
-            return False
+        if force_download:
+            # Always download the file if force_download is True
+            return True
 
         if download_newer:
+            # Check if the file is up to date
             cached_etag = get_file_etag(filepath)
             current_etag = fetch_etag(url)
-
-            if cached_etag == current_etag:
-                # The file is up to date, return cached file path
-                return False
+            return cached_etag != current_etag
+        else:
+            # The file exists, no need to download it again
+            return False
 
     return True
 

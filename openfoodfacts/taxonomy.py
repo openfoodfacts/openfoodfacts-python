@@ -384,7 +384,9 @@ def get_taxonomy(
     :param force_download: if True, (re)download the taxonomy even if it was
         cached, defaults to False
     :param download_newer: if True, download the taxonomy if a more recent
-        version is available (based on file Etag)
+        version compared to the cached version is available (based on file
+        Etag). This parameter if ignored if force_download is True, defaults
+        to False.
     :param cache_dir: the cache directory to use, defaults to
         ~/.cache/openfoodfacts/taxonomy
     :return: a Taxonomy
