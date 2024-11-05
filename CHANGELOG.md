@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.5...v2.0.0) (2024-11-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* fix should_download_file function ([#284](https://github.com/openfoodfacts/openfoodfacts-python/issues/284))
+
+### Features
+
+* add support for downloading obsolete product dump in ProductDataset ([1c26936](https://github.com/openfoodfacts/openfoodfacts-python/commit/1c2693681223968ef222d2bf1de60da6cb6c1468))
+
+
+### Bug Fixes
+
+* correct path separator issue in extract_source_from_url function for Windows compatibility ([#280](https://github.com/openfoodfacts/openfoodfacts-python/issues/280)) ([385fbdb](https://github.com/openfoodfacts/openfoodfacts-python/commit/385fbdb9c2e27751c6494edead38b153103ce507))
+* fix should_download_file function ([#284](https://github.com/openfoodfacts/openfoodfacts-python/issues/284)) ([eb77a8c](https://github.com/openfoodfacts/openfoodfacts-python/commit/eb77a8ca5b873b28f51442987f8eb8c6f02b1f41))
+
+
+### Documentation
+
+* add missing changelog for [#223](https://github.com/openfoodfacts/openfoodfacts-python/issues/223) ([#282](https://github.com/openfoodfacts/openfoodfacts-python/issues/282)) ([b1134cc](https://github.com/openfoodfacts/openfoodfacts-python/commit/b1134cc1799029b794bb92687b126b7420bbb5cf))
+
 ## [1.1.5](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.4...v1.1.5) (2024-10-14)
 
 
