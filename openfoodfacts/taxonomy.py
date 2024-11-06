@@ -3,6 +3,8 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Union
 
 import requests
 
+from openfoodfacts.utils.text import get_tag
+
 from .types import Environment, Flavor, JSONType, TaxonomyType
 from .utils import (
     URLBuilder,
@@ -405,3 +407,56 @@ def get_taxonomy(
     logger.info("Downloading taxonomy, saving it in %s", taxonomy_path)
     download_file(url, taxonomy_path)
     return Taxonomy.from_path(taxonomy_path)
+
+
+def create_taxonomy_mapping(taxonomy: Taxonomy) -> Dict[str, str]:
+    """From a taxonomy, create a mapping of tags to taxonomy node ids.
+
+    The mapping is created by iterating over the nodes of the taxonomy and
+    creating a tag from the name and synonyms of each node.
+
+    The taxonomy mapping has the following format:
+    {
+        "fr:noix": "en:nuts",
+        "en:nuts": "en:nuts",
+        ...
+    }
+
+    :param taxonomy: the taxonomy to use
+    :return: a dict mapping tags (with language prefix) to taxonomy node ids
+    """
+    mapping = {}
+    for node in taxonomy.iter_nodes():
+        for lang, name in node.names.items():
+            tag = get_tag(name)
+            tag_id = f"{lang}:{tag}".lower()
+            mapping[tag_id] = node.id
+
+        for lang, synonyms in node.synonyms.items():
+            for synonym in synonyms:
+                tag = get_tag(synonym)
+                tag_id = f"{lang}:{tag}".lower()
+                mapping[tag_id] = node.id
+    return mapping
+
+
+def map_to_canonical_id(
+    taxonomy_mapping: Dict[str, str], values: List[str]
+) -> Dict[str, str]:
+    """Map a list of values to their canonical taxonomy id.
+
+    Each value should be a tag in the form `lang:tag`. If a value is not found
+    in the taxonomy mapping, it is returned as is, in its tag form.
+
+    :param taxonomy_mapping: a mapping of tags to taxonomy node ids, generated
+        by `create_taxonomy_mapping`
+    :param values: a list of string values
+    :return: a dict mapping values to their canonical taxonomy id
+    """
+    for value in values:
+        if len(value) < 3 or value[2] != ":":
+            raise ValueError(
+                f"Invalid value: '{value}', expected value to be in 'lang:tag' format"
+            )
+    tags = [get_tag(value) for value in values]
+    return {value: taxonomy_mapping.get(tag, tag) for tag, value in zip(tags, values)}
