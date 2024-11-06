@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.1.0...v2.2.0) (2024-11-06)
+
+
+### Features
+
+* add map_to_canonical_id function ([#287](https://github.com/openfoodfacts/openfoodfacts-python/issues/287)) ([cde7683](https://github.com/openfoodfacts/openfoodfacts-python/commit/cde7683aa7376b17ddc621a0a99efdcf94bbcf96))
+
 ## [2.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.0.0...v2.1.0) (2024-11-06)
 
 
