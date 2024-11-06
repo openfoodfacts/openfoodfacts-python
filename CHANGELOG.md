@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.0.0...v2.1.0) (2024-11-06)
+
+
+### Features
+
+* add ingredient analysis endpoint ([#285](https://github.com/openfoodfacts/openfoodfacts-python/issues/285)) ([10c42d2](https://github.com/openfoodfacts/openfoodfacts-python/commit/10c42d20e6cd6651eab597c00d200e0f00542580))
+
 ## [2.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v1.1.5...v2.0.0) (2024-11-05)
 
 
