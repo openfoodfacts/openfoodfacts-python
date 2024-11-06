@@ -1,9 +1,12 @@
+import logging
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
 
 from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor, JSONType
 from .utils import URLBuilder, http_session
+
+logger = logging.getLogger(__name__)
 
 
 def get_http_auth(environment: Environment) -> Optional[Tuple[str, str]]:
@@ -310,6 +313,88 @@ class ProductResource:
 
         r.raise_for_status()
         return r
+
+    def parse_ingredients(
+        self, text: str, lang: str, timeout: int = 10
+    ) -> list[JSONType]:
+        """Parse ingredients text using Product Opener API.
+
+        It is only available for `off` flavor (food).
+
+        The result is a list of ingredients, each ingredient is a dict with the
+        following keys:
+
+        - id: the ingredient ID. Having an ID does not means that the
+            ingredient is recognized, you must check if it exists in the
+            taxonomy.
+        - text: the ingredient text (as it appears in the input ingredients
+            list)
+        - percent_min: the minimum percentage of the ingredient in the product
+        - percent_max: the maximum percentage of the ingredient in the product
+        - percent_estimate: the estimated percentage of the ingredient in the
+            product
+        - vegan (bool): optional key indicating if the ingredient is vegan
+        - vegetarian (bool): optional key indicating if the ingredient is
+            vegetarian
+
+        :param server_type: the server type (project) to use
+        :param text: the ingredients text to parse
+        :param lang: the language of the text (used for parsing) as a 2-letter
+            code
+        :param timeout: the request timeout in seconds, defaults to 10s
+        :raises RuntimeError: a RuntimeError is raised if the parsing fails
+        :return: the list of parsed ingredients
+        """
+        if self.api_config.flavor != Flavor.off:
+            raise ValueError("ingredient parsing is only available for food")
+
+        if self.api_config.version != APIVersion.v3:
+            logger.warning(
+                "ingredient parsing is only available in v3 of the API (here: %s), using v3",
+                self.api_config.version,
+            )
+        # by using "test" as code, we don't save any information to database
+        # This endpoint is specifically designed for testing purposes
+        url = f"{self.base_url}/api/v3/product/test"
+
+        if len(text) == 0:
+            raise ValueError("text must be a non-empty string")
+
+        try:
+            r = http_session.patch(
+                url,
+                auth=get_http_auth(self.api_config.environment),
+                json={
+                    "fields": "ingredients",
+                    "lc": lang,
+                    "tags_lc": lang,
+                    "product": {
+                        "lang": lang,
+                        f"ingredients_text_{lang}": text,
+                    },
+                },
+                timeout=timeout,
+            )
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.SSLError,
+            requests.exceptions.Timeout,
+        ) as e:
+            raise RuntimeError(
+                f"Unable to parse ingredients: error during HTTP request: {e}"
+            )
+
+        if not r.ok:
+            raise RuntimeError(
+                f"Unable to parse ingredients (non-200 status code): {r.status_code}, {r.text}"
+            )
+
+        response_data = r.json()
+
+        if response_data.get("status") != "success":
+            raise RuntimeError(f"Unable to parse ingredients: {response_data}")
+
+        return response_data["product"].get("ingredients", [])
 
 
 class API:
