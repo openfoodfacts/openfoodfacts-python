@@ -37,6 +37,11 @@ types-requests = "2.31.0.2"
 types-tqdm = "4.66.0.20240417"
 types-redis = "^4.6.0.20240425"
 
+
+[tool.poetry.group.ml.dependencies]
+tritonclient = {extras = ["grpc"], version = "^2.52.0"}
+opencv-python = "^4.10.0.84"
+
 [tool.poetry.extras]
 redis = ["redis"]
 Pillow = ["Pillow"]
