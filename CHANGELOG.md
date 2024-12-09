@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.2.0...v2.3.0) (2024-12-09)
+
+
+### Features
+
+* add new openfoodfacts.ml module ([#293](https://github.com/openfoodfacts/openfoodfacts-python/issues/293)) ([27659fe](https://github.com/openfoodfacts/openfoodfacts-python/commit/27659fe2788c4273b93945790dcbe4824e3e5f4b))
+
+
+### Dependencies
+
+* relax dependency constrains ([#295](https://github.com/openfoodfacts/openfoodfacts-python/issues/295)) ([4456195](https://github.com/openfoodfacts/openfoodfacts-python/commit/44561954fe744368eb417797037afabaa90fd575))
+* relax dependency constraints ([4456195](https://github.com/openfoodfacts/openfoodfacts-python/commit/44561954fe744368eb417797037afabaa90fd575))
+
 ## [2.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.1.0...v2.2.0) (2024-11-06)
 
 
