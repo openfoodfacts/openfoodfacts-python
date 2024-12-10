@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.0...v2.3.1) (2024-12-10)
+
+
+### Bug Fixes
+
+* fix extra dependency specification ([#296](https://github.com/openfoodfacts/openfoodfacts-python/issues/296)) ([90e06b6](https://github.com/openfoodfacts/openfoodfacts-python/commit/90e06b68ba872cf5668f2a93a9ecdc8fa798f6ba))
+
 ## [2.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.2.0...v2.3.0) (2024-12-09)
 
 
