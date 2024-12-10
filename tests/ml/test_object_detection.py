@@ -36,7 +36,7 @@ class TestObjectDetector:
 
         # Check the scale factors
         # Here, image ratio (width / height) is 100 / 200 = 0.5
-        assert scale_x == 640 / 0.5
+        assert scale_x == 640 * 0.5
         assert scale_y == 640
 
     def test_postprocess(self, object_detector):

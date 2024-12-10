@@ -116,11 +116,11 @@ class ObjectDetector:
         scale_x: float
         scale_y: float
         if image_ratio < 1:  # portrait, height > width
-            scale_x = self.image_size / image_ratio
+            scale_x = self.image_size * image_ratio
             scale_y = self.image_size
         else:  # landscape, width > height
             scale_x = self.image_size
-            scale_y = self.image_size * image_ratio
+            scale_y = self.image_size / image_ratio
 
         # Preprocess the image and prepare blob for model
         image_array = (
