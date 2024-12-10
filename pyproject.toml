@@ -24,6 +24,8 @@ pydantic = ">=2.0.0,<3.0.0"
 tqdm = ">=4.0.0,<5.0.0"
 redis = { version = "~5.1.0", optional = true, extras = ["hiredis"] }
 Pillow = { version = ">=9.3,<10.4", optional = true }
+tritonclient = {extras = ["grpc"], version = ">2.0.0,<3.0.0", optional = true}
+opencv-python = {version = ">4.0.0,<5.0.0", optional = true}
 
 [tool.poetry.group.dev.dependencies]
 requests-mock = "1.11.0"
@@ -37,14 +39,10 @@ types-requests = "2.31.0.2"
 types-tqdm = "4.66.0.20240417"
 types-redis = "^4.6.0.20240425"
 
-
-[tool.poetry.group.ml.dependencies]
-tritonclient = {extras = ["grpc"], version = ">2.0.0,<3.0.0"}
-opencv-python = ">4.0.0,<5.0.0"
-
 [tool.poetry.extras]
 redis = ["redis"]
-Pillow = ["Pillow"]
+pillow = ["Pillow"]
+ml = ["tritonclient", "opencv-python", "Pillow"]
 
 [build-system]
 requires = ["poetry-core"]
