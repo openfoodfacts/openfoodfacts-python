@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.1...v2.3.2) (2024-12-10)
+
+
+### Bug Fixes
+
+* relax constraint on Pillow dep ([#298](https://github.com/openfoodfacts/openfoodfacts-python/issues/298)) ([7bf368c](https://github.com/openfoodfacts/openfoodfacts-python/commit/7bf368cfcd403d5578e9bd4af501338dc2e97947))
+
 ## [2.3.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.0...v2.3.1) (2024-12-10)
 
 
