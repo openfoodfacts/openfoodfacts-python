@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.3](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.2...v2.3.3) (2024-12-10)
+
+
+### Bug Fixes
+
+* use headless version of OpenCV ([#300](https://github.com/openfoodfacts/openfoodfacts-python/issues/300)) ([7c2fe0a](https://github.com/openfoodfacts/openfoodfacts-python/commit/7c2fe0a53c46023c280d8913c5d3a2f656e41483))
+
 ## [2.3.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.1...v2.3.2) (2024-12-10)
 
 
