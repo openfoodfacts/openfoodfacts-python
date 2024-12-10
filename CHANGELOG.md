@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.4](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.3...v2.3.4) (2024-12-10)
+
+
+### Bug Fixes
+
+* fix wrong scale_x and scale_y for object detection models ([#302](https://github.com/openfoodfacts/openfoodfacts-python/issues/302)) ([8558d6d](https://github.com/openfoodfacts/openfoodfacts-python/commit/8558d6dc9a8fdeafeaec391350f35fa8b1350981))
+
 ## [2.3.3](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.2...v2.3.3) (2024-12-10)
 
 
