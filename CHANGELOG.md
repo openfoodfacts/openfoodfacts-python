@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.4...v2.4.0) (2024-12-11)
+
+
+### Features
+
+* add UpdateListener class ([#304](https://github.com/openfoodfacts/openfoodfacts-python/issues/304)) ([56362ac](https://github.com/openfoodfacts/openfoodfacts-python/commit/56362ac1503c7534224d831bda8e3b7966f1f83a))
+
 ## [2.3.4](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.3...v2.3.4) (2024-12-10)
 
 
