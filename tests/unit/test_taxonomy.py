@@ -5,9 +5,11 @@ import pytest
 from openfoodfacts.taxonomy import (
     Taxonomy,
     TaxonomyNode,
+    create_brand_taxonomy_mapping,
     create_taxonomy_mapping,
     map_to_canonical_id,
 )
+from openfoodfacts.types import TaxonomyType
 
 
 def test_map_to_canonical_id():
@@ -123,3 +125,19 @@ class TestCreateTaxonomyMapping:
         }
 
         assert create_taxonomy_mapping(taxonomy) == expected_mapping
+
+    def test_create_brand_taxonomy_mapping(self):
+        taxonomy = Taxonomy.from_dict(
+            {
+                "en:5th-season": {"name": {"en": "5th Season"}},
+                "en:arev": {"name": {"en": "Arèv"}},
+                "en:arrighi": {"name": {"en": "Arrighi"}},
+                "en:voiles-au-vent": {"name": {"en": "Voiles au Vent"}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "5th-season": "5th Season",
+            "arev": "Arèv",
+            "arrighi": "Arrighi",
+            "voiles-au-vent": "Voiles au Vent",
+        }
