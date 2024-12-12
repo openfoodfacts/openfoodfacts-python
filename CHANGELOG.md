@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.4.0...v2.5.0) (2024-12-12)
+
+
+### Features
+
+* add `create_brand_taxonomy_mapping` function ([#306](https://github.com/openfoodfacts/openfoodfacts-python/issues/306)) ([f62b74d](https://github.com/openfoodfacts/openfoodfacts-python/commit/f62b74d822b3c4e340079428262f5b32fb770443))
+* add `Flavor.from_product_type` method ([#308](https://github.com/openfoodfacts/openfoodfacts-python/issues/308)) ([1cda84e](https://github.com/openfoodfacts/openfoodfacts-python/commit/1cda84e8a04c0e07579a76ab901861980c23c657))
+
 ## [2.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.3.4...v2.4.0) (2024-12-11)
 
 
