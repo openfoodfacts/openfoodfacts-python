@@ -66,6 +66,19 @@ class Flavor(str, enum.Enum):
         otherwise."""
         return self in (self.off, self.off_pro)
 
+    @classmethod
+    def from_product_type(cls, product_type: str) -> "Flavor":
+        """Get the `Flavor` associated with a `product_type`."""
+        if product_type == "food":
+            return Flavor.off
+        elif product_type == "beauty":
+            return Flavor.obf
+        elif product_type == "petfood":
+            return Flavor.opff
+        elif product_type == "product":
+            return Flavor.opf
+        raise ValueError(f"no Flavor matched with product_type '{product_type}'")
+
 
 class APIVersion(str, enum.Enum):
     v0 = "v0"
