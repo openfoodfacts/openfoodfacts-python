@@ -9,7 +9,6 @@ from openfoodfacts.taxonomy import (
     create_taxonomy_mapping,
     map_to_canonical_id,
 )
-from openfoodfacts.types import TaxonomyType
 
 
 def test_map_to_canonical_id():
