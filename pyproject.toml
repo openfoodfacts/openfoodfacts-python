@@ -5,6 +5,7 @@ description = "Official Python SDK of Open Food Facts"
 authors = ["The Open Food Facts team"]
 license = "Apache 2.0"
 readme = "README.md"
+repository = "https://github.com/openfoodfacts/openfoodfacts-python"
 
 [tool.mypy]
 ignore_missing_imports = true
