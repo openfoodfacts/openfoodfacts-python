@@ -5,6 +5,7 @@ import requests
 
 from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor, JSONType
 from .utils import URLBuilder, http_session
+from .search_a_licious import SearchALiciousResource
 
 logger = logging.getLogger(__name__)
 
@@ -396,7 +397,6 @@ class ProductResource:
 
         return response_data["product"].get("ingredients", [])
 
-
 class API:
     def __init__(
         self,
@@ -449,6 +449,55 @@ class API:
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
         self.robotoff = RobotoffResource(self.api_config)
+        self.search_a_licious = SearchALiciousResource(self.api_config)
+
+    def advanced_search(
+            self,
+            query: Optional[str] = None,
+            filters: Optional[List[Dict[str, Any]]] = None,
+            facets: Optional[List[Dict[str, Any]]] = None,
+            sort_by: Optional[Union[str, List[str]]] = None,
+            page: int = 1,
+            page_size: int = 20,
+            **kwargs,
+        ) -> JSONType:
+
+        """
+        Enhanced search using the search-a-licious endpoint with advanced filtering options.
+    
+    This method provides access to the powerful search-a-licious capabilities.
+    
+    Parameters:
+    -----------
+    query : str, optional
+        The search query text
+    filters : list of dict or SearchFilter, optional
+        Advanced filters to apply to the search
+    sort_by : str or list, optional
+        Field(s) to sort results by
+    facets : list of dict or SearchFacet, optional
+        Facets to retrieve with the search results
+    page : int, optional
+        Page number (default: 1)
+    page_size : int, optional
+        Number of results per page (default: 20)
+    **kwargs : dict
+        Additional parameters to pass to the search-a-licious endpoint
+    
+    Returns:
+    --------
+    dict
+        Search results
+        """
+        return self.search_a_licious.search(
+        query=query,
+        filters=filters,
+        facets=facets,
+        sort_by=sort_by,
+        page=page,
+        page_size=page_size,
+        **kwargs
+    )
 
 
 def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:

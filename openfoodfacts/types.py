@@ -129,6 +129,31 @@ class Facet(str, enum.Enum):
                 raise ValueError("unknown Facet: %s", value)
             return cls[value]
 
+class SearchFilterOperator(str, enum.Enum):
+    """Operators that can be used in search filters"""
+    eq = "eq"  # equals
+    gt = "gt"  # greater than
+    gte = "gte"  # greater than or equal to
+    lt = "lt"  # less than
+    lte = "lte"  # less than or equal to
+    in_list = "in"  # in list
+    prefix = "prefix"  # starts with
+    range = "range"  # range between values
+    exists = "exists"  # field exists
+    missing = "missing"  # field doesn't exist
+
+
+class SearchFilter(BaseModel):
+    """A filter for use with search-a-licious advanced search."""
+    field: str
+    value: Optional[Any] = None
+    operator: Optional[SearchFilterOperator] = SearchFilterOperator.eq
+
+
+class SearchFacet(BaseModel):
+    """A facet request for use with search-a-licious advanced search."""
+    field: str
+    size: int = 10
 
 class Environment(str, enum.Enum):
     """Environment is used to specify Open Food Facts environment:
