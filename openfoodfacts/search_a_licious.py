@@ -15,6 +15,60 @@ class SearchALiciousResource:
         self.api_config = api_config
         self.base_url = "https://search.openfoodfacts.org"
         
+    def _process_filters(self, filters: List[Union[Dict[str, Any], SearchFilter]]) -> List[Dict[str, Any]]:
+        """Process filter objects into serializable dictionaries."""
+        processed_filters = []
+        for f in filters:
+            if isinstance(f, SearchFilter):
+                processed_filters.append(f.model_dump(exclude_none=True))
+            else:
+                processed_filters.append(f)
+        return processed_filters
+    
+    def _process_facets(self, facets: List[Union[Dict[str, Any], SearchFacet]]) -> List[Dict[str, Any]]:
+        """Process facet objects into serializable dictionaries."""
+        processed_facets = []
+        for f in facets:
+            if isinstance(f, SearchFacet):
+                processed_facets.append(f.model_dump(exclude_none=True))
+            else:
+                processed_facets.append(f)
+        return processed_facets
+        
+    def _format_list_param(self, param: Union[str, List[str]]) -> str:
+        """Convert a list parameter to comma-separated string if needed."""
+        if isinstance(param, list):
+            return ",".join(param)
+        return param
+        
+    def _make_request(self, method: str, endpoint: str, data=None, params=None) -> JSONType:
+        """Make an HTTP request and handle common error patterns."""
+        headers = {"User-Agent": self.api_config.user_agent}
+        url = f"{self.base_url}/{endpoint}"
+        
+        try:
+            if method.lower() == "post":
+                response = requests.post(
+                    url, json=data, headers=headers, timeout=self.api_config.timeout
+                )
+            else:
+                response = requests.get(
+                    url, params=params, headers=headers, timeout=self.api_config.timeout
+                )
+                
+            response.raise_for_status()
+            return response.json()
+            
+        except requests.exceptions.RequestException as e:
+            logger.error(f"{method} request to {endpoint} failed: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                try:
+                    error_data = e.response.json()
+                    logger.error(f"Error response: {error_data}")
+                except ValueError:
+                    logger.error(f"Error response: {e.response.text}")
+            raise
+    
     def search(
         self,
         query: Optional[str] = None,
@@ -65,54 +119,23 @@ class SearchALiciousResource:
             payload["query"] = query
             
         if filters:
-            processed_filters = []
-            for f in filters:
-                if isinstance(f, SearchFilter):
-                    processed_filters.append(f.model_dump(exclude_none=True))
-                else:
-                    processed_filters.append(f)
-            payload["filters"] = processed_filters
+            payload["filters"] = self._process_filters(filters)
             
         if sort_by:
             payload["sort_by"] = sort_by
             
         if facets:
-            processed_facets = []
-            for f in facets:
-                if isinstance(f, SearchFacet):
-                    processed_facets.append(f.model_dump(exclude_none=True))
-                else:
-                    processed_facets.append(f)
-            payload["facets"] = processed_facets
+            payload["facets"] = self._process_facets(facets)
             
         if langs:
-            if isinstance(langs, list):
-                payload["langs"] = ",".join(langs)
-            else:
-                payload["langs"] = langs
+            payload["langs"] = self._format_list_param(langs)
                 
         if index_id:
             payload["index_id"] = index_id
 
         payload.update(kwargs)
         
-        try:
-            response = requests.post(
-                f"{self.base_url}/search",
-                json=payload,
-                headers={"User-Agent": self.api_config.user_agent},
-                timeout=self.api_config.timeout,
-            )
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Search request failed: {e}")
-            if hasattr(e, 'response') and e.response is not None:
-                try:
-                    error_data = e.response.json()
-                    logger.error(f"Error response: {error_data}")
-                except ValueError:
-                    logger.error(f"Error response: {e.response.text}")
-            raise
+        return self._make_request("post", "search", data=payload)
     
     def search_get(
         self,
@@ -166,50 +189,26 @@ class SearchALiciousResource:
             params["q"] = query
             
         if sort_by:
-            if isinstance(sort_by, list):
-                params["sort_by"] = ",".join(sort_by)
-            else:
-                params["sort_by"] = sort_by
+            params["sort_by"] = self._format_list_param(sort_by)
                 
         if langs:
-            if isinstance(langs, list):
-                params["langs"] = ",".join(langs)
-            else:
-                params["langs"] = langs
+            params["langs"] = self._format_list_param(langs)
                 
         if index_id:
             params["index_id"] = index_id
-            
-        # Note: GET requests are more limited and cannot handle complex filters/facets
-        # We'll raise a warning if these are provided
+        
+        self._warn_complex_parameters(filters, facets)
+        params.update(kwargs)
+        
+        return self._make_request("get", "search", params=params)
+    
+    def _warn_complex_parameters(self, filters, facets):
+        """Warn about parameters that may not be fully supported in GET requests."""
         if filters:
             logger.warning("Filters may not be fully supported in GET requests. Consider using search() with POST instead.")
-            # Convert filters to a simplified format if possible
             
         if facets:
             logger.warning("Facets may not be fully supported in GET requests. Consider using search() with POST instead.")
-           
-
-        params.update(kwargs)
-        
-        try:
-            response = requests.get(
-                f"{self.base_url}/search",
-                params=params,
-                headers={"User-Agent": self.api_config.user_agent},
-                timeout=self.api_config.timeout,
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Search GET request failed: {e}")
-            if hasattr(e, 'response') and e.response is not None:
-                try:
-                    error_data = e.response.json()
-                    logger.error(f"Error response: {error_data}")
-                except ValueError:
-                    logger.error(f"Error response: {e.response.text}")
-            raise
             
     def autocomplete(
         self,
@@ -243,20 +242,12 @@ class SearchALiciousResource:
         dict
             Autocomplete results
         """
-        params = {"q": q}
+        params = {"q": q, "size": size}
         
-        if isinstance(taxonomy_names, list):
-            params["taxonomy_names"] = ",".join(taxonomy_names)
-        else:
-            params["taxonomy_names"] = taxonomy_names
+        params["taxonomy_names"] = self._format_list_param(taxonomy_names)
         
         if langs:
-            if isinstance(langs, list):
-                params["langs"] = ",".join(langs)
-            else:
-                params["langs"] = langs
-        
-        params["size"] = size
+            params["langs"] = self._format_list_param(langs)
         
         if fuzziness is not None:
             params["fuzziness"] = fuzziness
@@ -264,24 +255,7 @@ class SearchALiciousResource:
         if index_id:
             params["index_id"] = index_id
         
-        try:
-            response = requests.get(
-                f"{self.base_url}/autocomplete",
-                params=params,
-                headers={"User-Agent": self.api_config.user_agent},
-                timeout=self.api_config.timeout,
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Autocomplete request failed: {e}")
-            if hasattr(e, 'response') and e.response is not None:
-                try:
-                    error_data = e.response.json()
-                    logger.error(f"Error response: {error_data}")
-                except ValueError:
-                    logger.error(f"Error response: {e.response.text}")
-            raise
+        return self._make_request("get", "autocomplete", params=params)
     
     def parse_search_response(self, response_data: JSONType) -> Dict[str, Any]:
         """
@@ -333,21 +307,4 @@ class SearchALiciousResource:
         if index_id:
             params["index_id"] = index_id
             
-        try:
-            response = requests.get(
-                f"{self.base_url}/document/{identifier}",
-                params=params,
-                headers={"User-Agent": self.api_config.user_agent},
-                timeout=self.api_config.timeout,
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Get document request failed: {e}")
-            if hasattr(e, 'response') and e.response is not None:
-                try:
-                    error_data = e.response.json()
-                    logger.error(f"Error response: {error_data}")
-                except ValueError:
-                    logger.error(f"Error response: {e.response.text}")
-            raise
+        return self._make_request("get", f"document/{identifier}", params=params)

@@ -32,7 +32,7 @@ class TestSearchALicious(unittest.TestCase):
         
         # Check if the POST request was made with the expected parameters
         mock_post.assert_called_once()
-        args, kwargs = mock_post.call_args
+        _ , kwargs = mock_post.call_args
         self.assertEqual(kwargs['json']['query'], "test")
         
         # Check if the results are as expected
@@ -55,7 +55,7 @@ class TestSearchALicious(unittest.TestCase):
         
         # Check if the GET request was made with the expected parameters
         mock_get.assert_called_once()
-        args, kwargs = mock_get.call_args
+        _ , kwargs = mock_get.call_args
         self.assertEqual(kwargs['params']['q'], "choc")
         
         # Check if the results are as expected
