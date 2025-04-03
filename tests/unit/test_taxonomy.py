@@ -137,6 +137,9 @@ class TestCreateTaxonomyMapping:
                 "en:arrighi": {"name": {"en": "Arrighi"}},
                 "en:voiles-au-vent": {"name": {"en": "Voiles au Vent"}},
                 "xx:turini": {"name": {"xx": "Turini"}},
+                "fr:auchan": {"name": {"xx": "Auchan"}},
+                "fr:mamouth": {"name": {"fr": "Mamouth"}},
+                "fr:carefour": {"name": {}},
             }
         )
         assert create_brand_taxonomy_mapping(taxonomy) == {
@@ -145,6 +148,9 @@ class TestCreateTaxonomyMapping:
             "arrighi": "Arrighi",
             "voiles-au-vent": "Voiles au Vent",
             "turini": "Turini",
+            "auchan": "Auchan",
+            "mamouth": "Mamouth",
+            "carefour": "carefour",
         }
 
 
