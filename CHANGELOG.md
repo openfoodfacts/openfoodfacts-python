@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.5.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.0...v2.5.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* brands taxonomy might use xx language code ([#320](https://github.com/openfoodfacts/openfoodfacts-python/issues/320)) ([9e48a60](https://github.com/openfoodfacts/openfoodfacts-python/commit/9e48a60945440d119313ae38a9c46dfa2710eea3)), closes [#319](https://github.com/openfoodfacts/openfoodfacts-python/issues/319)
+* **metadata:** add project repository URL ([#311](https://github.com/openfoodfacts/openfoodfacts-python/issues/311)) ([cbf38b4](https://github.com/openfoodfacts/openfoodfacts-python/commit/cbf38b4aed0a1af260b94811e44c7e327afe8635))
+* **metadata:** set license to "MIT" (as in LICENSE file) ([#310](https://github.com/openfoodfacts/openfoodfacts-python/issues/310)) ([d82191c](https://github.com/openfoodfacts/openfoodfacts-python/commit/d82191c6448fef0759b03d6d9b6068954d2c0dbb))
+
+
+### Documentation
+
+* https://python-poetry.org/docs/pyproject/#repository ([cbf38b4](https://github.com/openfoodfacts/openfoodfacts-python/commit/cbf38b4aed0a1af260b94811e44c7e327afe8635))
+
 ## [2.5.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.4.0...v2.5.0) (2024-12-12)
 
 
