@@ -2,6 +2,10 @@ import logging
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
+"""
+NOTE: The Open Food Facts API limits queries to 10,000 results by default.
+This limitation may affect large data requests and should be considered when querying large datasets.
+"""
 
 from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor, JSONType
 from .utils import URLBuilder, http_session
