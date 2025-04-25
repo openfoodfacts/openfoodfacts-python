@@ -141,6 +141,27 @@ class FacetResource:
 
 
 class ProductResource:
+    def get_folksonomy_tags(self, code: str) -> List[str]:
+        """Retrieve folksonomy tags for a product by barcode."""
+        url = f"{self.base_url}/api/v0/product/{code}.json"
+        response = send_get_request(
+            url=url,
+            api_config=self.api_config,
+            return_none_on_404=True,
+            auth=get_http_auth(self.api_config.environment),
+        )
+        if not response or "product" not in response:
+            return []
+        return response["product"].get("tags", [])
+
+    def add_folksonomy_tag(self, code: str, tag: str) -> str:
+        """Add a folksonomy tag to a product (requires authentication)."""
+        url = f"{self.base_url}/cgi/tag_product.pl"
+        payload = {
+            "code": code,
+            "tag": tag,
+        }
+        return send_form_urlencoded_post_request(url, payload, self.api_config).text
     def __init__(self, api_config: APIConfig):
         self.api_config = api_config
         self.base_url = URLBuilder.country(
@@ -449,6 +470,8 @@ class API:
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
         self.robotoff = RobotoffResource(self.api_config)
+        self.get_tags = self.product.get_folksonomy_tags
+        self.add_tag = self.product.add_folksonomy_tag
 
 
 def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:
