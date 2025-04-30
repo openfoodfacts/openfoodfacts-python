@@ -1,6 +1,7 @@
 docs_dir: docs
 site_name: openfoodfacts-python
 site_url: https://openfoodfacts.github.io/openfoodfacts-python
+edit_uri: edit/develop/docs/
 site_dir: gh_pages
 
 nav:
@@ -10,3 +11,5 @@ nav:
 
 theme:
   name: material
+  features:
+    - content.action.edit
