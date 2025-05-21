@@ -248,7 +248,7 @@ IMAGES_WITH_LEGACY_SCHEMA = {
 }
 
 
-IMAGES_WITH_NEW_SCHEMA = IMAGES = {
+IMAGES_WITH_NEW_SCHEMA = {
     "uploaded": {
         "1": {
             "sizes": {
