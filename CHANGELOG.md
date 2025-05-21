@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.1...v2.5.2) (2025-05-21)
+
+
+### Bug Fixes
+
+* add new function to convert images to old schema ([#327](https://github.com/openfoodfacts/openfoodfacts-python/issues/327)) ([224c38c](https://github.com/openfoodfacts/openfoodfacts-python/commit/224c38cc202e94ba2ecb6ba5a68ba7f8609c4c49))
+
 ## [2.5.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.0...v2.5.1) (2025-04-03)
 
 
