@@ -3,7 +3,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Union
 
 import requests
 
-from openfoodfacts.utils.text import get_tag
+from openfoodfacts.utils.text import get_tag, replace_lang_prefix
 
 from .types import Environment, Flavor, JSONType, TaxonomyType
 from .utils import (
@@ -495,5 +495,18 @@ def map_to_canonical_id(
             raise ValueError(
                 f"Invalid value: '{value}', expected value to be in 'lang:tag' format"
             )
-    tags = [get_tag(value) for value in values]
-    return {value: taxonomy_mapping.get(tag, tag) for tag, value in zip(tags, values)}
+
+    output = {}
+    for value in values:
+        tag = get_tag(value)
+        output[value] = (
+            # Look for a direct match first
+            taxonomy_mapping.get(tag)
+            # Then look for a match with the xx prefix (language-independent
+            # entry)
+            or taxonomy_mapping.get(replace_lang_prefix(tag, "xx"))
+            # If no match is found, return the original taggified value
+            or tag
+        )
+
+    return output

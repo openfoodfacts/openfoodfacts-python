@@ -21,6 +21,8 @@ def test_map_to_canonical_id():
         "en:apples": "en:apples",
         "fr:pomme": "en:apples",
         "fr:noix-d-isere": "en:nuts-from-isere",
+        "xx:provence-alpes-cote-d-azur": "en:provence-alpes-cote-d-azur",
+        "xx:sashimi": "xx:sashimi",
     }
     values = [
         "en: Apple",
@@ -28,6 +30,9 @@ def test_map_to_canonical_id():
         "fr: Pomme",
         "fr: Bananes d'Isère",
         "fr: Noix d'Isère",
+        "fr: Provence-Alpes-Côte d'Azur",
+        "pt: Provence-Alpes-Côte d'Azur",
+        "it: sashimi",
     ]
     expected = {
         "en: Apple": "en:apples",
@@ -35,6 +40,9 @@ def test_map_to_canonical_id():
         "fr: Pomme": "en:apples",
         "fr: Bananes d'Isère": "fr:bananes-d-isere",
         "fr: Noix d'Isère": "en:nuts-from-isere",
+        "fr: Provence-Alpes-Côte d'Azur": "en:provence-alpes-cote-d-azur",
+        "pt: Provence-Alpes-Côte d'Azur": "en:provence-alpes-cote-d-azur",
+        "it: sashimi": "xx:sashimi",
     }
     assert map_to_canonical_id(taxonomy_mapping, values) == expected
 
@@ -70,8 +78,14 @@ class TestCreateTaxonomyMapping:
             names={"fr": "Noix d'Isère"},
             synonyms={"fr": ["Noix d'Isère"]},
         )
+        node3 = TaxonomyNode(
+            identifier="xx:sashimi",
+            names={"xx": "Sashimi"},
+            synonyms={"xx": ["Sashimi"]},
+        )
         taxonomy.add(node1.id, node1)
         taxonomy.add(node2.id, node2)
+        taxonomy.add(node3.id, node3)
 
         expected_mapping = {
             "en:apple": "en:apples",
@@ -79,6 +93,7 @@ class TestCreateTaxonomyMapping:
             "en:apples": "en:apples",
             "fr:pommes": "en:apples",
             "fr:noix-d-isere": "en:nuts-from-isere",
+            "xx:sashimi": "xx:sashimi",
         }
 
         assert create_taxonomy_mapping(taxonomy) == expected_mapping
