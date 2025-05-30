@@ -1153,27 +1153,15 @@ class FaceAnnotation:
 
     def __init__(self, data: JSONType):
         self.detection_confidence = data.get("detectionConfidence", 0.0)
-        self.joy_likelihood = SafeSearchAnnotationLikelihood[
-            data.get("joyLikelihood", "UNKNOWN")
-        ]
-        self.sorrow_likelihood = SafeSearchAnnotationLikelihood[
-            data.get("sorrowLikelihood", "UNKNOWN")
-        ]
-        self.anger_likelihood = SafeSearchAnnotationLikelihood[
-            data.get("angerLikelihood", "UNKNOWN")
-        ]
-        self.surprise_likelihood = SafeSearchAnnotationLikelihood[
-            data.get("surpriseLikelihood", "UNKNOWN")
-        ]
-        self.under_exposed_likelihood = SafeSearchAnnotationLikelihood[
+        self.joy_likelihood = Likelihood[data.get("joyLikelihood", "UNKNOWN")]
+        self.sorrow_likelihood = Likelihood[data.get("sorrowLikelihood", "UNKNOWN")]
+        self.anger_likelihood = Likelihood[data.get("angerLikelihood", "UNKNOWN")]
+        self.surprise_likelihood = Likelihood[data.get("surpriseLikelihood", "UNKNOWN")]
+        self.under_exposed_likelihood = Likelihood[
             data.get("underExposedLikelihood", "UNKNOWN")
         ]
-        self.blurred_likelihood = SafeSearchAnnotationLikelihood[
-            data.get("blurredLikelihood", "UNKNOWN")
-        ]
-        self.headwear_likelihood = SafeSearchAnnotationLikelihood[
-            data.get("headwearLikelihood", "UNKNOWN")
-        ]
+        self.blurred_likelihood = Likelihood[data.get("blurredLikelihood", "UNKNOWN")]
+        self.headwear_likelihood = Likelihood[data.get("headwearLikelihood", "UNKNOWN")]
 
 
 class SafeSearchAnnotation:
@@ -1197,6 +1185,16 @@ class SafeSearchAnnotation:
         ]
 
 
+class Likelihood(enum.IntEnum):
+    UNKNOWN = 1
+    VERY_UNLIKELY = 2
+    UNLIKELY = 3
+    POSSIBLE = 4
+    LIKELY = 5
+    VERY_LIKELY = 6
+
+
+# This class should be deleted and replaced by `Likelihood` in the future.
 class SafeSearchAnnotationLikelihood(enum.IntEnum):
     UNKNOWN = 1
     VERY_UNLIKELY = 2
