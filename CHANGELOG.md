@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.6.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.2...v2.6.0) (2025-05-30)
+
+
+### Features
+
+* add face annotations support in OCRResult ([#333](https://github.com/openfoodfacts/openfoodfacts-python/issues/333)) ([da800f9](https://github.com/openfoodfacts/openfoodfacts-python/commit/da800f9cba1e484f773b38696651adc97a005f80))
+
+
+### Bug Fixes
+
+* fix issue in map_to_canonical_id function ([#332](https://github.com/openfoodfacts/openfoodfacts-python/issues/332)) ([e383de1](https://github.com/openfoodfacts/openfoodfacts-python/commit/e383de11cc4aff9177887ee007aa0996b7240ff2)), closes [#331](https://github.com/openfoodfacts/openfoodfacts-python/issues/331)
+* remove unused variable in tests ([3a1375e](https://github.com/openfoodfacts/openfoodfacts-python/commit/3a1375ea718ffd4c2c19778d524c4681a0bb3c37))
+
 ## [2.5.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.1...v2.5.2) (2025-05-21)
 
 
