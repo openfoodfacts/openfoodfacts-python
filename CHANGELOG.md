@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.6.0...v2.6.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* fix issue witn convert_to_legacy_schema function ([#335](https://github.com/openfoodfacts/openfoodfacts-python/issues/335)) ([9897443](https://github.com/openfoodfacts/openfoodfacts-python/commit/9897443a0af44ec92ed307c3b9fc3f9d4f349e23)), closes [#334](https://github.com/openfoodfacts/openfoodfacts-python/issues/334)
+
 ## [2.6.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.2...v2.6.0) (2025-05-30)
 
 
