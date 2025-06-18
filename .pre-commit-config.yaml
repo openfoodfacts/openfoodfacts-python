@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Free Software Foundation Europe e.V.
+# SPDX-License-Identifier: CC0-1.0
+repos:
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v5.0.2
+    hooks:
+      - id: reuse-lint-file
