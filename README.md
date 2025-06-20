@@ -39,7 +39,7 @@ or manually from source:
 
     git clone https://github.com/openfoodfacts/openfoodfacts-python
     cd openfoodfacts-python
-    python setup.py install
+    pip install .  # Note the “.” at the end!
 
 ## Examples
 
