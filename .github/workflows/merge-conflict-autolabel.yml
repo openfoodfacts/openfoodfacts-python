@@ -2,7 +2,7 @@ name: '💥 Auto-Label Merge Conflicts on PRs'
 on:
   push:
     branches:
-      - main
+      - develop
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
