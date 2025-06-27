@@ -19,7 +19,7 @@ ensure_newline_before_comments = true
 line_length = 88
 
 [tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
+python = ">=3.9,<4.0"
 requests = ">=2.20.0"
 pydantic = ">=2.0.0,<3.0.0"
 tqdm = ">=4.0.0,<5.0.0"
