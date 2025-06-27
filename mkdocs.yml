@@ -1,6 +1,7 @@
 docs_dir: docs
 site_name: openfoodfacts-python
 site_url: https://openfoodfacts.github.io/openfoodfacts-python
+edit_uri: edit/develop/docs/
 site_dir: gh_pages
 
 nav:
@@ -10,3 +11,18 @@ nav:
 
 theme:
   name: material
+  features:
+    - content.action.edit
+  logo: https://static.openfoodfacts.org/images/logos/off-logo-horizontal-light.svg
+  favicon: https://static.openfoodfacts.org/images/logos/off-logo-favicon-light.png
+  palette: 
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode

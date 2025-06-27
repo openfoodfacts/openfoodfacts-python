@@ -11,7 +11,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Union
 import requests
 import tqdm
 
-from .types import COUNTRY_CODE_TO_NAME, Country, Environment, Flavor
+from ..types import COUNTRY_CODE_TO_NAME, Country, Environment, Flavor
 
 _orjson_available = True
 try:
