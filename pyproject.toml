@@ -1,50 +1,33 @@
 [project]
 name = "openfoodfacts"
-dynamic = ["version"]
+version = "2.6.1"
 authors = [
-    {name = "The Open Food Facts team", email = "contact@openfoodfacts.org" }
+    {name = "The Open Food Facts team", email = "contact@openfoodfacts.org"}
 ]
 description = "Official Python SDK of Open Food Facts"
 readme = "README.md"
-license = "Apache-2.0"
+license = "MIT"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.20.0",
+    "pydantic>=2.0.0,<3.0.0",
+    "tqdm>=4.0.0,<5.0.0",
+]
+dynamic = ["classifiers"]
+
+[tool.poetry]
+include = [
+    {path = "tests", format = "sdist"},
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Natural Language :: English",
-    "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
-requires-python = ">=3.9"
-dependencies = [
-    "requests>=2.20.0",
-    "pydantic>=1.10.0,<2.0.0",
-]
 
-[tool.setuptools]
-zip-safe = false
-include-package-data = true
-
-[tool.setuptools.package-data]
-"*" = ["*.txt", "*.rst"]
-
-[tool.setuptools.packages.find]
-exclude = ["tests*"]
-
-[tool.setuptools.dynamic]
-version = {attr = "openfoodfacts.__version__"}
-
-[tool.poetry]
-name = "openfoodfacts"
-version = "2.6.1"
-description = "Official Python SDK of Open Food Facts"
-authors = ["The Open Food Facts team"]
-license = "MIT"
-readme = "README.md"
+[project.urls]
 repository = "https://github.com/openfoodfacts/openfoodfacts-python"
 
 [tool.mypy]
@@ -60,9 +43,6 @@ line_length = 88
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-requests = ">=2.20.0"
-pydantic = ">=2.0.0,<3.0.0"
-tqdm = ">=4.0.0,<5.0.0"
 redis = { version = "~5.1.0", optional = true, extras = ["hiredis"] }
 Pillow = { version = ">=9.3,<11", optional = true }
 tritonclient = {extras = ["grpc"], version = ">2.0.0,<3.0.0", optional = true}
