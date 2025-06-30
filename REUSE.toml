@@ -1,0 +1,7 @@
+version = 1
+
+# Catch-all entry; overridden by specific claims in individual files
+[[annotations]]
+path = ["**"]
+SPDX-FileCopyrightText = "Copyright (c) 2016-2025 Open Food Facts <https://openfoodfacts.org/>"
+SPDX-License-Identifier = "MIT"
