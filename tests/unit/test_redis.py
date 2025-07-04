@@ -1,8 +1,152 @@
+import json
 from typing import Optional, cast
 
+import pytest
 from redis import Redis
 
 from openfoodfacts.redis import RedisUpdate, get_new_updates, get_processed_since
+
+
+class TestRedisUpdate:
+    @pytest.mark.parametrize(
+        "diffs, expected",
+        [
+            ({"uploaded_images": {"add": ["2"]}}, True),
+            ({"fields": {"change": {"product_type": "food"}}}, False),
+            (None, False),
+        ],
+    )
+    def test_is_image_upload(self, diffs, expected):
+        update = RedisUpdate(
+            id="1629878400000-0",
+            stream="product_updates",
+            timestamp=1629878400000,
+            code="1",
+            flavor="off",
+            user_id="user1",
+            action="updated",
+            comment="comment",
+            product_type="food",
+            diffs=json.dumps(diffs) if diffs is not None else None,
+        )
+        assert update.is_image_upload() is expected
+
+    @pytest.mark.parametrize(
+        "diffs, expected",
+        [
+            ({"fields": {"change": ["product_type"]}}, True),
+            ({"fields": {"change": ["countries", "product_type"]}}, True),
+            ({"fields": {"change": ["countries"]}}, False),
+            (None, False),
+        ],
+    )
+    def test_is_product_type_change(self, diffs, expected):
+        update = RedisUpdate(
+            id="1629878400000-0",
+            stream="product_updates",
+            timestamp=1629878400000,
+            code="1",
+            flavor="off",
+            user_id="user1",
+            action="updated",
+            comment="comment",
+            product_type="food",
+            diffs=json.dumps(diffs) if diffs is not None else None,
+        )
+        assert update.is_product_type_change() is expected
+
+    @pytest.mark.parametrize(
+        "diffs, field_name, expected",
+        [
+            (
+                {"fields": {"change": ["product_name", "quantity"]}},
+                "product_name",
+                True,
+            ),
+            ({"fields": {"change": ["product_name", "quantity"]}}, "countries", False),
+            ({"uploaded_images": {"add": ["4"]}}, "countries", False),
+            ({}, "countries", False),
+            (None, "product_name", False),
+        ],
+    )
+    def test_is_field_updated(self, diffs, field_name, expected):
+        update = RedisUpdate(
+            id="1629878400000-0",
+            stream="product_updates",
+            timestamp=1629878400000,
+            code="1",
+            flavor="off",
+            user_id="user1",
+            action="updated",
+            comment="comment",
+            product_type="food",
+            diffs=json.dumps(diffs) if diffs is not None else None,
+        )
+        assert update.is_field_updated(field_name) is expected
+
+    @pytest.mark.parametrize(
+        "diffs, field_name, expected",
+        [
+            (
+                {"fields": {"add": ["product_name", "quantity"]}},
+                "product_name",
+                True,
+            ),
+            ({"fields": {"add": ["product_name"]}}, "countries", False),
+            ({"uploaded_images": {"add": ["4"]}}, "countries", False),
+            ({}, "countries", False),
+            (None, "product_name", False),
+        ],
+    )
+    def test_is_field_added(self, diffs, field_name, expected):
+        update = RedisUpdate(
+            id="1629878400000-0",
+            stream="product_updates",
+            timestamp=1629878400000,
+            code="1",
+            flavor="off",
+            user_id="user1",
+            action="updated",
+            comment="comment",
+            product_type="food",
+            diffs=json.dumps(diffs) if diffs is not None else None,
+        )
+        assert update.is_field_added(field_name) is expected
+
+    @pytest.mark.parametrize(
+        "diffs, field_name, expected",
+        [
+            (
+                {"fields": {"change": ["product_name", "quantity"]}},
+                "product_name",
+                True,
+            ),
+            ({"fields": {"change": ["product_name", "quantity"]}}, "countries", False),
+            (
+                {"fields": {"add": ["product_name", "quantity"]}},
+                "product_name",
+                True,
+            ),
+            ({"fields": {"add": ["product_name"]}}, "countries", False),
+            ({"uploaded_images": {"add": ["4"]}}, "countries", False),
+            ({}, "countries", False),
+            (None, "product_name", False),
+        ],
+    )
+    def test_is_field_added_or_updated(self, diffs, field_name, expected):
+        update = RedisUpdate(
+            id="1629878400000-0",
+            stream="product_updates",
+            timestamp=1629878400000,
+            code="1",
+            flavor="off",
+            user_id="user1",
+            action="updated",
+            comment="comment",
+            product_type="food",
+            diffs=json.dumps(diffs) if diffs is not None else None,
+        )
+        assert update.is_field_added_or_updated(field_name) is expected
 
 
 class RedisXrangeClient:
@@ -13,7 +157,7 @@ class RedisXrangeClient:
     def xrange(
         self, name: str, min: str = "-", max: str = "+", count: Optional[int] = None
     ):
-        assert name == "product_updates_off"
+        assert name == "product_updates"
         assert max == "+"
         assert count == 100
         if self.call_count >= len(self.xrange_return_values):
@@ -23,7 +167,7 @@ class RedisXrangeClient:
 
 
 def test_get_processed_since():
-    stream_name = "product_updates_off"
+    stream_name = "product_updates"
     base_values = {
         "flavor": "off",
         "user_id": "user1",
@@ -73,7 +217,7 @@ class RedisXreadClient:
         self.call_count = 0
 
     def xread(self, streams: dict, block: int, count: Optional[int] = None):
-        assert set(streams.keys()) == {"product_updates_off"}
+        assert set(streams.keys()) == {"product_updates"}
         assert block == 0
         assert count == 100
         if self.call_count >= len(self.xread_return_values):
@@ -83,7 +227,7 @@ class RedisXreadClient:
 
 
 def test_get_new_updates():
-    redis_stream_name = "product_updates_off"
+    redis_stream_name = "product_updates"
     base_values = {
         "flavor": "off",
         "user_id": "user1",
