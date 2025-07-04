@@ -60,7 +60,7 @@ types-requests = "2.31.0.2"
 types-tqdm = "4.66.0.20240417"
 types-redis = "^4.6.0.20240425"
 
-[tool.poetry.extras]
+[project.optional-dependencies]
 redis = ["redis"]
 pillow = ["Pillow"]
 ml = ["tritonclient", "opencv-python-headless", "Pillow"]
