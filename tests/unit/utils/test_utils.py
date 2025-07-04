@@ -97,9 +97,11 @@ def test_should_download_file():
         )
 
     # Test case 3: Download newer with same ETag
-    with patch.object(Path, "is_file", return_value=True), patch(
-        "openfoodfacts.utils.get_file_etag", return_value="etag123"
-    ), patch("openfoodfacts.utils.fetch_etag", return_value="etag123"):
+    with (
+        patch.object(Path, "is_file", return_value=True),
+        patch("openfoodfacts.utils.get_file_etag", return_value="etag123"),
+        patch("openfoodfacts.utils.fetch_etag", return_value="etag123"),
+    ):
         assert (
             should_download_file(
                 url, filepath, force_download=False, download_newer=True
@@ -108,9 +110,11 @@ def test_should_download_file():
         )
 
     # Test case 4: Download newer with different ETag
-    with patch.object(Path, "is_file", return_value=True), patch(
-        "openfoodfacts.utils.get_file_etag", return_value="etag123"
-    ), patch("openfoodfacts.utils.fetch_etag", return_value="etag456"):
+    with (
+        patch.object(Path, "is_file", return_value=True),
+        patch("openfoodfacts.utils.get_file_etag", return_value="etag123"),
+        patch("openfoodfacts.utils.fetch_etag", return_value="etag456"),
+    ):
         assert (
             should_download_file(
                 url, filepath, force_download=False, download_newer=True
