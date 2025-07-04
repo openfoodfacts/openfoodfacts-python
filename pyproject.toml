@@ -63,7 +63,7 @@ types-redis = "^4.6.0.20240425"
 [project.optional-dependencies]
 redis = ["redis"]
 pillow = ["Pillow"]
-ml = ["tritonclient", "opencv-python-headless", "Pillow"]
+ml = ["tritonclient[grpc]", "opencv-python-headless", "Pillow"]
 
 [build-system]
 requires = ["poetry-core"]
