@@ -43,7 +43,7 @@ class OCRField(enum.Enum):
 
 
 class OCRRegex:
-    __slots__ = ("regex", "field", "processing_func", "priority", "notify")
+    __slots__ = ("regex", "field", "processing_func", "priority")
 
     def __init__(
         self,
@@ -51,13 +51,11 @@ class OCRRegex:
         field: OCRField,
         processing_func: Optional[Callable] = None,
         priority: Optional[int] = None,
-        notify: bool = False,
     ):
         self.regex: re.Pattern = regex
         self.field: OCRField = field
         self.processing_func: Optional[Callable] = processing_func
         self.priority = priority
-        self.notify = notify
 
 
 class ImageOrientation(enum.Enum):
@@ -109,6 +107,7 @@ class OCRResult:
         "logo_annotations",
         "safe_search_annotation",
         "label_annotations",
+        "face_annotations",
     )
 
     def __init__(self, data: JSONType):
@@ -117,6 +116,7 @@ class OCRResult:
         self.logo_annotations: List[LogoAnnotation] = []
         self.label_annotations: List[LabelAnnotation] = []
         self.safe_search_annotation: Optional[SafeSearchAnnotation] = None
+        self.face_annotations: List[FaceAnnotation] = []
 
         for text_annotation_data in data.get("textAnnotations", []):
             text_annotation = OCRTextAnnotation(text_annotation_data)
@@ -144,6 +144,10 @@ class OCRResult:
             self.safe_search_annotation = SafeSearchAnnotation(
                 data["safeSearchAnnotation"]
             )
+
+        for face_annotation_data in data.get("faceAnnotations", []):
+            face_annotation = FaceAnnotation(face_annotation_data)
+            self.face_annotations.append(face_annotation)
 
     def get_full_text(self) -> str:
         return (
@@ -185,6 +189,9 @@ class OCRResult:
 
     def get_label_annotations(self) -> List["LabelAnnotation"]:
         return self.label_annotations
+
+    def get_face_annotations(self) -> List["FaceAnnotation"]:
+        return self.face_annotations
 
     def get_safe_search_annotation(self):
         return self.safe_search_annotation
@@ -1130,6 +1137,31 @@ class LabelAnnotation:
         self.description = data["description"]
 
 
+class FaceAnnotation:
+    __slots__ = (
+        "detection_confidence",
+        "joy_likelihood",
+        "sorrow_likelihood",
+        "anger_likelihood",
+        "surprise_likelihood",
+        "under_exposed_likelihood",
+        "blurred_likelihood",
+        "headwear_likelihood",
+    )
+
+    def __init__(self, data: JSONType):
+        self.detection_confidence = data.get("detectionConfidence", 0.0)
+        self.joy_likelihood = Likelihood[data.get("joyLikelihood", "UNKNOWN")]
+        self.sorrow_likelihood = Likelihood[data.get("sorrowLikelihood", "UNKNOWN")]
+        self.anger_likelihood = Likelihood[data.get("angerLikelihood", "UNKNOWN")]
+        self.surprise_likelihood = Likelihood[data.get("surpriseLikelihood", "UNKNOWN")]
+        self.under_exposed_likelihood = Likelihood[
+            data.get("underExposedLikelihood", "UNKNOWN")
+        ]
+        self.blurred_likelihood = Likelihood[data.get("blurredLikelihood", "UNKNOWN")]
+        self.headwear_likelihood = Likelihood[data.get("headwearLikelihood", "UNKNOWN")]
+
+
 class SafeSearchAnnotation:
     __slots__ = ("adult", "spoof", "medical", "violence", "racy")
 
@@ -1151,6 +1183,16 @@ class SafeSearchAnnotation:
         ]
 
 
+class Likelihood(enum.IntEnum):
+    UNKNOWN = 1
+    VERY_UNLIKELY = 2
+    UNLIKELY = 3
+    POSSIBLE = 4
+    LIKELY = 5
+    VERY_LIKELY = 6
+
+
+# This class should be deleted and replaced by `Likelihood` in the future.
 class SafeSearchAnnotationLikelihood(enum.IntEnum):
     UNKNOWN = 1
     VERY_UNLIKELY = 2

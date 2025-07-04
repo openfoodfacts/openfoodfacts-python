@@ -1,5 +1,64 @@
 # Changelog
 
+## [2.7.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.6.1...v2.7.0) (2025-07-04)
+
+
+### Features
+
+* add new methods to TestRedisUpdate ([#349](https://github.com/openfoodfacts/openfoodfacts-python/issues/349)) ([1aa68da](https://github.com/openfoodfacts/openfoodfacts-python/commit/1aa68dab8410451e328709e4eeeb0421fdd6dfcf))
+
+
+### Bug Fixes
+
+* remove legacy notify field in OCRRegex ([#348](https://github.com/openfoodfacts/openfoodfacts-python/issues/348)) ([00abb17](https://github.com/openfoodfacts/openfoodfacts-python/commit/00abb17cc9b52d1aa32e29a0e8b711d79c1092d3))
+* use [project.optional-dependencies] instead of [tool.poetry.extras] ([#350](https://github.com/openfoodfacts/openfoodfacts-python/issues/350)) ([1012279](https://github.com/openfoodfacts/openfoodfacts-python/commit/1012279b91e91bb3c47b26632c02bacd33b16d72))
+
+
+### Documentation
+
+* Make project REUSE v3.3 compliant ([#337](https://github.com/openfoodfacts/openfoodfacts-python/issues/337)) ([799bbaa](https://github.com/openfoodfacts/openfoodfacts-python/commit/799bbaa2a9f76357824c9aa321b6c51a44bf7576))
+
+## [2.6.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.6.0...v2.6.1) (2025-06-12)
+
+
+### Bug Fixes
+
+* fix issue witn convert_to_legacy_schema function ([#335](https://github.com/openfoodfacts/openfoodfacts-python/issues/335)) ([9897443](https://github.com/openfoodfacts/openfoodfacts-python/commit/9897443a0af44ec92ed307c3b9fc3f9d4f349e23)), closes [#334](https://github.com/openfoodfacts/openfoodfacts-python/issues/334)
+
+## [2.6.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.2...v2.6.0) (2025-05-30)
+
+
+### Features
+
+* add face annotations support in OCRResult ([#333](https://github.com/openfoodfacts/openfoodfacts-python/issues/333)) ([da800f9](https://github.com/openfoodfacts/openfoodfacts-python/commit/da800f9cba1e484f773b38696651adc97a005f80))
+
+
+### Bug Fixes
+
+* fix issue in map_to_canonical_id function ([#332](https://github.com/openfoodfacts/openfoodfacts-python/issues/332)) ([e383de1](https://github.com/openfoodfacts/openfoodfacts-python/commit/e383de11cc4aff9177887ee007aa0996b7240ff2)), closes [#331](https://github.com/openfoodfacts/openfoodfacts-python/issues/331)
+* remove unused variable in tests ([3a1375e](https://github.com/openfoodfacts/openfoodfacts-python/commit/3a1375ea718ffd4c2c19778d524c4681a0bb3c37))
+
+## [2.5.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.1...v2.5.2) (2025-05-21)
+
+
+### Bug Fixes
+
+* add new function to convert images to old schema ([#327](https://github.com/openfoodfacts/openfoodfacts-python/issues/327)) ([224c38c](https://github.com/openfoodfacts/openfoodfacts-python/commit/224c38cc202e94ba2ecb6ba5a68ba7f8609c4c49))
+
+## [2.5.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.5.0...v2.5.1) (2025-04-03)
+
+
+### Bug Fixes
+
+* brands taxonomy might use xx language code ([#320](https://github.com/openfoodfacts/openfoodfacts-python/issues/320)) ([9e48a60](https://github.com/openfoodfacts/openfoodfacts-python/commit/9e48a60945440d119313ae38a9c46dfa2710eea3)), closes [#319](https://github.com/openfoodfacts/openfoodfacts-python/issues/319)
+* **metadata:** add project repository URL ([#311](https://github.com/openfoodfacts/openfoodfacts-python/issues/311)) ([cbf38b4](https://github.com/openfoodfacts/openfoodfacts-python/commit/cbf38b4aed0a1af260b94811e44c7e327afe8635))
+* **metadata:** set license to "MIT" (as in LICENSE file) ([#310](https://github.com/openfoodfacts/openfoodfacts-python/issues/310)) ([d82191c](https://github.com/openfoodfacts/openfoodfacts-python/commit/d82191c6448fef0759b03d6d9b6068954d2c0dbb))
+
+
+### Documentation
+
+* https://python-poetry.org/docs/pyproject/#repository ([cbf38b4](https://github.com/openfoodfacts/openfoodfacts-python/commit/cbf38b4aed0a1af260b94811e44c7e327afe8635))
+
 ## [2.5.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.4.0...v2.5.0) (2024-12-12)
 
 

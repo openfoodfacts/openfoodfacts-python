@@ -90,3 +90,17 @@ def get_tag(text: str) -> str:
     if lang_prefix:
         text = f"{lang_prefix}:{text}"
     return text
+
+
+def replace_lang_prefix(tag: str, new_lang_prefix: str) -> str:
+    """Replace the language prefix of a tag with a new one."""
+
+    if len(new_lang_prefix) != 2:
+        raise ValueError(
+            f"new_lang_prefix '{new_lang_prefix}' must be a 2-letter code."
+        )
+
+    if len(tag) < 3 or tag[2] != ":":
+        raise ValueError(f"tag '{tag}' has an invalid language prefix")
+
+    return f"{new_lang_prefix}:{tag[3:]}"
