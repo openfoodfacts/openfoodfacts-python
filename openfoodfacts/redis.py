@@ -50,6 +50,41 @@ class RedisUpdate(BaseModel):
             and "add" in self.diffs["uploaded_images"]
         )
 
+    def is_product_type_change(self) -> bool:
+        """Returns True if the update contains a product type change (example:
+        switch from `food` to `beauty`)."""
+        return bool(
+            self.diffs is not None
+            and "fields" in self.diffs
+            and "change" in self.diffs["fields"]
+            and "product_type" in self.diffs["fields"]["change"]
+        )
+
+    def is_field_updated(self, field_name: str) -> bool:
+        """Returns True if the update contains a change in the specified
+        field."""
+        return (
+            self.diffs is not None
+            and "fields" in self.diffs
+            and "change" in self.diffs["fields"]
+            and field_name in self.diffs["fields"]["change"]
+        )
+
+    def is_field_added(self, field_name: str) -> bool:
+        """Returns True if the update contains a change in the specified
+        field."""
+        return (
+            self.diffs is not None
+            and "fields" in self.diffs
+            and "add" in self.diffs["fields"]
+            and field_name in self.diffs["fields"]["add"]
+        )
+
+    def is_field_added_or_updated(self, field_name: str) -> bool:
+        """Returns True if the update contains a change in the specified
+        field."""
+        return self.is_field_updated(field_name) or self.is_field_added(field_name)
+
 
 def get_processed_since(
     redis_client: Redis,
