@@ -56,14 +56,14 @@ def test_get_processed_since():
         stream=stream_name,
         timestamp=1629878400000,
         code="2",
-        **base_values
+        **base_values,
     )
     assert results[1] == RedisUpdate(
         id="1629878400001-0",
         stream=stream_name,
         timestamp=1629878400001,
         code="3",
-        **base_values
+        **base_values,
     )
 
 
@@ -128,5 +128,5 @@ def test_get_new_updates():
         stream=redis_stream_name,
         timestamp=1629878400002,
         code="4",
-        **base_values
+        **base_values,
     )

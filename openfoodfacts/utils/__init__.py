@@ -190,14 +190,17 @@ def download_file(url: str, output_path: Path):
     etag = r.headers.get("ETag", "").strip("'\"")
 
     tmp_output_path = output_path.with_name(output_path.name + ".part")
-    with tmp_output_path.open("wb") as f, tqdm.tqdm(
-        unit="B",
-        unit_scale=True,
-        unit_divisor=1024,
-        miniters=1,
-        desc=str(output_path),
-        total=int(r.headers.get("content-length", 0)),
-    ) as pbar:
+    with (
+        tmp_output_path.open("wb") as f,
+        tqdm.tqdm(
+            unit="B",
+            unit_scale=True,
+            unit_divisor=1024,
+            miniters=1,
+            desc=str(output_path),
+            total=int(r.headers.get("content-length", 0)),
+        ) as pbar,
+    ):
         for chunk in r.iter_content(chunk_size=4096):
             f.write(chunk)
             pbar.update(len(chunk))
