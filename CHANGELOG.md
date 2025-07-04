@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.7.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.6.1...v2.7.0) (2025-07-04)
+
+
+### Features
+
+* add new methods to TestRedisUpdate ([#349](https://github.com/openfoodfacts/openfoodfacts-python/issues/349)) ([1aa68da](https://github.com/openfoodfacts/openfoodfacts-python/commit/1aa68dab8410451e328709e4eeeb0421fdd6dfcf))
+
+
+### Bug Fixes
+
+* remove legacy notify field in OCRRegex ([#348](https://github.com/openfoodfacts/openfoodfacts-python/issues/348)) ([00abb17](https://github.com/openfoodfacts/openfoodfacts-python/commit/00abb17cc9b52d1aa32e29a0e8b711d79c1092d3))
+* use [project.optional-dependencies] instead of [tool.poetry.extras] ([#350](https://github.com/openfoodfacts/openfoodfacts-python/issues/350)) ([1012279](https://github.com/openfoodfacts/openfoodfacts-python/commit/1012279b91e91bb3c47b26632c02bacd33b16d72))
+
+
+### Documentation
+
+* Make project REUSE v3.3 compliant ([#337](https://github.com/openfoodfacts/openfoodfacts-python/issues/337)) ([799bbaa](https://github.com/openfoodfacts/openfoodfacts-python/commit/799bbaa2a9f76357824c9aa321b6c51a44bf7576))
+
 ## [2.6.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.6.0...v2.6.1) (2025-06-12)
 
 
