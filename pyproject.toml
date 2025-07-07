@@ -54,7 +54,7 @@ flake8 = "6.0.0"
 black = "24.3.0"
 mypy = "1.12.0"
 isort = "5.12.0"
-coverage = {version = "7.2.7", extras = ["toml"]}
+coverage = {version = "7.9.2", extras = ["toml"]}
 pytest = "7.4.2"
 types-requests = "2.32.4.20250611"
 types-tqdm = "4.66.0.20240417"
