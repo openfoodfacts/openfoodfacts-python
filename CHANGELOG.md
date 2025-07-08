@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.8.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.7.0...v2.8.0) (2025-07-08)
+
+
+### Features
+
+* add new is_image_deletion method to RedisUpdate ([#359](https://github.com/openfoodfacts/openfoodfacts-python/issues/359)) ([9e3951c](https://github.com/openfoodfacts/openfoodfacts-python/commit/9e3951c392dfde4761b7cb99ffe2131ba4641738))
+
+
+### Bug Fixes
+
+* fix release please config ([fc77c07](https://github.com/openfoodfacts/openfoodfacts-python/commit/fc77c07a3509f56a3c9cbe617b5beeca8e050263))
+
 ## [2.7.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.6.1...v2.7.0) (2025-07-04)
 
 
