@@ -85,6 +85,14 @@ class RedisUpdate(BaseModel):
         field."""
         return self.is_field_updated(field_name) or self.is_field_added(field_name)
 
+    def is_image_deletion(self) -> bool:
+        """Returns True if the event is an image deletion."""
+        return (
+            self.diffs is not None
+            and "uploaded_images" in self.diffs
+            and "delete" in self.diffs["uploaded_images"]
+        )
+
 
 def get_processed_since(
     redis_client: Redis,
