@@ -148,6 +148,37 @@ class TestRedisUpdate:
         )
         assert update.is_field_added_or_updated(field_name) is expected
 
+    @pytest.mark.parametrize(
+        "diffs, expected",
+        [
+            (
+                {
+                    "selected_images": {"delete": ["front_de"]},
+                    "uploaded_images": {"delete": ["1"]},
+                },
+                True,
+            ),
+            ({"fields": {"add": ["product_name"]}}, False),
+            ({"uploaded_images": {"add": ["4"]}}, False),
+            ({}, False),
+            (None, False),
+        ],
+    )
+    def test_is_image_deletion(self, diffs, expected):
+        update = RedisUpdate(
+            id="1629878400000-0",
+            stream="product_updates",
+            timestamp=1629878400000,
+            code="1",
+            flavor="off",
+            user_id="user1",
+            action="updated",
+            comment="comment",
+            product_type="food",
+            diffs=json.dumps(diffs),
+        )
+        assert update.is_image_deletion() is expected
+
 
 class RedisXrangeClient:
     def __init__(self, xrange_return_values: list):
