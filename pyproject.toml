@@ -57,7 +57,7 @@ isort = "6.0.1"
 coverage = {version = "7.9.2", extras = ["toml"]}
 pytest = "7.4.2"
 types-requests = "2.32.4.20250611"
-types-tqdm = "4.66.0.20240417"
+types-tqdm = "4.67.0.20250516"
 types-redis = "^4.6.0.20240425"
 
 [project.optional-dependencies]
