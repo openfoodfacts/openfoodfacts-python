@@ -95,10 +95,15 @@ class FacetResource:
         )
 
     def get(self, facet_name: Union[Facet, str]) -> JSONType:
+        """Return all possible values for a given facet.
+
+        :param facet_name: the facet name, e.g. "label"
+        :return: the API response containing all possible values for the facet
+        """
         facet = Facet.from_str_or_enum(facet_name)
         facet_plural = facet.value.replace("_", "-")
         resp = send_get_request(
-            url=f"{self.base_url}/{facet_plural}",
+            url=f"{self.base_url}/facets/{facet_plural}",
             params={"json": "1"},
             api_config=self.api_config,
             auth=get_http_auth(self.api_config.environment),
@@ -113,6 +118,7 @@ class FacetResource:
         page: int = 1,
         page_size: int = 25,
         fields: Optional[List[str]] = None,
+        sort_by: Optional[str] = None,
     ) -> JSONType:
         """Return products for a given facet value.
 
@@ -122,16 +128,21 @@ class FacetResource:
         :param page_size: the number of items per page, defaults to 25
         :param fields: a list of fields to return. If None, all fields are
             returned.
+        :param sort_by: the sorting key, defaults to None (no sorting)
+            possible values (not exhaustive) are: "popularity",
+            "last_modified_t", "created_t".
         :return: the API response
         """
         facet = Facet.from_str_or_enum(facet_name)
-        facet_singular = facet.name.replace("_", "-")
-        params: JSONType = {"page": page, "page_size": page_size}
+        facet_plural = facet.value.replace("_", "-")
+        params: JSONType = {"page": page, "page_size": page_size, "json": "1"}
         if fields is not None:
             params["fields"] = ",".join(fields)
+        if sort_by is not None:
+            params["sort_by"] = sort_by
 
         resp = send_get_request(
-            url=f"{self.base_url}/{facet_singular}/{facet_value}.json",
+            url=f"{self.base_url}/facets/{facet_plural}/{facet_value}",
             params=params,
             api_config=self.api_config,
             auth=get_http_auth(self.api_config.environment),
