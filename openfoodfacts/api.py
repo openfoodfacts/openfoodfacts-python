@@ -94,17 +94,26 @@ class FacetResource:
             country_code=self.api_config.country.name,
         )
 
-    def get(self, facet_name: Union[Facet, str]) -> JSONType:
+    def get(
+        self,
+        facet_name: Union[Facet, str],
+        page: int = 1,
+        page_size: int = 20,
+        **kwargs: JSONType,
+    ) -> JSONType:
         """Return all possible values for a given facet.
 
         :param facet_name: the facet name, e.g. "label"
+        :param page: the page number, defaults to 1
+        :param page_size: the number of items per page, defaults to 20
+        :param kwargs: additional query parameters to pass to the API
         :return: the API response containing all possible values for the facet
         """
         facet = Facet.from_str_or_enum(facet_name)
         facet_plural = facet.value.replace("_", "-")
         resp = send_get_request(
             url=f"{self.base_url}/facets/{facet_plural}",
-            params={"json": "1"},
+            params={"json": "1", "page": page, "page_size": page_size, **kwargs},
             api_config=self.api_config,
             auth=get_http_auth(self.api_config.environment),
         )
