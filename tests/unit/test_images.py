@@ -62,6 +62,15 @@ def test_get_source_from_url(url: str, output: str):
             Environment.org,
             "https://images.openfoodfacts.org/images/products/541/012/672/6954/1.jpg",
         ),
+        # Test that barcode normalization (stripping leading zeros) works
+        # correctly
+        (
+            "0005410126726954",
+            "1",
+            Flavor.off,
+            Environment.org,
+            "https://images.openfoodfacts.org/images/products/541/012/672/6954/1.jpg",
+        ),
         (
             "990530101113758685",
             "2",

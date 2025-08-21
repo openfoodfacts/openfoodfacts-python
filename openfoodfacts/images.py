@@ -42,7 +42,7 @@ def split_barcode(barcode: str) -> List[str]:
         raise ValueError(f"unknown barcode format: {barcode}")
 
     # Pad the barcode with zeros to ensure it has 13 digits
-    barcode = barcode.zfill(13)
+    barcode = barcode.lstrip("0").zfill(13)
     # Split the first 9 digits of the barcode into 3 groups of 3 digits to
     # get the first 3 folder names and use the rest of the barcode as the
     # last folder name
