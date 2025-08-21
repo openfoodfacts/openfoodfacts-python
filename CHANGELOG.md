@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.9.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.8.0...v2.9.0) (2025-08-21)
+
+
+### Features
+
+* improve facet functions ([#377](https://github.com/openfoodfacts/openfoodfacts-python/issues/377)) ([1084e05](https://github.com/openfoodfacts/openfoodfacts-python/commit/1084e05aa91450be6c0e82e4fc3e909d3f2f4091))
+
+
+### Bug Fixes
+
+* strip leading 0 before splitting barcodes ([#378](https://github.com/openfoodfacts/openfoodfacts-python/issues/378)) ([1247212](https://github.com/openfoodfacts/openfoodfacts-python/commit/12472127b8db41beba1d204d1224378b93e013cb))
+
 ## [2.8.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.7.0...v2.8.0) (2025-07-08)
 
 
