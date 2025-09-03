@@ -29,6 +29,10 @@ It also provides some helper functions to make it easier to work with Open Food 
 
 Please note that this SDK is still in beta and the API is subject to change. Make sure to pin the version in your requirements file.
 
+## Third party applications
+If you use this SDK or want to use this SDK, make sure to read the [REUSE](https://github.com/openfoodfacts/openfoodfacts-python/blob/develop/REUSE.md) and ensure you comply with the OdBL licence, in addition to the licence of this package (MIT). Make sure you at least fill the form, and feel free to open a PR to add your application in this list :-)
+
+
 ## Installation
 
 The easiest way to install the SDK is through pip:
@@ -81,8 +85,7 @@ with `CODE` the product barcode. The rest of the body should be a dictionary of 
 
 To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/usage/).
 
-## Third party applications
-If you use this SDK, feel free to open a PR to add your application in this list.
+
 
 ## Contributing
 
