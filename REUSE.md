@@ -3,12 +3,14 @@
 ### Official applications
 
 - Robotoff: https://github.com/openfoodfacts/robotoff uses this to create the ML system of Open Food Facts.
+- Open Prices: https://github.com/openfoodfacts/open-prices uses this to handle many operations related to products
 
 ### Targets
 
-- Folksonomy Engine
-- Taxonomy Editor
-- Facets Knowledge Panels
+- Folksonomy Engine:
+- Nutri-Patrol:
+- Taxonomy Editor:
+- Facets Knowledge Panels:
 
 ### Third party applications
 
