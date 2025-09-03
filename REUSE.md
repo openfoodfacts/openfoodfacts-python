@@ -2,7 +2,7 @@
 
 ### Official applications
 
-- robotoff : https://github.com/openfoodfacts/robotoff uses this to create the ML system of Open Food Facts
+- Robotoff: https://github.com/openfoodfacts/robotoff uses this to create the ML system of Open Food Facts.
 
 ### Targets
 
