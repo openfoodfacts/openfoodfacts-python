@@ -193,7 +193,7 @@ class RedisXrangeClient:
     def xrange(
         self, name: str, min: str = "-", max: str = "+", count: Optional[int] = None
     ):
-        assert name == "product_updates"
+        assert name in ("product_updates", "ocr_ready")
         assert max == "+"
         assert count == 100
         if self.call_count >= len(self.xrange_return_values):

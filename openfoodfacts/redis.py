@@ -149,7 +149,7 @@ def get_processed_since(
         while True:
             logger.debug(
                 "Fetching batch from Redis, stream %s, min_id %s, count %d",
-                product_updates_stream_name,
+                stream_name,
                 min_id,
                 batch_size,
             )
