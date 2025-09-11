@@ -1,10 +1,15 @@
+import datetime
 import json
 from typing import Optional, cast
 
 import pytest
 from redis import Redis
 
-from openfoodfacts.redis import RedisUpdate, get_new_updates, get_processed_since
+from openfoodfacts.redis import (
+    ProductUpdateEvent,
+    get_new_updates_multistream,
+    get_processed_since,
+)
 
 
 class TestRedisUpdate:
@@ -17,7 +22,7 @@ class TestRedisUpdate:
         ],
     )
     def test_is_image_upload(self, diffs, expected):
-        update = RedisUpdate(
+        update = ProductUpdateEvent(
             id="1629878400000-0",
             stream="product_updates",
             timestamp=1629878400000,
@@ -41,7 +46,7 @@ class TestRedisUpdate:
         ],
     )
     def test_is_product_type_change(self, diffs, expected):
-        update = RedisUpdate(
+        update = ProductUpdateEvent(
             id="1629878400000-0",
             stream="product_updates",
             timestamp=1629878400000,
@@ -70,7 +75,7 @@ class TestRedisUpdate:
         ],
     )
     def test_is_field_updated(self, diffs, field_name, expected):
-        update = RedisUpdate(
+        update = ProductUpdateEvent(
             id="1629878400000-0",
             stream="product_updates",
             timestamp=1629878400000,
@@ -99,7 +104,7 @@ class TestRedisUpdate:
         ],
     )
     def test_is_field_added(self, diffs, field_name, expected):
-        update = RedisUpdate(
+        update = ProductUpdateEvent(
             id="1629878400000-0",
             stream="product_updates",
             timestamp=1629878400000,
@@ -134,7 +139,7 @@ class TestRedisUpdate:
         ],
     )
     def test_is_field_added_or_updated(self, diffs, field_name, expected):
-        update = RedisUpdate(
+        update = ProductUpdateEvent(
             id="1629878400000-0",
             stream="product_updates",
             timestamp=1629878400000,
@@ -165,7 +170,7 @@ class TestRedisUpdate:
         ],
     )
     def test_is_image_deletion(self, diffs, expected):
-        update = RedisUpdate(
+        update = ProductUpdateEvent(
             id="1629878400000-0",
             stream="product_updates",
             timestamp=1629878400000,
@@ -188,7 +193,7 @@ class RedisXrangeClient:
     def xrange(
         self, name: str, min: str = "-", max: str = "+", count: Optional[int] = None
     ):
-        assert name == "product_updates"
+        assert name in ("product_updates", "ocr_ready")
         assert max == "+"
         assert count == 100
         if self.call_count >= len(self.xrange_return_values):
@@ -219,21 +224,20 @@ def test_get_processed_since():
     results = list(
         get_processed_since(
             redis_client,
-            stream_name=stream_name,
             min_id=start_timestamp_ms,
         )
     )
 
     # Assertions
     assert len(results) == 2
-    assert results[0] == RedisUpdate(
+    assert results[0] == ProductUpdateEvent(
         id="1629878400000-0",
         stream=stream_name,
         timestamp=1629878400000,
         code="2",
         **base_values,
     )
-    assert results[1] == RedisUpdate(
+    assert results[1] == ProductUpdateEvent(
         id="1629878400001-0",
         stream=stream_name,
         timestamp=1629878400001,
@@ -248,7 +252,7 @@ class RedisXreadClient:
         self.call_count = 0
 
     def xread(self, streams: dict, block: int, count: Optional[int] = None):
-        assert set(streams.keys()) == {"product_updates"}
+        assert set(streams.keys()) == {"product_updates", "ocr_ready"}
         assert block == 0
         assert count == 100
         if self.call_count >= len(self.xread_return_values):
@@ -257,51 +261,75 @@ class RedisXreadClient:
         return self.xread_return_values[self.call_count - 1]
 
 
-def test_get_new_updates():
-    redis_stream_name = "product_updates"
-    base_values = {
+def test_get_new_updates_multistream():
+    product_updates_stream_name = "product_updates"
+    ocr_ready_stream_name = "ocr_ready"
+    base_values_product_updates = {
         "flavor": "off",
         "user_id": "user1",
         "action": "updated",
         "comment": "comment",
         "product_type": "beauty",
     }
+    ocr_ready_event = {
+        "product_type": "beauty",
+        "code": "3215495849204",
+        "image_id": "2",
+        "json_url": "https://images.openfoodfacts.org/images/products/321/549/584/9204/2.json",
+    }
     return_values = [
         [
             (
-                redis_stream_name,
-                [("1629878400002-0", {"code": "4", **base_values})],
+                product_updates_stream_name,
+                [("1629878400000-0", {"code": "4", **base_values_product_updates})],
+            ),
+        ],
+        [
+            (
+                ocr_ready_stream_name,
+                [("1629878400001-0", ocr_ready_event)],
+            ),
+        ],
+        [
+            (
+                product_updates_stream_name,
+                [("1629878400002-0", {"code": "1", **base_values_product_updates})],
             )
         ],
         [
             (
-                redis_stream_name,
-                [("1629878400000-0", {"code": "1", **base_values})],
+                product_updates_stream_name,
+                [("1629878400003-0", {"code": "2", **base_values_product_updates})],
             )
         ],
         [
             (
-                redis_stream_name,
-                [("1629878400001-0", {"code": "2", **base_values})],
-            )
-        ],
-        [
-            (
-                redis_stream_name,
-                [("1629878400003-0", {"code": "3", **base_values})],
+                product_updates_stream_name,
+                [("1629878400004-0", {"code": "3", **base_values_product_updates})],
             )
         ],
     ]
     redis_client = cast(Redis, RedisXreadClient(return_values))
 
     # Call the function and iterate over the results
-    updates_iter = get_new_updates(redis_client, stream_name=redis_stream_name)
+    updates_iter = get_new_updates_multistream(redis_client)
 
-    results = next(updates_iter)
-    assert results == RedisUpdate(
-        id="1629878400002-0",
-        stream=redis_stream_name,
-        timestamp=1629878400002,
+    product_update_result = next(updates_iter)
+    assert product_update_result == ProductUpdateEvent(
+        id="1629878400000-0",
+        stream=product_updates_stream_name,
+        timestamp=1629878400000,
         code="4",
-        **base_values,
+        **base_values_product_updates,
     )
+
+    ocr_ready_result = next(updates_iter)
+    assert ocr_ready_result.id == "1629878400001-0"
+    assert ocr_ready_result.stream == ocr_ready_stream_name
+    assert ocr_ready_result.timestamp == datetime.datetime.fromtimestamp(
+        1629878400.001, tz=datetime.timezone.utc
+    )
+    assert ocr_ready_result.code == ocr_ready_event["code"]
+    assert ocr_ready_result.product_type == ocr_ready_event["product_type"]
+    assert ocr_ready_result.image_id == ocr_ready_event["image_id"]
+    assert ocr_ready_result.json_url == ocr_ready_event["json_url"]
