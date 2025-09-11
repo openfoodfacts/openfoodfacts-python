@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.9.0...v3.0.0) (2025-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* **redis:** support `ocr_ready` event type ([#386](https://github.com/openfoodfacts/openfoodfacts-python/issues/386))
+
+### Features
+
+* **redis:** support `ocr_ready` event type ([#386](https://github.com/openfoodfacts/openfoodfacts-python/issues/386)) ([e4e598a](https://github.com/openfoodfacts/openfoodfacts-python/commit/e4e598aa9cb2b2bc48a7173122e7147deeb4e0fb))
+
+
+### Bug Fixes
+
+* allow to specify the page in FacetResource.get ([#381](https://github.com/openfoodfacts/openfoodfacts-python/issues/381)) ([11aa647](https://github.com/openfoodfacts/openfoodfacts-python/commit/11aa64732a35c05904e46b51ab3d778f42299f00)), closes [#292](https://github.com/openfoodfacts/openfoodfacts-python/issues/292)
+
+
+### Documentation
+
+* Add a REUSE.md for the Python SDK ([#385](https://github.com/openfoodfacts/openfoodfacts-python/issues/385)) ([72af8dd](https://github.com/openfoodfacts/openfoodfacts-python/commit/72af8ddf30bad656f902d8a384cf5b590514eeb0))
+
 ## [2.9.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.8.0...v2.9.0) (2025-08-21)
 
 
