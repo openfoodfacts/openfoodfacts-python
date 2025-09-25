@@ -1,4 +1,7 @@
+import base64
 import logging
+import warnings
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 import requests
@@ -62,6 +65,28 @@ def send_form_urlencoded_post_request(
         cookies=cookies,
     )
     r.raise_for_status()
+    return r
+
+
+def send_json_post_request(
+    url: str, body: JSONType, api_config: APIConfig
+) -> requests.Response:
+    cookies = None
+    if api_config.username and api_config.password:
+        body["user_id"] = api_config.username
+        body["password"] = api_config.password
+    elif api_config.session_cookie:
+        cookies = {
+            "session": api_config.session_cookie,
+        }
+    r = http_session.post(
+        url,
+        json=body,
+        headers={"User-Agent": api_config.user_agent},
+        timeout=api_config.timeout,
+        auth=get_http_auth(api_config.environment),
+        cookies=cookies,
+    )
     return r
 
 
@@ -415,6 +440,106 @@ class ProductResource:
             raise RuntimeError(f"Unable to parse ingredients: {response_data}")
 
         return response_data["product"].get("ingredients", [])
+
+    def upload_image(
+        self,
+        code: str,
+        image_path: Path | str | None = None,
+        image_data_base64: str | None = None,
+        selected: JSONType | None = None,
+    ):
+        """Upload an image for a product, and optionally select this image for
+        some specific field and language (example: `nutrition` image for `es`
+        language).
+
+        This method requires a password to be set in the API configuration.
+        Authentication through a session cookie does not seem to work
+        currently.
+
+        We force here the usage of v3 of the API.
+
+        The image can be provided either as a file path or as a base64-encoded
+        string.
+
+        :param code: the product barcode
+        :param image_path: the path to the image file, defaults to None. One of
+            image_path or image_data_base64 must be provided.
+        :param image_data_base64: the base64-encoded image, defaults to None.
+            One of image_path or image_data_base64 must be provided.
+        :param selected: a dict that describes how to select the image after
+            upload, defaults to None (no selection). Example:
+            {
+                "front": {"fr": {}},
+                "ingredients": {"en": {}},
+            }
+            will select the image as the front image for french language and
+            as the ingredients image for english language.
+
+        :return: the API response (a requests.Response object)
+        :raises ValueError: if no password or session cookie is provided, or if
+            both image_path and image_data_base64 are None.
+        """
+        if self.api_config.version != APIVersion.v3:
+            warnings.warn(
+                "image upload is only available in v3 of the API (here: %s), forcing use of v3"
+                % self.api_config.version,
+            )
+
+        if (self.api_config.username is None or self.api_config.password is None) and (
+            self.api_config.session_cookie is None
+        ):
+            raise ValueError(
+                "a password or a session cookie is required to upload an image"
+            )
+
+        if not code.isdigit():
+            raise ValueError("code must be a numeric string")
+
+        if image_path is None and image_data_base64 is None:
+            raise ValueError("one of image_path or image_data_base64 must be provided")
+
+        if image_path is not None and image_data_base64 is not None:
+            raise ValueError(
+                "only one of image_path or image_data_base64 must be provided"
+            )
+
+        if image_data_base64 is None and image_path is not None:
+            with Path(image_path).open("rb") as f:
+                image_data_base64 = base64.b64encode(f.read()).decode("utf-8")
+
+        if selected:
+            for key in selected:
+                if key not in ("front", "ingredients", "nutrition", "packaging"):
+                    raise ValueError(
+                        f"invalid image field name in selected: {key} "
+                        "(must be one of front, ingredients, nutrition, packaging)"
+                    )
+                lang_info = selected[key]
+                if not isinstance(lang_info, dict):
+                    raise ValueError(
+                        f"selected[{key}] must be a dict with a language code, "
+                        f"got {type(lang_info)}"
+                    )
+
+                for lang_code, value in lang_info.items():
+                    if not isinstance(lang_code, str) or len(lang_code) != 2:
+                        raise ValueError(
+                            f"invalid language code in selected[{key}]: {lang_code}"
+                        )
+                    if not isinstance(value, dict):
+                        raise ValueError(
+                            f"selected[{key}][{lang_code}] must be a dict, got {type(value)}"
+                        )
+
+        # copy the config but force v3 of the API
+        api_config = self.api_config.model_copy(update={"version": APIVersion.v3})
+        url = f"{self.base_url}/api/v3/product/{code}/images"
+        data: JSONType = {"image_data_base64": image_data_base64}
+
+        if selected:
+            data["selected"] = selected
+
+        return send_json_post_request(url, data, api_config)
 
 
 class API:
