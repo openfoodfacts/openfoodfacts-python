@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.0.0...v3.1.0) (2025-09-25)
+
+
+### Features
+
+* implement POST /api/v3/product/{barcode}/images route ([#389](https://github.com/openfoodfacts/openfoodfacts-python/issues/389)) ([73704cf](https://github.com/openfoodfacts/openfoodfacts-python/commit/73704cf4e348813780af2125cefb2936fb55fce5))
+
 ## [3.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v2.9.0...v3.0.0) (2025-09-11)
 
 
