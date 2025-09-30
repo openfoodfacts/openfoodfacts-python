@@ -903,6 +903,7 @@ class TaxonomyType(str, enum.Enum):
     nucleotide = "nucleotide"
     allergen = "allergen"
     state = "state"
+    data_quality = "data_quality"
     origin = "origin"
     language = "language"
     other_nutritional_substance = "other_nutritional_substance"
