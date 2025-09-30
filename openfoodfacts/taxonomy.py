@@ -53,6 +53,8 @@ TAXONOMY_URLS = {
     + "/data/taxonomies/allergens.full.json",
     TaxonomyType.state: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/states.full.json",
+    TaxonomyType.data_quality: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/data_quality.full.json",
     TaxonomyType.origin: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/origins.full.json",
     TaxonomyType.language: URLBuilder.static(Flavor.off, Environment.org)
