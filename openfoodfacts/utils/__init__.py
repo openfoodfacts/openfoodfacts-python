@@ -2,7 +2,9 @@ import dataclasses
 import gzip
 import json
 import logging
+import random
 import shutil
+import string
 import time
 from io import BytesIO
 from pathlib import Path
@@ -189,7 +191,9 @@ def download_file(url: str, output_path: Path):
     r = http_session.get(url, stream=True)
     etag = r.headers.get("ETag", "").strip("'\"")
 
-    tmp_output_path = output_path.with_name(output_path.name + ".part")
+    # add a random string to the output path to avoid concurrent writes
+    suffix = "".join(random.choices(string.ascii_letters, k=8))
+    tmp_output_path = output_path.with_name(output_path.name + f"-{suffix}.part")
     with (
         tmp_output_path.open("wb") as f,
         tqdm.tqdm(
