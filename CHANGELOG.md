@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.1.0...v3.2.0) (2025-11-18)
+
+
+### Features
+
+* add a `warning_missing` parameter to OCRResult.from_url function ([#399](https://github.com/openfoodfacts/openfoodfacts-python/issues/399)) ([9612b06](https://github.com/openfoodfacts/openfoodfacts-python/commit/9612b0655d424d48d804982e692e3db1c2517e40))
+* Add data quality taxonomy URL ([#392](https://github.com/openfoodfacts/openfoodfacts-python/issues/392)) ([67e0768](https://github.com/openfoodfacts/openfoodfacts-python/commit/67e0768a1ff3173fb924f8b1f027eb4651916514))
+
+
+### Bug Fixes
+
+* use a temp filename to save files with `download_file` func ([#398](https://github.com/openfoodfacts/openfoodfacts-python/issues/398)) ([6f1eba5](https://github.com/openfoodfacts/openfoodfacts-python/commit/6f1eba57de0bfcc96b4e9c02bc3a1aad333fd7fe))
+
 ## [3.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.0.0...v3.1.0) (2025-09-25)
 
 
