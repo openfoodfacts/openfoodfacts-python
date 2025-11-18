@@ -304,6 +304,7 @@ class OCRResult:
         ocr_url: str,
         session: Optional[requests.Session] = None,
         error_raise: bool = True,
+        warning_missing: bool = True,
     ) -> Optional["OCRResult"]:
         """Generate an OCRResult from the URL of an OCR JSON.
 
@@ -312,6 +313,8 @@ class OCRResult:
             optional
         :param error_raise: if True, raises an OCRResultGenerationException if
             an error occured during download or analysis, defaults to True
+        :param warning_missing: if True, log a warning if a non HTTP 200 status
+            code is returned when fetching the OCR URL, defaults to True
         :return: if `error_raise` is True, always return an OCRResult (or
             raise an error). Otherwise return the OCRResult or None if an
             error occured.
@@ -333,8 +336,8 @@ class OCRResult:
                 raise OCRResultGenerationException(
                     error_message % r.status_code, ocr_url
                 )
-
-            logger.warning(error_message + ": %s", r.status_code, ocr_url)
+            if warning_missing:
+                logger.warning(error_message + ": %s", r.status_code, ocr_url)
             return None
 
         try:
