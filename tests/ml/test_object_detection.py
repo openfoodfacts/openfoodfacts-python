@@ -9,12 +9,12 @@ from openfoodfacts.ml.object_detection import ObjectDetectionRawResult, ObjectDe
 
 @pytest.fixture
 def sample_image():
-    # Create a sample image for testing
-    return Image.new("RGB", (100, 200), color="white")
+    # Create a sample image (np uint8 array) for testing
+    return np.array(Image.new("RGB", (100, 200), color="white"))
 
 
 @pytest.fixture
-def object_detector():
+def object_detector() -> ObjectDetector:
     # Create an instance of ObjectDetector for testing
     label_names = ["label1", "label2"]
     return ObjectDetector(
@@ -28,18 +28,13 @@ class ResponseOutputs:
 
 
 class TestObjectDetector:
-    def test_preprocess(self, sample_image, object_detector):
-        image_array, scale_x, scale_y = object_detector.preprocess(sample_image)
+    def test_preprocess(self, sample_image, object_detector: ObjectDetector):
+        image_array = object_detector.preprocess(sample_image)
 
         # Check the shape of the output image array
         assert image_array.shape == (1, 3, 640, 640)
 
-        # Check the scale factors
-        # Here, image ratio (width / height) is 100 / 200 = 0.5
-        assert scale_x == 640 * 0.5
-        assert scale_y == 640
-
-    def test_postprocess(self, object_detector):
+    def test_postprocess(self, object_detector: ObjectDetector):
         # Mock response object
         response = MagicMock()
         response.outputs = [ResponseOutputs("output0")]
@@ -50,10 +45,9 @@ class TestObjectDetector:
         ]
 
         threshold = 0.5
-        scale_x = 1.0
-        scale_y = 1.0
-
-        result = object_detector.postprocess(response, threshold, scale_x, scale_y)
+        result = object_detector.postprocess(
+            response, threshold, original_shape=(200, 100)
+        )
 
         # Check the type of the result
         assert isinstance(result, ObjectDetectionRawResult)
@@ -67,17 +61,15 @@ class TestObjectDetector:
         # Check the length of detection classes and scores
         assert len(result.detection_classes) == len(result.detection_scores)
 
-    def test_detect_from_image(self, sample_image, object_detector):
+    def test_detect_from_image(self, sample_image, object_detector: ObjectDetector):
         # Mock the Triton inference stub and response
         grpc_stub = MagicMock()
         grpc_stub.ModelInfer.return_value = MagicMock()
         get_triton_inference_stub = MagicMock(return_value=grpc_stub)
 
         # Mock the preprocess and postprocess methods
-        object_detector.preprocess = MagicMock(
-            return_value=(np.zeros((1, 3, 640, 640)), 1.0, 1.0)
-        )
-        object_detector.postprocess = MagicMock(
+        object_detector.preprocess = MagicMock(return_value=np.zeros((1, 3, 640, 640)))  # type: ignore
+        object_detector.postprocess = MagicMock(  # type: ignore
             return_value=ObjectDetectionRawResult(
                 num_detections=1,
                 detection_boxes=np.zeros((1, 4)),
@@ -96,7 +88,10 @@ class TestObjectDetector:
             )
 
         # Check that preprocess was called
-        object_detector.preprocess.assert_called_once_with(sample_image)
+        object_detector.preprocess.assert_called_once()
+        assert object_detector.preprocess.call_args.kwargs == {
+            "image_array": sample_image
+        }
 
         # Check that get_triton_inference_stub was called
         get_triton_inference_stub.assert_called_once_with("fake_triton_uri")

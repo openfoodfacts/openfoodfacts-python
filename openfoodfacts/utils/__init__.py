@@ -8,6 +8,7 @@ import string
 import time
 from io import BytesIO
 from pathlib import Path
+from time import perf_counter
 from typing import Callable, Dict, Iterable, List, Optional, Union
 
 import requests
@@ -414,3 +415,22 @@ def get_image_from_url(
         return ImageDownloadItem(url=image_url, response=response, error=error_message)
 
     return None
+
+
+class PerfTimer:
+    """A simple performance timer context manager."""
+
+    def __init__(
+        self, metric_name: Optional[str] = None, metric_dict: Optional[Dict] = None
+    ):
+        self.metric_name = metric_name
+        self.metric_dict = metric_dict
+
+    def __enter__(self):
+        self.start = perf_counter()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.elapsed = perf_counter() - self.start
+        if self.metric_name and self.metric_dict is not None:
+            self.metric_dict[self.metric_name] = self.elapsed
