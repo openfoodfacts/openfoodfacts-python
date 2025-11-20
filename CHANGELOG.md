@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.2.0...v3.3.0) (2025-11-20)
+
+
+### Features
+
+* improve object detection pre-processing ([#400](https://github.com/openfoodfacts/openfoodfacts-python/issues/400)) ([2c3c58d](https://github.com/openfoodfacts/openfoodfacts-python/commit/2c3c58dc675284a0f31d48d395963f18ab190b33))
+
 ## [3.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.1.0...v3.2.0) (2025-11-18)
 
 

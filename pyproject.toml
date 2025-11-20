@@ -1,6 +1,6 @@
 [project]
 name = "openfoodfacts"
-version = "3.2.0"
+version = "3.3.0"
 authors = [
     {name = "The Open Food Facts team", email = "contact@openfoodfacts.org"}
 ]
