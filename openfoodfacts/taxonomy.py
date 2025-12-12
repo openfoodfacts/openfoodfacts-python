@@ -39,6 +39,8 @@ TAXONOMY_URLS = {
     + "/data/taxonomies/packaging_recycling.full.json",
     TaxonomyType.country: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/countries.full.json",
+    TaxonomyType.store: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/stores.full.json",
     TaxonomyType.additive: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/additives.full.json",
     TaxonomyType.vitamin: URLBuilder.static(Flavor.off, Environment.org)
