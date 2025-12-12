@@ -41,6 +41,8 @@ TAXONOMY_URLS = {
     + "/data/taxonomies/countries.full.json",
     TaxonomyType.store: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/stores.full.json",
+    TaxonomyType.nova_group: URLBuilder.static(Flavor.off, Environment.org)
+    + "/data/taxonomies/nova_groups.full.json",
     TaxonomyType.additive: URLBuilder.static(Flavor.off, Environment.org)
     + "/data/taxonomies/additives.full.json",
     TaxonomyType.vitamin: URLBuilder.static(Flavor.off, Environment.org)
