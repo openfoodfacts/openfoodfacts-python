@@ -894,6 +894,7 @@ class TaxonomyType(str, enum.Enum):
     packaging_material = "packaging_material"
     packaging_recycling = "packaging_recycling"
     country = "country"
+    store = "store"
     nova_group = "nova_group"
     packaging = "packaging"
     additive = "additive"
