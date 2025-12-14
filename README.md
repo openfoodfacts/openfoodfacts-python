@@ -12,8 +12,6 @@
 [![Latest Version](https://img.shields.io/pypi/v/openfoodfacts.svg)](https://pypi.org/project/openfoodfacts)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/openfoodfacts/openfoodfacts-python/blob/master/LICENSE)
 
----
-
 ## Description
 
 This is the official Python SDK for the
@@ -26,8 +24,6 @@ requests or raw JSON responses.
 
 It can be used in Python scripts, applications, or notebooks to explore, search,
 and update food product data.
-
----
 
 ## Installation
 
@@ -44,8 +40,6 @@ git clone https://github.com/openfoodfacts/openfoodfacts-python
 cd openfoodfacts-python
 pip install .  # Note the “.” at the end
 ```
-
----
 
 ## What you can do with this SDK
 
@@ -94,8 +88,6 @@ results = api.product.update({
 Here, `CODE` refers to the product barcode, and the remaining fields represent the
 data to be created or updated.
 
----
-
 ## Helper utilities
 
 In addition to direct API interactions, the SDK provides helper functions to make
@@ -108,14 +100,12 @@ working with Open Food Facts data easier, such as:
 These utilities are especially useful when working with large datasets or
 multilingual data.
 
----
 
 ## Further documentation
 
 For advanced use cases and a complete overview of the SDK capabilities, refer to
 the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/usage/).
 
----
 
 ## Third-party applications
 
@@ -125,8 +115,6 @@ guidelines and ensure compliance with the OdBL licence, in addition to the MIT
 licence of this package.
 
 You are welcome to open a PR to add your application to the list.
-
----
 
 ## Contributing
 
@@ -154,7 +142,6 @@ Contributors:
 * [Benoît Prieur](https://github.com/benprieur)
 * [Aadarsh A](https://github.com/aadarsh-ram)
 
----
 
 ## Copyright and License
 
