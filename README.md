@@ -58,7 +58,6 @@ api.product.get(code, fields=["code", "product_name"])
 # {'code': '3017620422003', 'product_name': 'Nutella'}
 ```
 
----
 
 ### 2. Perform text search on products
 
@@ -71,7 +70,7 @@ api.product.text_search("mineral water")
 
 The result includes pagination information and a list of matching products.
 
----
+
 
 ### 3. Create a new product or update an existing one
 
