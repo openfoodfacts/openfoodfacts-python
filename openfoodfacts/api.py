@@ -193,6 +193,31 @@ class ProductResource:
             environment=api_config.environment,
             country_code=self.api_config.country.name,
         )
+    @property
+    def product_update_url(self) -> str:
+        return f"{self.base_url}/cgi/product_jqm2.pl"
+    
+    def get_url(self, code: str, fields: Optional[List[str]] = None) -> str:
+        """Return the URL used to fetch a product without making a request.
+
+        :param code: barcode of the product
+        :param fields: a list of fields to return. If None, all fields are
+            returned.
+        :return: the URL to fetch the product
+        """
+        if len(code) == 0:
+            raise ValueError("code must be a non-empty string")
+
+        fields = fields or []
+        url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
+
+        if fields:
+            # requests escape comma in URLs, as expected, but openfoodfacts
+            # server does not recognize escaped commas.
+            # See
+            # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
+            url += "?fields={}".format(",".join(fields))
+        return url
 
     def get(
         self,
@@ -211,18 +236,7 @@ class ProductResource:
             barcode is invalid, defaults to False.
         :return: the API response
         """
-        if len(code) == 0:
-            raise ValueError("code must be a non-empty string")
-
-        fields = fields or []
-        url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
-
-        if fields:
-            # requests escape comma in URLs, as expected, but openfoodfacts
-            # server does not recognize escaped commas.
-            # See
-            # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
-            url += "?fields={}".format(",".join(fields))
+        url = self.get_url(code, fields)
 
         resp = send_get_request(
             url=url, api_config=self.api_config, return_none_on_404=True
