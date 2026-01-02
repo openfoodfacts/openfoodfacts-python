@@ -45,6 +45,10 @@ or manually from source:
     cd openfoodfacts-python
     pip install .  # Note the “.” at the end!
 
+> **Note:** This package requires `pydantic` and `tqdm` at runtime.  
+> These dependencies are automatically installed when using pip.
+
+
 ## Examples
 
 All the examples below assume that you have imported the SDK and instanciated the API object:
