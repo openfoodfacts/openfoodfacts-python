@@ -274,6 +274,51 @@ class ProductResource:
             auth=get_http_auth(self.api_config.environment),
         )
 
+    def search_a_licious(
+        self,
+        query: str,
+        page: int = 1,
+        page_size: int = 24,
+        sort_by: Optional[str] = None,
+        **kwargs: Any,
+    ) -> Optional[JSONType]:
+        """Search products using the new high-performance Search-a-licious endpoint.
+
+        :param query: the search query
+        :param page: requested page (starts at 1), defaults to 1
+        :param page_size: number of items per page, defaults to 24
+        :param sort_by: result sorting key, defaults to None
+        :param kwargs: additional filters
+        :return: the search results (standardized with 'products' list)
+        """
+        # The new high-performance search endpoint
+        url = "https://search.openfoodfacts.org/search"
+
+        params = {
+            "q": query,
+            "page": page,
+            "page_size": page_size,
+        }
+
+        if sort_by:
+            params["sort_by"] = sort_by
+
+        params.update(kwargs)
+
+        # Get the raw response
+        result = send_get_request(
+            url=url,
+            api_config=self.api_config,
+            params=params,
+            auth=get_http_auth(self.api_config.environment),
+        )
+
+        # Compatibility Fix: Rename 'hits' to 'products' to match existing SDK behavior
+        if result and "hits" in result:
+            result["products"] = result.pop("hits")
+
+        return result
+
     def update(self, body: Dict[str, Any]):
         """Create a new product or update an existing one."""
         if not body.get("code"):
