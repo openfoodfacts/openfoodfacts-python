@@ -193,6 +193,9 @@ class ProductResource:
             environment=api_config.environment,
             country_code=self.api_config.country.name,
         )
+        # Handle environment for Search-a-licious (Requested by review)
+        domain = "net" if self.api_config.environment == Environment.net else "org"
+        self.base_searchalicious_url = f"https://search.openfoodfacts.{domain}"
 
     def get(
         self,
@@ -274,7 +277,7 @@ class ProductResource:
             auth=get_http_auth(self.api_config.environment),
         )
 
-    def search_a_licious(
+    def search(
         self,
         query: str,
         page: int = 1,
@@ -284,6 +287,9 @@ class ProductResource:
     ) -> Optional[JSONType]:
         """Search products using the new high-performance Search-a-licious endpoint.
 
+        WARNING: This endpoint is currently in alpha version and subjected to
+        breaking changes.
+
         :param query: the search query
         :param page: requested page (starts at 1), defaults to 1
         :param page_size: number of items per page, defaults to 24
@@ -291,8 +297,8 @@ class ProductResource:
         :param kwargs: additional filters
         :return: the search results (standardized with 'products' list)
         """
-        # The new high-performance search endpoint
-        url = "https://search.openfoodfacts.org/search"
+        # Use the dynamic URL based on environment
+        url = f"{self.base_searchalicious_url}/search"
 
         params = {
             "q": query,
