@@ -184,98 +184,96 @@ class FacetResource:
         resp = cast(JSONType, resp)
         return resp
 
-
 class ProductResource:
     def __init__(self, api_config: APIConfig):
-        self.api_config = api_config
-        self.base_url = URLBuilder.country(
-            self.api_config.flavor,
-            environment=api_config.environment,
-            country_code=self.api_config.country.name,
-        )
-        # Handle environment for Search-a-licious (Requested by review)
-        domain = "net" if self.api_config.environment == Environment.net else "org"
-        self.base_searchalicious_url = f"https://search.openfoodfacts.{domain}"
+            self.api_config = api_config
+            self.base_url = URLBuilder.country(
+                self.api_config.flavor,
+                environment=api_config.environment,
+                country_code=self.api_config.country.name,
+            )
+            # Handle environment for Search-a-licious using the new URLBuilder helper
+            self.base_search_url = URLBuilder.search(self.api_config.environment)
 
     def get(
-        self,
-        code: str,
-        fields: Optional[List[str]] = None,
-        raise_if_invalid: bool = False,
-    ) -> Optional[JSONType]:
-        """Return a product.
+            self,
+            code: str,
+            fields: Optional[List[str]] = None,
+            raise_if_invalid: bool = False,
+        ) -> Optional[JSONType]:
+            """Return a product.
 
-        If the product does not exist, None is returned.
+            If the product does not exist, None is returned.
 
-        :param code: barcode of the product
-        :param fields: a list of fields to return. If None, all fields are
-            returned.
-        :param raise_if_invalid: if True, a ValueError is raised if the
-            barcode is invalid, defaults to False.
-        :return: the API response
-        """
-        if len(code) == 0:
-            raise ValueError("code must be a non-empty string")
+            :param code: barcode of the product
+            :param fields: a list of fields to return. If None, all fields are
+                returned.
+            :param raise_if_invalid: if True, a ValueError is raised if the
+                barcode is invalid, defaults to False.
+            :return: the API response
+            """
+            if len(code) == 0:
+                raise ValueError("code must be a non-empty string")
 
-        fields = fields or []
-        url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
+            fields = fields or []
+            url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
 
-        if fields:
-            # requests escape comma in URLs, as expected, but openfoodfacts
-            # server does not recognize escaped commas.
-            # See
-            # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
-            url += "?fields={}".format(",".join(fields))
+            if fields:
+                # requests escape comma in URLs, as expected, but openfoodfacts
+                # server does not recognize escaped commas.
+                # See
+                # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
+                url += "?fields={}".format(",".join(fields))
 
-        resp = send_get_request(
-            url=url, api_config=self.api_config, return_none_on_404=True
-        )
+            resp = send_get_request(
+                url=url, api_config=self.api_config, return_none_on_404=True
+            )
 
-        if resp is None:
-            # product not found
-            return None
+            if resp is None:
+                # product not found
+                return None
 
-        if resp["status"] == 0:
-            # invalid barcode
-            if raise_if_invalid:
-                raise ValueError(f"invalid barcode: {code}")
-            return None
+            if resp["status"] == 0:
+                # invalid barcode
+                if raise_if_invalid:
+                    raise ValueError(f"invalid barcode: {code}")
+                return None
 
-        return resp["product"] if resp is not None else None
+            return resp["product"] if resp is not None else None
 
     def text_search(
-        self,
-        query: str,
-        page: int = 1,
-        page_size: int = 20,
-        sort_by: Optional[str] = None,
-    ):
-        """Search products using a textual query.
+            self,
+            query: str,
+            page: int = 1,
+            page_size: int = 20,
+            sort_by: Optional[str] = None,
+        ):
+            """Search products using a textual query.
 
-        :param query: the search query
-        :param page: requested page (starts at 1), defaults to 1
-        :param page_size: number of items per page, defaults to 20
-        :param sort_by: result sorting key, defaults to None (no sorting)
-        :return: the search results
-        """
-        # We force usage of v2 of API
-        params = {
-            "search_terms": query,
-            "page": page,
-            "page_size": page_size,
-            "sort_by": sort_by,
-            "json": "1",
-        }
+            :param query: the search query
+            :param page: requested page (starts at 1), defaults to 1
+            :param page_size: number of items per page, defaults to 20
+            :param sort_by: result sorting key, defaults to None (no sorting)
+            :return: the search results
+            """
+            # We force usage of v2 of API
+            params = {
+                "search_terms": query,
+                "page": page,
+                "page_size": page_size,
+                "sort_by": sort_by,
+                "json": "1",
+            }
 
-        if sort_by is not None:
-            params["sort_by"] = sort_by
+            if sort_by is not None:
+                params["sort_by"] = sort_by
 
-        return send_get_request(
-            url=f"{self.base_url}/cgi/search.pl",
-            api_config=self.api_config,
-            params=params,
-            auth=get_http_auth(self.api_config.environment),
-        )
+            return send_get_request(
+                url=f"{self.base_url}/cgi/search.pl",
+                api_config=self.api_config,
+                params=params,
+                auth=get_http_auth(self.api_config.environment),
+            )
 
     def search(
         self,
@@ -297,8 +295,8 @@ class ProductResource:
         :param kwargs: additional filters
         :return: the search results (standardized with 'products' list)
         """
-        # Use the dynamic URL based on environment
-        url = f"{self.base_searchalicious_url}/search"
+        # Use the dynamic URL from init
+        url = f"{self.base_search_url}/search"
 
         params = {
             "q": query,
