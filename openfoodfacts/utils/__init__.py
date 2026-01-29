@@ -110,8 +110,11 @@ class URLBuilder:
         """
         Return the URL of the search service (Search-a-licious).
         """
-        domain = "net" if environment == Environment.net else "org"
-        return f"https://search.openfoodfacts.{domain}"
+        return URLBuilder._get_url(
+            prefix="search",
+            tld=environment.value,
+            base_domain=Flavor.off.get_base_domain(),
+        )
 
     @staticmethod
     def static(flavor: Flavor, environment: Environment) -> str:
