@@ -15,8 +15,8 @@ jobs:
       matrix:
         python-version: [3.9]
     steps:
-    - uses: actions/checkout@v5
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@v6
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Poetry
@@ -26,7 +26,7 @@ jobs:
         virtualenvs-in-project: true
     - name: Load cached venv
       id: cached-poetry-dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
