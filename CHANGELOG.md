@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.3.0...v3.4.0) (2026-02-04)
+
+
+### Features
+
+* **Taxonomy:** allow fetching 'stores' ([#406](https://github.com/openfoodfacts/openfoodfacts-python/issues/406)) ([ae27d85](https://github.com/openfoodfacts/openfoodfacts-python/commit/ae27d850136f1e4db5aa1fc459dd4d80adc19eea))
+
+
+### Bug Fixes
+
+* fix bug in how we apply NMS ([#417](https://github.com/openfoodfacts/openfoodfacts-python/issues/417)) ([26d1361](https://github.com/openfoodfacts/openfoodfacts-python/commit/26d136198d290bfa3a2c692cf273f7e107284054))
+* **Taxonomy:** add missing nova_group URL mapping ([#408](https://github.com/openfoodfacts/openfoodfacts-python/issues/408)) ([f05108a](https://github.com/openfoodfacts/openfoodfacts-python/commit/f05108adc14e17e1974caa673b9433fd3ab50927))
+
 ## [3.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.2.0...v3.3.0) (2025-11-20)
 
 
