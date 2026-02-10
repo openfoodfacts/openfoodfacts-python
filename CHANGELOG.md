@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.4.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.0...v3.4.1) (2026-02-10)
+
+
+### Bug Fixes
+
+* support more API version ([595fcf7](https://github.com/openfoodfacts/openfoodfacts-python/commit/595fcf75529b7073657e5cbaaac5c3854fc43b0d))
+* support more API versions ([#420](https://github.com/openfoodfacts/openfoodfacts-python/issues/420)) ([595fcf7](https://github.com/openfoodfacts/openfoodfacts-python/commit/595fcf75529b7073657e5cbaaac5c3854fc43b0d))
+
+
+### Dependencies
+
+* **chore:** upgrade poetry ([919a366](https://github.com/openfoodfacts/openfoodfacts-python/commit/919a366031df757585f23c95ef97147f26bd38e9))
+
 ## [3.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.3.0...v3.4.0) (2026-02-04)
 
 
