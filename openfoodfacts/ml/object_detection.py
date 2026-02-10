@@ -166,12 +166,12 @@ def apply_nms(
 
     We use `NMSBoxes` from the openCV library to perform NMS.
 
-    :param bboxes: The bounding boxes in format [y_min, x_min, y_max, x_max], in relative
-        coordinates. Shape: (N, 4)
+    :param bboxes: The bounding boxes in format [y_min, x_min, y_max, x_max],
+        in relative coordinates. Shape: (N, 4)
     :param scores: The confidence scores. Shape: (N,)
     :param classes: The class labels, as an int array. Shape: (N,)
-    :param threshold: The confidence threshold to use to filter out the bounding boxes.
-        Shape: (N,)
+    :param threshold: The confidence threshold to use to filter out the
+        bounding boxes. Shape: (N,)
     :param nms_threshold: The NMS threshold to use.
     :param nms_eta: The NMS eta to use.
     :return: bounding boxes, scores, classes after NMS

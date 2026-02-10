@@ -296,7 +296,8 @@ class TestApplyNMS:
         assert result_classes[0] == 0
 
     def test_bbbox_format_conversion(self):
-        """Test that bbox format conversion is correct (y_min,x_min,y_max,x_max) -> (x,y,w,h)."""
+        """Test that bbox format conversion is correct
+        (y_min,x_min,y_max,x_max) -> (x,y,w,h)."""
         # This test verifies the internal conversion in apply_nms
         bboxes = np.array([[0.0, 0.0, 1.0, 1.0]], dtype=np.float32)  # Full image
         scores = np.array([1.0], dtype=np.float32)

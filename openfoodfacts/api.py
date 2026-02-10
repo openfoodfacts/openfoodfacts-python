@@ -586,7 +586,7 @@ class API:
 
         if isinstance(version, APIVersion):
             version = version.value
-        
+
         self.api_config = APIConfig(
             user_agent=user_agent,
             country=country,
