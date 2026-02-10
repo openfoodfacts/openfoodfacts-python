@@ -85,6 +85,11 @@ class APIVersion(str, enum.Enum):
     v1 = "v1"
     v2 = "v2"
     v3 = "v3"
+    v31 = "v3.1"
+    v32 = "v3.2"
+    v33 = "v3.3"
+    v34 = "v3.4"
+    v35 = "v3.5"
 
 
 class Facet(str, enum.Enum):
@@ -851,7 +856,7 @@ class APIConfig(BaseModel):
     country: Country = Country.world
     environment: Environment = Environment.org
     flavor: Flavor = Flavor.off
-    version: APIVersion = APIVersion.v2
+    version: str = "v2"
     username: Optional[str] = None
     password: Optional[str] = None
     session_cookie: Optional[str] = None

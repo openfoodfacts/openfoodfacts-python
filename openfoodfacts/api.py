@@ -215,7 +215,7 @@ class ProductResource:
             raise ValueError("code must be a non-empty string")
 
         fields = fields or []
-        url = f"{self.base_url}/api/{self.api_config.version.value}/product/{code}"
+        url = f"{self.base_url}/api/{self.api_config.version}/product/{code}"
 
         if fields:
             # requests escape comma in URLs, as expected, but openfoodfacts
@@ -393,14 +393,18 @@ class ProductResource:
         if self.api_config.flavor != Flavor.off:
             raise ValueError("ingredient parsing is only available for food")
 
-        if self.api_config.version != APIVersion.v3:
+        api_version = self.api_config.version
+
+        if not api_version.startswith("v3"):
             logger.warning(
                 "ingredient parsing is only available in v3 of the API (here: %s), using v3",
                 self.api_config.version,
             )
+            api_version = "v3"
+
         # by using "test" as code, we don't save any information to database
         # This endpoint is specifically designed for testing purposes
-        url = f"{self.base_url}/api/v3/product/test"
+        url = f"{self.base_url}/api/{api_version}/product/test"
 
         if len(text) == 0:
             raise ValueError("text must be a non-empty string")
@@ -479,11 +483,13 @@ class ProductResource:
         :raises ValueError: if no password or session cookie is provided, or if
             both image_path and image_data_base64 are None.
         """
-        if self.api_config.version != APIVersion.v3:
+        api_version = self.api_config.version
+        if not self.api_config.version.startswith("v3"):
             warnings.warn(
                 "image upload is only available in v3 of the API (here: %s), forcing use of v3"
                 % self.api_config.version,
             )
+            api_version = "v3"
 
         if (self.api_config.username is None or self.api_config.password is None) and (
             self.api_config.session_cookie is None
@@ -533,7 +539,7 @@ class ProductResource:
 
         # copy the config but force v3 of the API
         api_config = self.api_config.model_copy(update={"version": APIVersion.v3})
-        url = f"{self.base_url}/api/v3/product/{code}/images"
+        url = f"{self.base_url}/api/{api_version}/product/{code}/images"
         data: JSONType = {"image_data_base64": image_data_base64}
 
         if selected:
@@ -578,11 +584,14 @@ class API:
         if not isinstance(country, Country):
             country = Country[country]
 
+        if isinstance(version, APIVersion):
+            version = version.value
+        
         self.api_config = APIConfig(
             user_agent=user_agent,
             country=country,
             flavor=Flavor[flavor],
-            version=APIVersion[version],
+            version=version,
             environment=Environment[environment],
             username=username,
             password=password,
