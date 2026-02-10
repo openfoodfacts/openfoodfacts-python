@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.4.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.1...v3.4.2) (2026-02-10)
+
+
+### Bug Fixes
+
+* fix pep8 issues ([059df93](https://github.com/openfoodfacts/openfoodfacts-python/commit/059df9368009da679d9da398e11e98cfc3dbf0f4))
+* set-up explicitely licence file ([01147fd](https://github.com/openfoodfacts/openfoodfacts-python/commit/01147fdac2fa430015efa3376e2d9102d0ae47dc))
+* update naming convention for APIVersion ([008c700](https://github.com/openfoodfacts/openfoodfacts-python/commit/008c700f5ce484df1995736c393fcb2d8ff97369))
+
+
+### Technical
+
+* **deps:** upgrade more Python versions ([f8093a7](https://github.com/openfoodfacts/openfoodfacts-python/commit/f8093a704108dd78580f103e6caca62f8595a8f5))
+* **deps:** upgrade to new version of release please ([89b3251](https://github.com/openfoodfacts/openfoodfacts-python/commit/89b3251282a7a664fb3e9658010d9514e381d605))
+* remove MANIFEST.in ([207d6c5](https://github.com/openfoodfacts/openfoodfacts-python/commit/207d6c5cb77c54617922c637e1c2cc51e1583007))
+
 ## [3.4.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.0...v3.4.1) (2026-02-10)
 
 
