@@ -1,7 +1,50 @@
 {
+    "last-release-sha": "d5ef35ac50c509cc2c8e2816799406ba2d0837c0",
     "packages": {
         ".": {
             "release-type": "python"
         }
-    }
+    },
+    "changelog-sections": [
+        {
+            "type": "feat",
+            "section": "Features",
+            "hidden": false
+        },
+        {
+            "type": "fix",
+            "section": "Bug Fixes",
+            "hidden": false
+        },
+        {
+            "type": "l10n",
+            "section": "Translations",
+            "hidden": false
+        },
+        {
+            "type": "style",
+            "section": "Technical",
+            "hidden": false
+        },
+        {
+            "type": "docs",
+            "section": "Technical",
+            "hidden": false
+        },
+        {
+            "type": "test",
+            "section": "Technical",
+            "hidden": false
+        },
+        {
+            "type": "chore",
+            "section": "Technical",
+            "hidden": false
+        },
+        {
+            "type": "refactor",
+            "section": "Technical",
+            "hidden": false
+        }
+    ]
 }

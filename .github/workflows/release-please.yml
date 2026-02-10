@@ -1,17 +1,15 @@
-  on:
-    push:
-      branches:
-        - develop
-  name: release-please
-  jobs:
-    release-please:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: GoogleCloudPlatform/release-please-action@v4.3
-          with:
-            # We can't use GITHUB_TOKEN here because, github actions can't provocate actions
-            # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
-            # So this is a personnal access token
-            token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-            release-type: python
-            package-name: openfoodfacts
+on:
+  push:
+    branches:
+      - develop
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4.4
+        with:
+          # We can't use GITHUB_TOKEN here because, github actions can't provocate actions
+          # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
+          # So this is a personnal access token
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
