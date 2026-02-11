@@ -111,6 +111,8 @@ Contributors:
 - [Benoît Prieur](https://github.com/benprieur)
 - [Aadarsh A](https://github.com/aadarsh-ram)
 
+We use poetry as a dependency manager and ruff as a linter/formatter.
+
 ## Copyright and License
 
     Copyright 2016-2024 Open Food Facts
