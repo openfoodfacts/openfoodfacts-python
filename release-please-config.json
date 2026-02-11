@@ -1,5 +1,4 @@
 {
-    "last-release-sha": "d5ef35ac50c509cc2c8e2816799406ba2d0837c0",
     "packages": {
         ".": {
             "release-type": "python"
