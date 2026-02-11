@@ -13,7 +13,7 @@ def convert_image_to_array(image: Image.Image) -> np.ndarray:
     if image.mode != "RGB":
         image = image.convert("RGB")
 
-    (im_width, im_height) = image.size
+    im_width, im_height = image.size
 
     return np.array(image.getdata(), dtype=np.uint8).reshape((im_height, im_width, 3))
 
