@@ -397,7 +397,8 @@ class ProductResource:
 
         if not api_version.startswith("v3"):
             logger.warning(
-                "ingredient parsing is only available in v3 of the API (here: %s), using v3",
+                "ingredient parsing is only available in v3 of the API (here: %s), "
+                "using v3",
                 self.api_config.version,
             )
             api_version = "v3"
@@ -431,11 +432,12 @@ class ProductResource:
         ) as e:
             raise RuntimeError(
                 f"Unable to parse ingredients: error during HTTP request: {e}"
-            )
+            ) from e
 
         if not r.ok:
             raise RuntimeError(
-                f"Unable to parse ingredients (non-200 status code): {r.status_code}, {r.text}"
+                "Unable to parse ingredients (non-200 status code): "
+                f"{r.status_code}, {r.text}"
             )
 
         response_data = r.json()
@@ -486,8 +488,9 @@ class ProductResource:
         api_version = self.api_config.version
         if not self.api_config.version.startswith("v3"):
             warnings.warn(
-                "image upload is only available in v3 of the API (here: %s), forcing use of v3"
-                % self.api_config.version,
+                "image upload is only available in v3 of the API (here: %s), "
+                "forcing use of v3" % self.api_config.version,
+                stacklevel=2,
             )
             api_version = "v3"
 
@@ -534,7 +537,8 @@ class ProductResource:
                         )
                     if not isinstance(value, dict):
                         raise ValueError(
-                            f"selected[{key}][{lang_code}] must be a dict, got {type(value)}"
+                            f"selected[{key}][{lang_code}] must be a dict, got "
+                            f"{type(value)}"
                         )
 
         # copy the config but force v3 of the API
@@ -665,11 +669,12 @@ def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONT
     ) as e:
         raise RuntimeError(
             f"Unable to parse ingredients: error during HTTP request: {e}"
-        )
+        ) from e
 
     if not r.ok:
         raise RuntimeError(
-            f"Unable to parse ingredients (non-200 status code): {r.status_code}, {r.text}"
+            "Unable to parse ingredients (non-200 status code): "
+            f"{r.status_code}, {r.text}"
         )
 
     response_data = r.json()

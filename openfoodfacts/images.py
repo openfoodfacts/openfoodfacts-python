@@ -216,7 +216,9 @@ def download_image(
     :return: the downloaded image, or an `ImageDownloadItem` object if
         `return_struct` is True.
 
-    >>> download_image("https://images.openfoodfacts.org/images/products/324/227/210/2359/4.jpg")  # noqa
+    >>> download_image(
+      "https://images.openfoodfacts.org/images/products/324/227/210/2359/4.jpg"
+    )
     <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=1244x1500>
 
     >>> download_image(("3242272102359", "4"))

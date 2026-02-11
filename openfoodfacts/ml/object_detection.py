@@ -140,7 +140,10 @@ class ObjectDetectionRawResult:
         """Convert the detection results to a JSON serializable format."""
         results = []
         for bounding_box, score, label in zip(
-            self.detection_boxes, self.detection_scores, self.detection_classes
+            self.detection_boxes,
+            self.detection_scores,
+            self.detection_classes,
+            strict=True,
         ):
             label_int = int(label)
             label_str = self.label_names[label_int]
@@ -329,7 +332,8 @@ class ObjectDetector:
 
         if len(response.raw_output_contents) != 1:
             raise ValueError(
-                f"expected 1 raw output content, got {len(response.raw_output_contents)}"
+                "expected 1 raw output content, got "
+                f"{len(response.raw_output_contents)}"
             )
 
         if nms_threshold is None:

@@ -28,7 +28,8 @@ from openfoodfacts.ocr import OCRResult
             None,
         ),
         (
-            # [0.2808293402194977,0.37121888995170593,0.35544055700302124,0.49409016966819763]
+            # [0.2808293402194977,0.37121888995170593,0.35544055700302124,
+            # 0.49409016966819763]
             # /540/091/030/1160/1.jpg
             "https://raw.githubusercontent.com/openfoodfacts/test-data/main/openfoodfacts-python/tests/unit/5400910301160_1.json",
             [337, 327, 427, 436],

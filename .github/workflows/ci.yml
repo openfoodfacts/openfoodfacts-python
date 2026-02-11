@@ -36,10 +36,8 @@ jobs:
 
     - name: Launch quality checks
       run: |
-        poetry run flake8 .
-        poetry run black --check .
+        poetry run ruff check .
         poetry run mypy .
-        poetry run isort --check .
     - name: Test with pytest
       run: |
         poetry run pytest tests
