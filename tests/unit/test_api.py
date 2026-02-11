@@ -174,7 +174,8 @@ class TestProducts:
             with pytest.raises(
                 RuntimeError,
                 match=re.escape(
-                    'Unable to parse ingredients (non-200 status code): 400, {"error": "Bad Request"}'
+                    "Unable to parse ingredients (non-200 status code): 400, "
+                    '{"error": "Bad Request"}'
                 ),
             ):
                 api.product.parse_ingredients("eau, sucre", lang="fr")
@@ -341,7 +342,8 @@ class TestProducts:
         with pytest.raises(
             ValueError,
             match=re.escape(
-                "invalid image field name in selected: wrong (must be one of front, ingredients, nutrition, packaging)"
+                "invalid image field name in selected: wrong (must be one of front, "
+                "ingredients, nutrition, packaging)"
             ),
         ):
             api.product.upload_image(
