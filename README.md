@@ -111,7 +111,7 @@ Contributors:
 - [Benoît Prieur](https://github.com/benprieur)
 - [Aadarsh A](https://github.com/aadarsh-ram)
 
-We use poetry as a dependency manager and ruff as a linter/formatter.
+We use uv as a dependency manager and ruff as a linter/formatter.
 
 ## Copyright and License
 

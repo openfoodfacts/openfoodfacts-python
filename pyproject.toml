@@ -16,12 +16,7 @@ dependencies = [
     "pydantic>=2.0.0,<3.0.0",
     "tqdm>=4.0.0,<5.0.0",
 ]
-dynamic = ["classifiers"]
 
-[tool.poetry]
-include = [
-    {path = "tests", format = "sdist"},
-]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -60,28 +55,19 @@ use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 88
 
-[tool.poetry.dependencies]
-python = ">=3.10,<4.0"
-redis = { version = "~7.1.1", optional = true, extras = ["hiredis"] }
-Pillow = { version = ">=9.3,<12.2", optional = true }
-tritonclient = {extras = ["grpc"], version = ">2.0.0,<3.0.0", optional = true}
-opencv-python-headless = {version = ">4.0.0,<5.0.0", optional = true}
-
-[tool.poetry.group.dev.dependencies]
-requests-mock = "1.12.1"
-mypy = "1.17.1"
-coverage = {version = "7.13.4", extras = ["toml"]}
-pytest = "9.0.2"
-types-requests = "2.32.4.20260107"
-types-tqdm = "4.67.3.20260205"
-types-redis = "^4.6.0.20240425"
-ruff = "0.15.0"
+[dependency-groups]
+dev = [
+    "requests-mock==1.12.1",
+    "mypy==1.17.1",
+    "coverage[toml]==7.13.4",
+    "pytest==9.0.2",
+    "types-requests==2.32.4.20260107",
+    "types-tqdm==4.67.3.20260205",
+    "types-redis==4.6.0.20240425",
+    "ruff==0.15.0",
+]
 
 [project.optional-dependencies]
-redis = ["redis"]
-pillow = ["Pillow"]
-ml = ["tritonclient[grpc]", "opencv-python-headless", "Pillow", "albumentations>=2.0.0"]
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+redis = ["redis[hiredis]~=7.1.1"]
+pillow = ["Pillow>=9.3,<12.2"]
+ml = ["tritonclient[grpc]>2.0.0,<3.0.0", "opencv-python-headless>4.0.0,<5.0.0", "Pillow", "albumentations>=2.0.0"]
