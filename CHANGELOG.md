@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.4.3](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.2...v3.4.3) (2026-02-13)
+
+
+### Technical
+
+* **deps-dev:** bump cryptography from 43.0.3 to 46.0.5 ([#424](https://github.com/openfoodfacts/openfoodfacts-python/issues/424)) ([c5b4349](https://github.com/openfoodfacts/openfoodfacts-python/commit/c5b43496fea0dec61b499ca1bcd04203527a3238))
+* **deps:** bump protobuf from 5.29.5 to 5.29.6 ([#419](https://github.com/openfoodfacts/openfoodfacts-python/issues/419)) ([4e0c58a](https://github.com/openfoodfacts/openfoodfacts-python/commit/4e0c58a7ad9b97e1ee035df308e7c23cbc6af588))
+* **deps:** upgrade dependencies ([#426](https://github.com/openfoodfacts/openfoodfacts-python/issues/426)) ([93be8e5](https://github.com/openfoodfacts/openfoodfacts-python/commit/93be8e587d7c1bdecea9cc84d8f6e278c475d5c3))
+* improve tooling ([#430](https://github.com/openfoodfacts/openfoodfacts-python/issues/430)) ([c18d93f](https://github.com/openfoodfacts/openfoodfacts-python/commit/c18d93f72a62ecb6367e262d4e99d305ea4016ce))
+* move NutritionV3 from robotoff to SDK ([#433](https://github.com/openfoodfacts/openfoodfacts-python/issues/433)) ([0b2bc01](https://github.com/openfoodfacts/openfoodfacts-python/commit/0b2bc01ff4e04bdf29fc22d8aa3b6bdcde0aae5e))
+* remove reference to last release sha ([bef76a3](https://github.com/openfoodfacts/openfoodfacts-python/commit/bef76a3a9b113533f92f683ec10a660f20aa185e))
+* replace black/isort/flake8 by ruff ([#429](https://github.com/openfoodfacts/openfoodfacts-python/issues/429)) ([3d3c20c](https://github.com/openfoodfacts/openfoodfacts-python/commit/3d3c20c43176cfda3ddff5fdefd0f6d0702da326))
+* switch from poetry to uv ([#431](https://github.com/openfoodfacts/openfoodfacts-python/issues/431)) ([dcbd4fc](https://github.com/openfoodfacts/openfoodfacts-python/commit/dcbd4fc1491632460e406ebcc8a4067cfb689575))
+
 ## [3.4.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.1...v3.4.2) (2026-02-10)
 
 
