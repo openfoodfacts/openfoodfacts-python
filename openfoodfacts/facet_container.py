@@ -26,14 +26,3 @@ class FacetContainer:
         if not self.data:
             return 0
         return (len(self.data) + self.page_size - 1) // self.page_size
-if __name__ == "__main__":
-    dummy_data = list(range(50))
-    container = FacetContainer(facet_name="test_brand", data=dummy_data)
-    container.page_size = 10
-    
-    print(f"Total Pages: {container.total_pages}") 
-    
-    print(f"Page 1: {container.get_page(1)}")
-
-    print(f"Page 2: {container.get_page(2)}")
-    print(f"Page 6: {container.get_page(6)}")
