@@ -1,7 +1,7 @@
 import enum
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Literal, Optional, Union
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 #: A precise expectation of what mappings looks like in json.
 #: (dict where keys are always of type `str`).
@@ -913,3 +913,97 @@ class TaxonomyType(str, enum.Enum):
     origin = "origin"
     language = "language"
     other_nutritional_substance = "other_nutritional_substance"
+
+
+class NutritionV3NutrientAggregated(BaseModel):
+    value: float
+    unit: str = Field(description="Normalized unit", examples=["g", "kJ", "kcal", "%"])
+    modifier: str | None = None
+    source: str = Field(examples=["packaging", "manufacturer", "estimate", "usda"])
+    source_per: Literal["serving", "100g", "100ml"]
+    source_index: int
+
+
+class NutritionV3NutrientInput(BaseModel):
+    unit: str
+    value: float | None = None
+    value_computed: float | None = None
+    value_string: str | None = None
+    modifier: str | None = None
+
+
+class NutritionV3AggregatedSet(BaseModel):
+    preparation: Literal["as_sold", "prepared"]
+    per: Literal["100g", "100ml"]
+    nutrients: dict[str, NutritionV3NutrientAggregated] = Field(default_factory=dict)
+
+
+class NutritionV3InputSet(BaseModel):
+    preparation: Literal["as_sold", "prepared"]
+    per: Literal["serving", "100g", "100ml"]
+    per_quantity: int
+    per_unit: Literal["g", "ml"]
+    source: str = Field(
+        examples=["packaging", "manufacturer", "database-usda", "estimate"]
+    )
+    source_description: str | None = None
+    last_updated_t: int | None = Field(
+        None, description="timestamp of the last update of the input set"
+    )
+    nutrients: dict[str, NutritionV3NutrientInput] = Field(
+        default_factory=dict, description="Mapping from nutrient name to its value"
+    )
+    unspecified_nutrients: list[str] = Field(
+        default_factory=list,
+        description="List of unspecified nutrients (ex: not provided on the packaging)",
+    )
+
+
+class NutritionV3(BaseModel):
+    """New `nutrition` field of products, which come with schema_version 1003."""
+
+    aggregated_set: NutritionV3AggregatedSet | None = None
+    input_sets: list[NutritionV3InputSet] = Field(default_factory=list)
+
+    def filter_input_sets(
+        self,
+        per: str | None = None,
+        preparation: str | None = None,
+        per_quantity: int | None = None,
+        per_unit: str | None = None,
+        source: str | None = None,
+    ) -> list["NutritionV3InputSet"]:
+        results = self.input_sets
+        if per is not None:
+            results = [s for s in results if s.per == per]
+        if preparation is not None:
+            results = [s for s in results if s.preparation == preparation]
+        if per_quantity is not None:
+            results = [s for s in results if s.per_quantity == per_quantity]
+        if per_unit is not None:
+            results = [s for s in results if s.per_unit == per_unit]
+        if source is not None:
+            results = [s for s in results if s.source == source]
+        return results
+
+    def get_input_nutrient(
+        self,
+        nutrient: str,
+        per: str | None = None,
+        preparation: str | None = None,
+        per_quantity: int | None = None,
+        per_unit: str | None = None,
+        source: str | None = None,
+    ) -> NutritionV3NutrientInput | None:
+        filtered_sets = self.filter_input_sets(
+            per=per,
+            preparation=preparation,
+            per_quantity=per_quantity,
+            per_unit=per_unit,
+            source=source,
+        )
+        if not filtered_sets:
+            return None
+
+        input_set = filtered_sets[0]
+        return input_set.nutrients.get(nutrient)

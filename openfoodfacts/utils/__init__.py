@@ -400,15 +400,15 @@ def get_image_from_url(
                 image_bytes=content_bytes,
             )
         return image
-    except PIL.UnidentifiedImageError:
+    except PIL.UnidentifiedImageError as e:
         error_message = f"Cannot identify image {image_url}"
         if error_raise:
-            raise AssetLoadingException(error_message)
+            raise AssetLoadingException(error_message) from e
         logger.info(error_message)
-    except PIL.Image.DecompressionBombError:
+    except PIL.Image.DecompressionBombError as e:
         error_message = f"Decompression bomb error for image {image_url}"
         if error_raise:
-            raise AssetLoadingException(error_message)
+            raise AssetLoadingException(error_message) from e
         logger.info(error_message)
 
     if return_struct:

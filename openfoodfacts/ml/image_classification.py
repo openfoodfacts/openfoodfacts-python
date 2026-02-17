@@ -157,7 +157,8 @@ class ImageClassifier:
 
         if len(response.raw_output_contents) != 1:
             raise Exception(
-                f"expected 1 raw output content, got {len(response.raw_output_contents)}"
+                "expected 1 raw output content, got "
+                f"{len(response.raw_output_contents)}"
             )
 
         output_index = {output.name: i for i, output in enumerate(response.outputs)}
