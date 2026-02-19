@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.4](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.3...v3.4.4) (2026-02-19)
+
+
+### Bug Fixes
+
+* fix nutrition schema ([#437](https://github.com/openfoodfacts/openfoodfacts-python/issues/437)) ([be2d214](https://github.com/openfoodfacts/openfoodfacts-python/commit/be2d2146e17450c236232950a793e3c43b0cb527))
+
+
+### Technical
+
+* use src layout to simplify packaging with uv ([#434](https://github.com/openfoodfacts/openfoodfacts-python/issues/434)) ([e9fd435](https://github.com/openfoodfacts/openfoodfacts-python/commit/e9fd435d148f2df09ccca56d0f10eb3939b86c34))
+
 ## [3.4.3](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.2...v3.4.3) (2026-02-13)
 
 
