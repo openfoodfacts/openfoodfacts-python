@@ -71,3 +71,16 @@ dev = [
 redis = ["redis[hiredis]~=7.1.1"]
 pillow = ["Pillow>=9.3,<12.2"]
 ml = ["tritonclient[grpc]>2.0.0,<3.0.0", "opencv-python-headless>4.0.0,<5.0.0", "Pillow", "albumentations>=2.0.0"]
+
+
+[tool.pytest.ini_options]
+# Use importlib mode as some test names have duplicate basename 
+# (ex: test_utils.py is both in tests/ml and in tests/unit). See:
+# https://docs.pytest.org/en/stable/explanation/pythonpath.html#import-modes
+addopts = [
+    "--import-mode=importlib",
+]
+# Add the `src` directory to Python path, so that the openfoodfacts module can
+# be imported:
+# https://docs.pytest.org/en/stable/reference/reference.html#confval-pythonpath
+pythonpath = ["src"]
