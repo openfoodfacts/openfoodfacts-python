@@ -941,11 +941,11 @@ class NutritionV3AggregatedSet(BaseModel):
 class NutritionV3InputSet(BaseModel):
     preparation: Literal["as_sold", "prepared"]
     per: Literal["serving", "100g", "100ml"]
-    per_quantity: int
-    per_unit: Literal["g", "ml"]
     source: str = Field(
         examples=["packaging", "manufacturer", "database-usda", "estimate"]
     )
+    per_quantity: float | None = None
+    per_unit: Literal["g", "ml"] | None = None
     source_description: str | None = None
     last_updated_t: int | None = Field(
         None, description="timestamp of the last update of the input set"
