@@ -269,8 +269,108 @@ NUTRITION_3 = {
 }
 
 
+# With missing er_quantity and per_unit in the input_set
+NUTRITION_4 = {
+    "input_sets": [
+        {
+            "last_updated_t": 1771468068,
+            "per_unit": "g",
+            "source": "packaging",
+            "per": "100g",
+            "per_quantity": 100,
+            "nutrients": {"nova-group": {"unit": "", "value": 4, "value_string": "4"}},
+            "preparation": "as_sold",
+        },
+        {
+            "per_unit": "g",
+            "source_description": "Estimate from ingredients",
+            "preparation": "as_sold",
+            "nutrients": {
+                "fruits-vegetables-legumes": {
+                    "value_string": "0",
+                    "unit": "%",
+                    "value": 0,
+                    "modifier": "~",
+                },
+                "added-sugars": {
+                    "value": 0.182291666666664,
+                    "modifier": "~",
+                    "unit": "g",
+                    "value_string": "0.182291666666664",
+                },
+                "fruits-vegetables-nuts": {
+                    "value_string": "0",
+                    "value": 0,
+                    "modifier": "~",
+                    "unit": "%",
+                },
+            },
+            "per_quantity": 100,
+            "per": "100g",
+            "source": "estimate",
+        },
+        {
+            "source": "packaging",
+            "per": "serving",
+            "preparation": "as_sold",
+            "nutrients": {
+                "energy-kj": {"unit": "kJ", "value_computed": 0},
+                "carbohydrates": {"value_string": "0", "unit": "g", "value": 0},
+                "energy-kcal": {
+                    "value_string": "0",
+                    "value": 0,
+                    "value_computed": 0,
+                    "unit": "kcal",
+                },
+                "fat": {"value_string": "0", "unit": "g", "value": 0},
+                "proteins": {"value_string": "0", "value": 0, "unit": "g"},
+            },
+        },
+    ],
+    "aggregated_set": {
+        "per": "100g",
+        "preparation": "as_sold",
+        "nutrients": {
+            "fruits-vegetables-legumes": {
+                "source_per": "100g",
+                "source_index": 1,
+                "value": 0,
+                "modifier": "~",
+                "unit": "%",
+                "source": "estimate",
+            },
+            "added-sugars": {
+                "unit": "g",
+                "source": "estimate",
+                "modifier": "~",
+                "value": 0.182291666666664,
+                "source_index": 1,
+                "source_per": "100g",
+            },
+            "nova-group": {
+                "value": 4,
+                "source": "packaging",
+                "unit": "",
+                "source_per": "100g",
+                "source_index": 0,
+            },
+            "fruits-vegetables-nuts": {
+                "modifier": "~",
+                "value": 0,
+                "source": "estimate",
+                "unit": "%",
+                "source_per": "100g",
+                "source_index": 1,
+            },
+        },
+    },
+}
+
+
 class TestNutritionV3:
-    @pytest.mark.parametrize("obj", [NUTRITION_1, NUTRITION_2, NUTRITION_3])
+    @pytest.mark.parametrize(
+        "obj", [NUTRITION_1, NUTRITION_2, NUTRITION_3, NUTRITION_4]
+    )
     def test_parse(self, obj: JSONType):
         NutritionV3.model_validate(obj)
 
