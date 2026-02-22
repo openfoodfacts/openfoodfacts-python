@@ -293,7 +293,7 @@ class ProductResource:
         if not body.get("code"):
             raise ValueError("missing code from body")
 
-        url = f"{self.base_url}/cgi/product_jqm2.pl"
+        url = self.product_update_url
         return send_form_urlencoded_post_request(url, body, self.api_config)
 
     def select_image(
