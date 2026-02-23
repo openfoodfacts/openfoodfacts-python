@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.5](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.4...v3.4.5) (2026-02-23)
+
+
+### Bug Fixes
+
+* download taxonomy files in temporary directory ([#439](https://github.com/openfoodfacts/openfoodfacts-python/issues/439)) ([5841ecc](https://github.com/openfoodfacts/openfoodfacts-python/commit/5841eccb305508c3e3f639727dd0ee8ad7700437))
+
 ## [3.4.4](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.3...v3.4.4) (2026-02-19)
 
 
