@@ -5,6 +5,7 @@ import logging
 import random
 import shutil
 import string
+import tempfile
 import time
 from io import BytesIO
 from pathlib import Path
@@ -181,7 +182,7 @@ def _sanitize_file_path(file_path: Path, suffix: str = "") -> Path:
     return file_path.with_name(file_path.name.replace(".", "_") + suffix)
 
 
-def download_file(url: str, output_path: Path):
+def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
     """Download a dataset file and store it in `output_path`.
 
     The file metadata (`etag`, `url`, `created_at`) are stored in a JSON
@@ -192,9 +193,16 @@ def download_file(url: str, output_path: Path):
     r = http_session.get(url, stream=True)
     etag = r.headers.get("ETag", "").strip("'\"")
 
-    # add a random string to the output path to avoid concurrent writes
+    if tmp_dir is None:
+        # Get system default tmp dir
+        tmp_dir = Path(tempfile.gettempdir())
+
+    # create a random string to name the temporary directory to avoid concurrent writes
     suffix = "".join(random.choices(string.ascii_letters, k=8))
-    tmp_output_path = output_path.with_name(output_path.name + f"-{suffix}.part")
+    tmp_dir = tmp_dir / f"tmp_off_{suffix}"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+
+    tmp_output_path = tmp_dir / output_path.name
     with (
         tmp_output_path.open("wb") as f,
         tqdm.tqdm(

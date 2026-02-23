@@ -379,10 +379,11 @@ class Taxonomy:
 
 
 def get_taxonomy(
-    taxonomy_type: Union[TaxonomyType, str],
+    taxonomy_type: TaxonomyType | str,
     force_download: bool = False,
     download_newer: bool = False,
-    cache_dir: Optional[Path] = None,
+    cache_dir: Path | None = None,
+    tmp_dir: Path | None = None,
 ) -> Taxonomy:
     """Return the taxonomy of the provided type.
 
@@ -397,6 +398,8 @@ def get_taxonomy(
         to False.
     :param cache_dir: the cache directory to use, defaults to
         ~/.cache/openfoodfacts/taxonomy
+    :param tmp_dir: the temporary directory to use for downloads, defaults to
+        None, which means that the system default temporary directory will be used.
     :return: a Taxonomy
     """
     taxonomy_type = TaxonomyType[taxonomy_type]
@@ -411,7 +414,7 @@ def get_taxonomy(
 
     cache_dir.mkdir(parents=True, exist_ok=True)
     logger.info("Downloading taxonomy, saving it in %s", taxonomy_path)
-    download_file(url, taxonomy_path)
+    download_file(url, taxonomy_path, tmp_dir=tmp_dir)
     return Taxonomy.from_path(taxonomy_path)
 
 
