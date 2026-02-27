@@ -397,3 +397,40 @@ class TestProducts:
                 "user_id": "test",
                 "password": "test",
             }
+
+
+class TestSendRequest:
+    """Unit tests for the api._send_request function."""
+
+    api_config = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2").api_config
+
+    def test_invalid_method(self):
+        method = "invalid"
+        with pytest.raises(NotImplementedError) as excinfo:
+            openfoodfacts.api._send_request(
+                "https://example.com/",
+                api_config=self.api_config,
+                method=method,
+            )
+        assert method in str(excinfo.value)
+
+    def test_get_404_returns_none(self):
+        method = "get"
+        url = "https://world.openfoodfacts.org/api/v2/product/1223435"
+        response_data = {
+            "status": 0,
+            "status_verbose": "product not found",
+        }
+        with requests_mock.mock() as mock:
+            mock.get(
+                url,
+                text=json.dumps(response_data),
+                status_code=404,
+            )
+            res = openfoodfacts.api._send_request(
+                url,
+                api_config=self.api_config,
+                method=method,
+                return_none_on_404=True,
+            )
+            assert res is None
