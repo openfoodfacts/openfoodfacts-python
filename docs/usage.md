@@ -100,6 +100,89 @@ print(results)
 #  'vegetarian': 'yes'}]
 ```
 
+### Add an image to a product
+
+You can upload an image to a product using the `add_image` method.
+
+> **Note:** This is a WRITE operation and **requires authentication**.
+> Make sure to pass `username` and `password` when initializing the API.
+
+```python
+from openfoodfacts import API, APIVersion, Country, Environment, Flavor
+
+api = API(
+    user_agent="<application name>",
+    username="your_username",
+    password="your_password",
+    country=Country.world,
+    flavor=Flavor.off,
+    version=APIVersion.v2,
+    environment=Environment.org,
+)
+
+status_code = api.product.add_image(
+    barcode="3017620422003",
+    image_field="front",
+    image_path="path/to/image.jpg"
+)
+```
+
+The `image_field` parameter specifies the type of image being uploaded:
+
+- `front` — front of the product packaging
+- `ingredients` — ingredients label
+- `nutrition` — nutrition facts table
+- `packaging` — packaging/recycling details
+- `other` — any other relevant image
+
+You can also append a language code suffix to specify the language of the image:
+
+```python
+# Upload an English ingredients image
+status_code = api.product.add_image(
+    barcode="3017620422003",
+    image_field="ingredients_en",
+    image_path="path/to/ingredients.jpg"
+)
+
+# Upload a French front image
+status_code = api.product.add_image(
+    barcode="3017620422003",
+    image_field="front_fr",
+    image_path="path/to/front_fr.jpg"
+)
+```
+
+You can upload multiple images for a single product:
+
+```python
+barcode = "3017620422003"
+
+image_uploads = {
+    "front_en": "images/front.jpg",
+    "ingredients_en": "images/ingredients.jpg",
+    "nutrition_en": "images/nutrition.jpg",
+    "packaging_en": "images/packaging.jpg",
+}
+
+for image_field, image_path in image_uploads.items():
+    status_code = api.product.add_image(
+        barcode=barcode,
+        image_field=image_field,
+        image_path=image_path
+    )
+    print(f"Uploaded {image_field}: status {status_code}")
+```
+
+**Image requirements:**
+
+- Images must be under the [Creative Commons Attribution ShareAlike licence](https://creativecommons.org/licenses/by-sa/3.0/)
+- Minimum image size: 640 x 160 pixels
+- Only upload photos you have taken yourself — do not upload scraped content
+
+> **Tip:** Use the staging environment (`Environment.net`) for testing
+> before uploading to production.
+
 ## Using the dataset
 
 If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump. Fortunately it can be done really easily using the SDK:

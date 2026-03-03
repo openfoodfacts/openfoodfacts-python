@@ -20,6 +20,7 @@ It provides a simple interface to the [Open Food Facts API](https://openfoodfact
 - Get information about a product
 - Perform text search
 - Create a new product or update an existing one
+- Upload images to a product
 
 It also provides some helper functions to make it easier to work with Open Food Facts data and APIs, such as:
 
@@ -43,7 +44,7 @@ or manually from source:
 
     git clone https://github.com/openfoodfacts/openfoodfacts-python
     cd openfoodfacts-python
-    pip install .  # Note the “.” at the end!
+    pip install .  # Note the "." at the end!
 
 ## Examples
 
@@ -83,6 +84,25 @@ results = api.product.update({
 
 with `CODE` the product barcode. The rest of the body should be a dictionary of fields to create/update.
 
+*Add an image to a product*
+
+```python
+# Authentication is required for image uploads
+api = openfoodfacts.API(
+    user_agent="MyAwesomeApp/1.0",
+    username="your_username",
+    password="your_password"
+)
+
+status_code = api.product.add_image(
+    barcode="3017620422003",
+    image_field="front_en",
+    image_path="path/to/front.jpg"
+)
+```
+
+Supported `image_field` values: `front`, `ingredients`, `nutrition`, `packaging`, `other` (with optional language suffix e.g. `front_en`, `ingredients_fr`).
+
 To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/usage/).
 
 
@@ -90,7 +110,7 @@ To see all possible capabilities, check out the [usage guide](https://openfoodfa
 ## Contributing
 
 Any help is welcome, as long as you don't break the continuous integration.
-Fork the repository and open a Pull Request directly on the "develop" branch.
+Fork the repository and open a Pull Request directly on the "develop" branch.
 A maintainer will review and integrate your changes.
 
 Maintainers:
