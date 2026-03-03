@@ -4,31 +4,27 @@ github_actions:
 
 REDIS:
 - changed-files:
-  - any-glob-to-any-file: 'tests/test_redis.py'
-  - any-glob-to-any-file: 'openfoodfacts/redis.py'
+  - any-glob-to-any-file: 'tests/**/test_redis.py'
+  - any-glob-to-any-file: 'src/openfoodfacts/redis.py'
 
 images:
 - changed-files:
-  - any-glob-to-any-file: 'openfoodfacts/images.py'
-  - any-glob-to-any-file: 'tests/​test_images.py'
+  - any-glob-to-any-file: 'src/openfoodfacts/images.py'
+  - any-glob-to-any-file: 'tests/**/test_images.py'
 
 OCR:
 - changed-files:
-  - any-glob-to-any-file: 'tests/​test_ocr.py'
+  - any-glob-to-any-file: 'tests/**/test_ocr.py'
 
 tests:
 - changed-files:
-  - any-glob-to-any-file: 'tests/test_utils.py'
-  - any-glob-to-any-file: 'tests/test_api.py'
-  - any-glob-to-any-file: 'tests/test_ocr.py'
-  - any-glob-to-any-file: 'tests/test_redis.py'
-  - any-glob-to-any-file: 'tests/test_images.py'
-  - any-glob-to-any-file: 'tests/test_api_config.py'
+  - any-glob-to-any-file: 'tests/**/*'
 
 utils:
 - changed-files:
-  - any-glob-to-any-file: 'openfoodfacts/utils.py'
-  - any-glob-to-any-file: 'tests/test_utils.py'
+  - any-glob-to-any-file: 'src/openfoodfacts/utils.py'
+  - any-glob-to-any-file: 'tests/**/test_utils.py'
+  - any-glob-to-any-file: 'tests/unit/utils/**/*'
 
 dependencies:
 - changed-files:
@@ -36,5 +32,4 @@ dependencies:
 
 documentation:
 - changed-files:
-  - any-glob-to-any-file: 'handle_taxonomies.md'
-  - any-glob-to-any-file: 'usage.md'
+  - any-glob-to-any-file: 'docs/**/*'
