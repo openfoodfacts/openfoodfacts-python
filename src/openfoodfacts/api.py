@@ -2,7 +2,7 @@ import base64
 import logging
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union
 
 import requests
 
@@ -16,6 +16,59 @@ def get_http_auth(environment: Environment) -> Optional[Tuple[str, str]]:
     return ("off", "off") if environment is Environment.net else None
 
 
+def _send_request(
+    url: str,
+    api_config: APIConfig,
+    method: Literal["GET", "POST", "DELETE", "HEAD", "PUT"] = "GET",
+    return_none_on_404: bool = False,
+    **request_args,
+) -> requests.Response | None:
+    """Send an HTTP request to the given URL.
+
+    :param url: the URL to send the request to.
+    :param api_config: the API configuration.
+    :param method: type of HTTP request. Defaults to "GET".
+    :param return_none_on_404: if True, None is returned if the response
+        status code is 404. Defaults to False.
+    :param request_args: Optional arguments that requests.Session.request takes
+    :return: the API response.
+    """
+    # Raise early error on unknown methods
+    if method.upper() not in ("GET", "POST", "DELETE", "HEAD", "PUT"):
+        raise NotImplementedError(f'The HTTP method "{method}" is not implemented.')
+
+    # Build up the request
+    request_args |= {
+        "url": url,
+        "method": method,
+        "headers": request_args.get("headers", dict())
+        | {"User-Agent": api_config.user_agent},
+        "timeout": api_config.timeout,
+    }
+
+    # Handle authentication
+    if api_config.username and api_config.password:
+        key = "json" if request_args.get("json") else "data"
+        request_args[key] = request_args.get(key, dict()) | {
+            "user_id": api_config.username,
+            "password": api_config.password,
+        }
+    elif api_config.session_cookie:
+        request_args["cookies"] = request_args.get("cookies", dict()) | {
+            "session": api_config.session_cookie,
+        }
+    if "auth" not in request_args:
+        request_args["auth"] = get_http_auth(api_config.environment)
+
+    # Handle request and return data
+    r = http_session.request(**request_args)
+    if r.status_code == 404 and return_none_on_404:
+        return None
+    r.raise_for_status()
+    return r
+
+
+@warnings.deprecated("Use *Resource class methods instead.")
 def send_get_request(
     url: str,
     api_config: APIConfig,
@@ -32,62 +85,42 @@ def send_get_request(
         status code is 404, defaults to False
     :return: the API response
     """
-    r = http_session.get(
+    r = _send_request(
         url,
+        api_config=api_config,
         params=params,
-        headers={"User-Agent": api_config.user_agent},
-        timeout=api_config.timeout,
+        return_none_on_404=return_none_on_404,
         auth=auth,
+        method="GET",
     )
-    if r.status_code == 404 and return_none_on_404:
+    if r is None:
         return None
-    r.raise_for_status()
-    return r.json()
+    else:
+        return r.json()
 
 
+@warnings.deprecated("Use *Resource class methods instead.")
 def send_form_urlencoded_post_request(
     url: str, body: Dict[str, Any], api_config: APIConfig
 ) -> requests.Response:
-    cookies = None
-    if api_config.username and api_config.password:
-        body["user_id"] = api_config.username
-        body["password"] = api_config.password
-    elif api_config.session_cookie:
-        cookies = {
-            "session": api_config.session_cookie,
-        }
-    r = http_session.post(
+    return _send_request(
         url,
         data=body,
-        headers={"User-Agent": api_config.user_agent},
-        timeout=api_config.timeout,
-        auth=get_http_auth(api_config.environment),
-        cookies=cookies,
+        api_config=api_config,
+        method="POST",
     )
-    r.raise_for_status()
-    return r
 
 
+@warnings.deprecated("Use *Resource class methods instead.")
 def send_json_post_request(
     url: str, body: JSONType, api_config: APIConfig
 ) -> requests.Response:
-    cookies = None
-    if api_config.username and api_config.password:
-        body["user_id"] = api_config.username
-        body["password"] = api_config.password
-    elif api_config.session_cookie:
-        cookies = {
-            "session": api_config.session_cookie,
-        }
-    r = http_session.post(
+    return _send_request(
         url,
         json=body,
-        headers={"User-Agent": api_config.user_agent},
-        timeout=api_config.timeout,
-        auth=get_http_auth(api_config.environment),
-        cookies=cookies,
+        api_config=api_config,
+        method="POST",
     )
-    return r
 
 
 class RobotoffResource:
@@ -136,14 +169,12 @@ class FacetResource:
         """
         facet = Facet.from_str_or_enum(facet_name)
         facet_plural = facet.value.replace("_", "-")
-        resp = send_get_request(
+        return _send_request(
             url=f"{self.base_url}/facets/{facet_plural}",
             params={"json": "1", "page": page, "page_size": page_size, **kwargs},
             api_config=self.api_config,
-            auth=get_http_auth(self.api_config.environment),
-        )
-        resp = cast(JSONType, resp)
-        return resp
+            method="GET",
+        ).json()
 
     def get_products(
         self,
@@ -175,14 +206,12 @@ class FacetResource:
         if sort_by is not None:
             params["sort_by"] = sort_by
 
-        resp = send_get_request(
+        return _send_request(
             url=f"{self.base_url}/facets/{facet_plural}/{facet_value}",
             params=params,
             api_config=self.api_config,
-            auth=get_http_auth(self.api_config.environment),
-        )
-        resp = cast(JSONType, resp)
-        return resp
+            method="GET",
+        ).json()
 
 
 class ProductResource:
@@ -224,13 +253,18 @@ class ProductResource:
             # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
             url += "?fields={}".format(",".join(fields))
 
-        resp = send_get_request(
-            url=url, api_config=self.api_config, return_none_on_404=True
+        resp = _send_request(
+            url=url,
+            api_config=self.api_config,
+            return_none_on_404=True,
+            method="GET",
         )
 
         if resp is None:
             # product not found
             return None
+        else:
+            resp = resp.json()
 
         if resp["status"] == 0:
             # invalid barcode
@@ -267,12 +301,12 @@ class ProductResource:
         if sort_by is not None:
             params["sort_by"] = sort_by
 
-        return send_get_request(
+        return _send_request(
             url=f"{self.base_url}/cgi/search.pl",
             api_config=self.api_config,
             params=params,
-            auth=get_http_auth(self.api_config.environment),
-        )
+            method="GET",
+        ).json()
 
     def update(self, body: Dict[str, Any]):
         """Create a new product or update an existing one."""
@@ -280,7 +314,12 @@ class ProductResource:
             raise ValueError("missing code from body")
 
         url = f"{self.base_url}/cgi/product_jqm2.pl"
-        return send_form_urlencoded_post_request(url, body, self.api_config)
+        return _send_request(
+            url,
+            api_config=self.api_config,
+            method="POST",
+            data=body,
+        )
 
     def select_image(
         self,
@@ -333,31 +372,17 @@ class ProductResource:
         if image_key is not None:
             params["id"] = image_key
 
-        cookies = None
-        if self.api_config.session_cookie:
-            cookies = {
-                "session": self.api_config.session_cookie,
-            }
-        elif self.api_config.username:
-            params["user_id"] = self.api_config.username
-            params["password"] = self.api_config.password
-
-        if cookies is None and not params.get("password"):
+        if not (self.api_config.session_cookie or self.api_config.password):
             raise ValueError(
                 "a password or a session cookie is required to select an image"
             )
 
-        r = http_session.post(
+        return _send_request(
             url,
             data=params,
-            headers={"User-Agent": self.api_config.user_agent},
-            timeout=self.api_config.timeout,
-            auth=get_http_auth(self.api_config.environment),
-            cookies=cookies,
+            api_config=self.api_config,
+            method="POST",
         )
-
-        r.raise_for_status()
-        return r
 
     def parse_ingredients(
         self, text: str, lang: str, timeout: int = 10
@@ -549,7 +574,12 @@ class ProductResource:
         if selected:
             data["selected"] = selected
 
-        return send_json_post_request(url, data, api_config)
+        return _send_request(
+            url,
+            json=data,
+            api_config=api_config,
+            method="POST",
+        )
 
 
 class API:
