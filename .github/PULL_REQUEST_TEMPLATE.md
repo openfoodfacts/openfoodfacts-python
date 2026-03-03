@@ -30,7 +30,7 @@ Following `type`s are allowed:
 - Mention how your solution resolves the issue
 
 ### Large Language Models usage disclosure
-<!-- ⚠️ If you used an LLM, please disclose which LLM you used (and its version) and how (agentic, autocomplete). Please confirm you have run successfully the code on your device. Also provide a screenshot or video as proof -->
+<!-- ⚠️ If you used an LLM, please disclose which LLM you used (and its version) and how (agentic, autocomplete). Please confirm you have run the code successfully on your device (or in CI). Also provide a screenshot or video as proof -->
 
 ### Related issue(s) and discussion
 <!-- Please add the issue number this issue will close, that way, once your pull request is merged, the issue will be closed as well -->
