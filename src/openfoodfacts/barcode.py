@@ -1,14 +1,28 @@
 def normalize_barcode(barcode: str) -> str:
     """Normalize the barcode.
 
-    First, we remove leading zeros, then we pad the barcode with zeros to
-    reach 8 digits.
+    First, we validate that the barcode contains only digits.
+
+    Then we remove leading zeros and pad the barcode with zeros
+    to reach 8 digits.
 
     If the barcode is longer than 8 digits, we pad it to 13 digits.
 
     :param barcode: the barcode to normalize
     :return: the normalized barcode
     """
+
+    if not isinstance(barcode, str):
+        raise TypeError("Barcode must be a string")
+
+    barcode = barcode.strip()
+
+    if not barcode:
+        raise ValueError("Barcode cannot be empty")
+
+    if not barcode.isdigit():
+        raise ValueError("Barcode must contain only digits")
+
     barcode = barcode.lstrip("0").zfill(8)
 
     if len(barcode) > 8:
