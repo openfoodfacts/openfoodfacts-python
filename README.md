@@ -83,6 +83,10 @@ results = api.product.update({
 
 with `CODE` the product barcode. The rest of the body should be a dictionary of fields to create/update.
 
+# Search example
+results = api.product.text_search("chocolate")
+print(results["products"][0]["product_name"])
+
 To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/usage/).
 
 
