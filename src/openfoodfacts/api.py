@@ -1,5 +1,6 @@
 import base64
 import logging
+import typing
 import warnings
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union
@@ -100,7 +101,7 @@ def send_get_request(
 
 def send_form_urlencoded_post_request(
     url: str, body: Dict[str, Any], api_config: APIConfig
-) -> requests.Response:
+) -> requests.Response | None:
     return _send_request(
         url,
         data=body,
@@ -111,7 +112,7 @@ def send_form_urlencoded_post_request(
 
 def send_json_post_request(
     url: str, body: JSONType, api_config: APIConfig
-) -> requests.Response:
+) -> requests.Response | None:
     return _send_request(
         url,
         json=body,
@@ -166,12 +167,13 @@ class FacetResource:
         """
         facet = Facet.from_str_or_enum(facet_name)
         facet_plural = facet.value.replace("_", "-")
-        return _send_request(
+        r = _send_request(
             url=f"{self.base_url}/facets/{facet_plural}",
             params={"json": "1", "page": page, "page_size": page_size, **kwargs},
             api_config=self.api_config,
             method="GET",
-        ).json()
+        )
+        return typing.cast(requests.Response, r).json()
 
     def get_products(
         self,
@@ -203,12 +205,13 @@ class FacetResource:
         if sort_by is not None:
             params["sort_by"] = sort_by
 
-        return _send_request(
+        r = _send_request(
             url=f"{self.base_url}/facets/{facet_plural}/{facet_value}",
             params=params,
             api_config=self.api_config,
             method="GET",
-        ).json()
+        )
+        return typing.cast(requests.Response, r).json()
 
 
 class ProductResource:
@@ -250,18 +253,18 @@ class ProductResource:
             # https://github.com/openfoodfacts/openfoodfacts-server/issues/1607
             url += "?fields={}".format(",".join(fields))
 
-        resp = _send_request(
+        r = _send_request(
             url=url,
             api_config=self.api_config,
             return_none_on_404=True,
             method="GET",
         )
 
-        if resp is None:
+        if r is None:
             # product not found
             return None
         else:
-            resp = resp.json()
+            resp = r.json()
 
         if resp["status"] == 0:
             # invalid barcode
@@ -298,12 +301,13 @@ class ProductResource:
         if sort_by is not None:
             params["sort_by"] = sort_by
 
-        return _send_request(
+        r = _send_request(
             url=f"{self.base_url}/cgi/search.pl",
             api_config=self.api_config,
             params=params,
             method="GET",
-        ).json()
+        )
+        return typing.cast(requests.Response, r).json()
 
     def update(self, body: Dict[str, Any]):
         """Create a new product or update an existing one."""
