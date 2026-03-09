@@ -30,4 +30,4 @@ __all__ = [
     "normalize_barcode",
 ]
 
-__version__ = "3.4.5"
+__version__ = "4.0.0"

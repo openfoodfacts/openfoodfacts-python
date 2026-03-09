@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.5...v4.0.0) (2026-03-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* warnings.deprecated is only available on Python 3.13+ ([#453](https://github.com/openfoodfacts/openfoodfacts-python/issues/453))
+
+### Bug Fixes
+
+* ensure `value_string` is not an int or a float ([#454](https://github.com/openfoodfacts/openfoodfacts-python/issues/454)) ([b7cd03e](https://github.com/openfoodfacts/openfoodfacts-python/commit/b7cd03ecfe4088a0f3bee0f795fdaba27f627b72))
+* fix typing errors ([eb31aec](https://github.com/openfoodfacts/openfoodfacts-python/commit/eb31aec485bcce227be2ce55fb9de74ce7e2776e))
+* warnings.deprecated is only available on Python 3.13+ ([#453](https://github.com/openfoodfacts/openfoodfacts-python/issues/453)) ([3d4fa68](https://github.com/openfoodfacts/openfoodfacts-python/commit/3d4fa68eb7ca211cb97185fb83c2a7ab9a24ace6))
+
+
+### Technical
+
+* unify api.send_*_request() functions ([#435](https://github.com/openfoodfacts/openfoodfacts-python/issues/435)) ([df7d26e](https://github.com/openfoodfacts/openfoodfacts-python/commit/df7d26ec148446874326d92022e8d1a6a1564a00))
+
 ## [3.4.5](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.4...v3.4.5) (2026-02-23)
 
 
