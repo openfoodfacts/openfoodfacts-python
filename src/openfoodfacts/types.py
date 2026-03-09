@@ -1,7 +1,7 @@
 import enum
 from typing import Any, Dict, Literal, Optional, Union
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 #: A precise expectation of what mappings looks like in json.
 #: (dict where keys are always of type `str`).
@@ -930,6 +930,16 @@ class NutritionV3NutrientInput(BaseModel):
     value_computed: float | None = None
     value_string: str | None = None
     modifier: str | None = None
+
+    @field_validator("value_string", mode="before")
+    @classmethod
+    def ensure_value_string_is_not_an_int_or_float(cls, value: Any) -> Any:
+        # Sometimes, Product Opener uses an int for `value_string` instead
+        # of a string, which causes Pydantic validation to fail.
+        # See https://github.com/openfoodfacts/openfoodfacts-python/issues/452
+        if isinstance(value, int) or isinstance(value, float):
+            return str(value)
+        return value
 
 
 class NutritionV3AggregatedSet(BaseModel):

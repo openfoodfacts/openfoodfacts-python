@@ -1,6 +1,12 @@
 import pytest
 
-from openfoodfacts.types import Flavor, JSONType, NutritionV3, NutritionV3InputSet
+from openfoodfacts.types import (
+    Flavor,
+    JSONType,
+    NutritionV3,
+    NutritionV3InputSet,
+    NutritionV3NutrientInput,
+)
 
 
 def test_from_product_type_food():
@@ -420,3 +426,16 @@ class TestNutritionV3:
         assert result.value_string == "5.2"
         assert result.unit == "g"
         assert result.modifier is None
+
+
+class TestNutritionV3NutrientInput:
+    def test_ensure_value_string_is_not_an_int_or_float(self):
+        parsed = NutritionV3NutrientInput.model_validate(
+            {
+                "unit": "g",
+                "value": 5.2,
+                "value_string": 5.2,
+                "modifier": "<",
+            }
+        )
+        assert parsed.value_string == "5.2"
