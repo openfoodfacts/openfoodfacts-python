@@ -3,7 +3,7 @@ name: Python SDK quality checks and unit tests
 on:
   push:
     paths:
-      - "openfoodfacts/**"
+      - "src/**"
       - "pyproject.toml"
       - "uv.lock"
       - "tests/**"
