@@ -68,7 +68,6 @@ def _send_request(
     return r
 
 
-@warnings.deprecated("Use *Resource class methods instead.")
 def send_get_request(
     url: str,
     api_config: APIConfig,
@@ -99,7 +98,6 @@ def send_get_request(
         return r.json()
 
 
-@warnings.deprecated("Use *Resource class methods instead.")
 def send_form_urlencoded_post_request(
     url: str, body: Dict[str, Any], api_config: APIConfig
 ) -> requests.Response:
@@ -111,7 +109,6 @@ def send_form_urlencoded_post_request(
     )
 
 
-@warnings.deprecated("Use *Resource class methods instead.")
 def send_json_post_request(
     url: str, body: JSONType, api_config: APIConfig
 ) -> requests.Response:
