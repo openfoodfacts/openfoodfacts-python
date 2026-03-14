@@ -15,6 +15,12 @@ from typing import Callable, Dict, Iterable, List, Optional, Union
 import requests
 import tqdm
 
+# src/openfoodfacts/utils/__init__.py
+from .string_helpers import clean_string
+
+__all__ = ["clean_string"]
+
+
 from ..types import COUNTRY_CODE_TO_NAME, Country, Environment, Flavor
 
 _orjson_available = True
