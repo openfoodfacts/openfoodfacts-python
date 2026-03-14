@@ -25,13 +25,14 @@ The taxonomy object provides a way to access the taxonomy data. For example, if 
 
 ```python
 node = taxonomy["en:biscuits"]
-print(node)
+if node is not None:
+    print(node)
 # <TaxonomyNode en:biscuits>
 ```
 
 If the node does not exist, `None` is returned.
 
-You can get the the translation in a specific language:
+You can get the translation in a specific language:
 
 ```python
 print(node.get_localized_name("it"))
@@ -55,14 +56,15 @@ print(node.get_parents_hierarchy())
 # [<TaxonomyNode en:biscuits-and-cakes>, <TaxonomyNode en:sweet-snacks>, <TaxonomyNode en:snacks>]
 ```
 
-Beside the main translation that can be accessed using `get_localized_name`, each node may have synonyms. This information can be easily accessed as well:
+Besides the main translation that can be accessed using `get_localized_name`, each node may have synonyms. This information can be easily accessed as well:
 
 ```python
 # synonyms is a dict mapping language codes to a list of
 # synonyms in that language. The key is missing if there are
 # no synonyms.
-print(node.synonyms["es"])
-# ["Galletas", "galleta"]
+for lang, synonyms in node.synonyms.items():
+    print(f"{lang}: {synonyms}")
+# es: ["Galletas", "galleta"]
 ```
 
 Taxonomy node properties are stored in the `properties` field:
@@ -102,7 +104,7 @@ for node in taxonomy.iter_nodes():
 
 #### Find leaf nodes in the taxonomy
 
-One very common usecase is to find the leafs nodes among a list of nodes, i.e. the nodes that have no children.
+One very common use case is to find the leaf nodes among a list of nodes, i.e. the nodes that have no children.
 For example, in Open Food Facts, the `categories_tags` field contains the categories submitted by the user and all their parents. If you're only interested in the most precise categories, you need to filter out the categories that have children:
 
 ```python
