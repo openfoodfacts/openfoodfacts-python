@@ -47,7 +47,7 @@ or manually from source:
 
 ## Examples
 
-All the examples below assume that you have imported the SDK and instanciated the API object:
+All the examples below assume that you have imported the SDK and instantiated the API object:
 
 ```python
 import openfoodfacts
