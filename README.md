@@ -83,6 +83,54 @@ results = api.product.update({
 
 with `CODE` the product barcode. The rest of the body should be a dictionary of fields to create/update.
 
+### Uploading product images
+
+The SDK provides a convenient method to upload product images to the Open Food Facts database using the `upload_image()` method.
+
+Images can be uploaded either from a local file path or from a Base64 encoded string. After uploading, the image can optionally be selected as the front, ingredients, nutrition, or packaging image for a specific language.
+
+Authentication is required to perform write operations. You must provide a valid `username` and `password` when initializing the API object.
+
+Example:
+
+```python
+from openfoodfacts import API
+
+api = API(
+    user_agent="MyAwesomeApp/1.0",
+    username="YOUR_USERNAME",
+    password="YOUR_PASSWORD"
+)
+
+response = api.product.upload_image(
+    code="737628064502",
+    image_path="front.jpg",
+    selected={
+        "front": {"en": {}}
+    }
+)
+
+print(response.json())
+```
+
+Parameters:
+
+- **code**: Barcode of the product.
+- **image_path**: Path to the image file on your local machine.
+- **image_data_base64**: Base64 encoded representation of the image (alternative to `image_path`).
+- **selected**: Optional dictionary specifying how the uploaded image should be assigned. Supported image types include `front`, `ingredients`, `nutrition`, and `packaging`.
+
+Example of selecting multiple image types:
+
+```python
+selected = {
+    "front": {"en": {}},
+    "ingredients": {"en": {}}
+}
+```
+
+After uploading, the image will be processed and stored in the Open Food Facts image storage system and linked to the corresponding product.
+
 To see all possible capabilities, check out the [usage guide](https://openfoodfacts.github.io/openfoodfacts-python/usage/).
 
 
