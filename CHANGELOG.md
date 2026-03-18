@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.0.0...v5.0.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* add various fixes regarding image processing ([#461](https://github.com/openfoodfacts/openfoodfacts-python/issues/461)) ([44ebbd0](https://github.com/openfoodfacts/openfoodfacts-python/commit/44ebbd027b41b7208a4f5540fcb9be8e264478e6))
+
+
+### Technical
+
+* update .gitignore ([2e11c82](https://github.com/openfoodfacts/openfoodfacts-python/commit/2e11c8246810c1c21388c9b641298b248365d28b))
+
 ## [5.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v4.0.0...v5.0.0) (2026-03-18)
 
 
