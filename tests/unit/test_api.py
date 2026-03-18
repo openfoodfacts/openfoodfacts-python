@@ -182,7 +182,10 @@ class TestProducts:
 
     def test_upload_image_success(self):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT,
+            version="v3",
+            username="test",
+            password="test",
         )
         code = "1223435"
         response_data = {
@@ -228,7 +231,7 @@ class TestProducts:
 
     def test_upload_image_with_selected(self):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT, version="v3", username="test", password="test"
         )
         code = "1223435"
         response_data = {
@@ -291,7 +294,7 @@ class TestProducts:
             }
 
     def test_upload_image_no_auth(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v3")
         code = "1223435"
         with pytest.raises(
             ValueError,
@@ -301,7 +304,7 @@ class TestProducts:
 
     def test_upload_image_invalid_code(self):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT, version="v3", username="test", password="test"
         )
         code = "invalidcode"
         with pytest.raises(
@@ -312,7 +315,7 @@ class TestProducts:
 
     def test_upload_image_no_data(self):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT, version="v3", username="test", password="test"
         )
         code = "1223435"
         with pytest.raises(
@@ -323,7 +326,7 @@ class TestProducts:
 
     def test_upload_image_both_data(self):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT, version="v3", username="test", password="test"
         )
         code = "1223435"
         with pytest.raises(
@@ -336,7 +339,7 @@ class TestProducts:
 
     def test_upload_image_invalid_selected(self):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT, version="v3", username="test", password="test"
         )
         code = "1223435"
         with pytest.raises(
@@ -352,7 +355,7 @@ class TestProducts:
 
     def test_upload_image_with_path(self, tmp_path):
         api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, version="v2", username="test", password="test"
+            user_agent=TEST_USER_AGENT, version="v3", username="test", password="test"
         )
         code = "1223435"
         response_data = {

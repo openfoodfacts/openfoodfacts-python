@@ -1,21 +1,4 @@
-import numpy as np
 from PIL import Image
-
-
-def convert_image_to_array(image: Image.Image) -> np.ndarray:
-    """Convert a PIL Image into a numpy array.
-
-    The image is converted to RGB if needed before generating the array.
-
-    :param image: the input image.
-    :return: the generated numpy array of shape (width, height, 3)
-    """
-    if image.mode != "RGB":
-        image = image.convert("RGB")
-
-    im_width, im_height = image.size
-
-    return np.array(image.getdata(), dtype=np.uint8).reshape((im_height, im_width, 3))
 
 
 def resize_image(image: Image.Image, max_size: tuple[int, int]) -> Image.Image:

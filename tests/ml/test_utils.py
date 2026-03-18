@@ -1,36 +1,6 @@
-import numpy as np
 from PIL import Image
 
-from openfoodfacts.ml.utils import convert_image_to_array, resize_image
-
-
-class TestConvertImageToArray:
-    def test_rgb(self):
-        # Create a simple RGB image
-        image = Image.new("RGB", (10, 10), color="red")
-        array = convert_image_to_array(image)
-
-        assert array.shape == (10, 10, 3)
-        assert array.dtype == np.uint8
-        assert (array == [255, 0, 0]).all()
-
-    def test_non_rgb(self):
-        # Create a simple grayscale image
-        image = Image.new("L", (10, 10), color=128)
-        array = convert_image_to_array(image)
-
-        assert array.shape == (10, 10, 3)
-        assert array.dtype == np.uint8
-        assert (array == [128, 128, 128]).all()
-
-    def test_size(self):
-        # Create a simple RGB image with different size
-        image = Image.new("RGB", (20, 15), color="blue")
-        array = convert_image_to_array(image)
-
-        assert array.shape == (15, 20, 3)
-        assert array.dtype == np.uint8
-        assert (array == [0, 0, 255]).all()
+from openfoodfacts.ml.utils import resize_image
 
 
 class TestResizeImage:
