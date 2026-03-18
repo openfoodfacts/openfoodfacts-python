@@ -1,5 +1,21 @@
 # Changelog
 
+## [5.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v4.0.0...v5.0.0) (2026-03-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* improve ImageClassifier ([#460](https://github.com/openfoodfacts/openfoodfacts-python/issues/460))
+
+### Features
+
+* improve ImageClassifier ([#460](https://github.com/openfoodfacts/openfoodfacts-python/issues/460)) ([26da522](https://github.com/openfoodfacts/openfoodfacts-python/commit/26da522d3f74abd7e029bad3dae46bc4c0a63a9f))
+
+
+### Technical
+
+* fix typo in README: instanciated → instantiated ([#457](https://github.com/openfoodfacts/openfoodfacts-python/issues/457)) ([d16bcc4](https://github.com/openfoodfacts/openfoodfacts-python/commit/d16bcc4986e46964d860d36fc8af719d0dad47a2))
+
 ## [4.0.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v3.4.5...v4.0.0) (2026-03-09)
 
 
