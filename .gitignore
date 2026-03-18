@@ -64,3 +64,6 @@ target/
 
 # OS related files
 .DS_Store
+
+.vscode
+*.code-workspace
