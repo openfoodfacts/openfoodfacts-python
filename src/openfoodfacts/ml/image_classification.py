@@ -1,88 +1,55 @@
+import dataclasses
 import logging
-import math
-import time
-import typing
-from typing import Optional
+import warnings
 
+import albumentations as A
 import numpy as np
-from PIL import Image, ImageOps
 from tritonclient.grpc import service_pb2
 
 from openfoodfacts.ml.triton import (
     add_triton_infer_input_tensor,
     get_triton_inference_stub,
 )
+from openfoodfacts.utils import PerfTimer
 
 logger = logging.getLogger(__name__)
 
 
-def classify_transforms(
-    img: Image.Image,
-    size: int = 224,
-    mean: tuple[float, float, float] = (0.0, 0.0, 0.0),
-    std: tuple[float, float, float] = (1.0, 1.0, 1.0),
-    interpolation: Image.Resampling = Image.Resampling.BILINEAR,
-    crop_fraction: float = 1.0,
-) -> np.ndarray:
+@dataclasses.dataclass
+class ImageClassificationResult:
+    """The result of an image classification model.
+
+    Attributes:
+        predictions (list[tuple[str, float]]): The list of label names and their
+            corresponding confidence scores, ordered by confidence score in
+            descending order.
+        metrics (dict[str, float]): The performance metrics of the classification.
+            Each key is the name of the metric (a step in the inference
+            process), and the value is the time taken in seconds.
+            The following metrics are provided:
+                - preprocess_time: time taken to preprocess the image
+                - grpc_request_build_time: time taken to build the gRPC request
+                - triton_inference_time: time taken for Triton inference
+                - postprocess_time: time taken to postprocess the results
     """
-    Applies a series of image transformations including resizing, center
-    cropping, normalization, and conversion to a NumPy array.
 
-    Transformation steps is based on the one used in the Ultralytics library:
-    https://github.com/ultralytics/ultralytics/blob/main/ultralytics/data/augment.py#L2319
+    predictions: list[tuple[str, float]]
+    metrics: dict[str, float]
 
-    :param img: Input Pillow image.
-    :param size: The target size for the transformed image (shortest edge).
-    :param mean: Mean values for each RGB channel used in normalization.
-    :param std: Standard deviation values for each RGB channel used in
-        normalization.
-    :param interpolation: Interpolation method from PIL (
-    Image.Resampling.NEAREST, Image.Resampling.BILINEAR,
-    Image.Resampling.BICUBIC).
-    :param crop_fraction: Fraction of the image to be cropped.
-    :return: The transformed image as a NumPy array.
-    """
-    if img.mode != "RGB":
-        img = img.convert("RGB")
 
-    # Rotate the image based on the EXIF orientation if needed
-    img = typing.cast(Image.Image, ImageOps.exif_transpose(img))
-
-    # Step 1: Resize while preserving the aspect ratio
-    width, height = img.size
-
-    # Calculate scale size while preserving aspect ratio
-    scale_size = math.floor(size / crop_fraction)
-
-    aspect_ratio = width / height
-    if width < height:
-        new_width = scale_size
-        new_height = int(new_width / aspect_ratio)
-    else:
-        new_height = scale_size
-        new_width = int(new_height * aspect_ratio)
-
-    img = img.resize((new_width, new_height), interpolation)
-
-    # Step 2: Center crop
-    left = (new_width - size) // 2
-    top = (new_height - size) // 2
-    right = left + size
-    bottom = top + size
-    img = img.crop((left, top, right, bottom))
-
-    # Step 3: Convert the image to a NumPy array and scale pixel values to
-    # [0, 1]
-    img_array = np.array(img).astype(np.float32) / 255.0
-
-    # Step 4: Normalize the image
-    mean_np = np.array(mean, dtype=np.float32).reshape(1, 1, 3)
-    std_np = np.array(std, dtype=np.float32).reshape(1, 1, 3)
-    img_array = (img_array - mean_np) / std_np
-
-    # Step 5: Change the order of dimensions from (H, W, C) to (C, H, W)
-    img_array = np.transpose(img_array, (2, 0, 1))
-    return img_array
+def _classify_transform(
+    max_size: int,
+    normalize_mean: tuple[float, float, float] = (0.0, 0.0, 0.0),
+    normalize_std: tuple[float, float, float] = (1.0, 1.0, 1.0),
+):
+    return A.Compose(
+        [
+            A.LongestMaxSize(max_size=max_size, p=1.0),
+            A.PadIfNeeded(min_height=max_size, min_width=max_size, p=1.0),
+            A.ToRGB(p=1.0),
+            A.Normalize(mean=normalize_mean, std=normalize_std, p=1.0),
+        ]
+    )
 
 
 class ImageClassifier:
@@ -101,49 +68,58 @@ class ImageClassifier:
 
     def predict(
         self,
-        image: Image.Image,
+        image: np.ndarray,
         triton_uri: str,
-        model_version: Optional[str] = None,
-    ) -> list[tuple[str, float]]:
+        model_version: str | None = None,
+    ) -> ImageClassificationResult:
         """Run an image classification model on an image.
 
         The model is expected to have been trained with Ultralytics library
-        (Yolov8).
+        (any Yolo classification model).
 
-        :param image: the input Pillow image
+        :param image: the input NumPy array image
         :param triton_uri: URI of the Triton Inference Server, defaults to
             None. If not provided, the default value from settings is used.
-        :return: the prediction results as a list of tuples (label, confidence)
+        :param model_version: the version of the model to use, defaults to
+            None. If not provided, the latest version is used.
+        :return: the prediction results as an ImageClassificationResult
         """
-        image_array = self.preprocess(image)
+        metrics: dict[str, float] = {}
 
-        grpc_stub = get_triton_inference_stub(triton_uri)
-        request = service_pb2.ModelInferRequest()
-        request.model_name = self.model_name
-        if model_version:
-            request.model_version = model_version
-        add_triton_infer_input_tensor(
-            request, name="images", data=image_array, datatype="FP32"
-        )
-        start_time = time.monotonic()
-        response = grpc_stub.ModelInfer(request)
-        latency = time.monotonic() - start_time
-        logger.debug("Inference time for %s: %s", self.model_name, latency)
+        with PerfTimer("preprocess_time", metrics):
+            image_array = self.preprocess(image)
 
-        start_time = time.monotonic()
-        result = self.postprocess(response)
-        latency = time.monotonic() - start_time
-        logger.debug("Post-processing time for %s: %s", self.model_name, latency)
-        return result
+        with PerfTimer("grpc_request_build_time", metrics):
+            request = service_pb2.ModelInferRequest()
+            request.model_name = self.model_name
+            if model_version:
+                request.model_version = model_version
+            add_triton_infer_input_tensor(
+                request, name="images", data=image_array, datatype="FP32"
+            )
 
-    def preprocess(self, image: Image.Image) -> np.ndarray:
+        with PerfTimer("triton_inference_time", metrics):
+            grpc_stub = get_triton_inference_stub(triton_uri)
+            response = grpc_stub.ModelInfer(request)
+
+        with PerfTimer("postprocess_time", metrics):
+            predictions = self.postprocess(response)
+
+        return ImageClassificationResult(predictions=predictions, metrics=metrics)
+
+    def preprocess(self, image: np.ndarray) -> np.ndarray:
         """Preprocess an image for object detection.
 
-        :param image: the input Pillow image
+        :param image: the input NumPy array image
         :return: the preprocessed image as a NumPy array
         """
-        image_array = classify_transforms(image, size=self.image_size)
-        return np.expand_dims(image_array, axis=0)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            image_array = _classify_transform(max_size=self.image_size)(image=image)[
+                "image"
+            ]
+        image_array = np.transpose(image_array, (2, 0, 1))[np.newaxis, :]  # HWC to CHW
+        return image_array
 
     def postprocess(
         self, response: service_pb2.ModelInferResponse

@@ -1,50 +1,91 @@
+import warnings
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 from PIL import Image
 
-from openfoodfacts.ml.image_classification import ImageClassifier, classify_transforms
+from openfoodfacts.ml.image_classification import (
+    ImageClassificationResult,
+    ImageClassifier,
+    _classify_transform,
+)
 
 
-class TestClassifyTransforms:
+class TestClassifyTransform:
     def test_rgb_image(self):
-        img = Image.new("RGB", (300, 300), color="red")
-        transformed_img = classify_transforms(img)
-        assert transformed_img.shape == (3, 224, 224)
+        img = np.array(Image.new("RGB", (300, 300), color="red"))
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            transformed_img = _classify_transform(max_size=224)(image=img)["image"]
+        assert transformed_img.shape == (224, 224, 3)
         assert transformed_img.dtype == np.float32
 
+    def test_non_square_image_aspect_ratio_lt_1(self):
+        # width=150, height=300
+        img = np.array(Image.new("RGB", (150, 300), color="red"))
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            transformed_img = _classify_transform(max_size=300)(image=img)["image"]
+        assert transformed_img.shape == (300, 300, 3)
+        assert transformed_img.dtype == np.float32
+        # assert that the green and blue channels are zero
+        assert np.sum(transformed_img[:, :, 1:3]) == 0.0
+        # image is in HWC
+        red_channel = transformed_img[:, :, 0]
+        assert np.all(red_channel[:, :75] == 0.0)
+        assert np.all(red_channel[:, 75:150] == 1.0)
+        assert np.all(red_channel[:, 225:] == 0.0)
+
+    def test_non_square_image_aspect_ratio_gt_1(self):
+        # width=600, height=300
+        img = np.array(Image.new("RGB", (600, 300), color="red"))
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            transformed_img = _classify_transform(max_size=300)(image=img)["image"]
+        assert transformed_img.shape == (300, 300, 3)
+        assert transformed_img.dtype == np.float32
+        # assert that the green and blue channels are zero
+        assert np.sum(transformed_img[:, :, 1:3]) == 0.0
+        # image is in HWC
+        red_channel = transformed_img[:, :, 0]
+        assert np.all(red_channel[:75, :] == 0.0)
+        assert np.all(red_channel[75:150, :] == 1.0)
+        assert np.all(red_channel[225:, :] == 0.0)
+
     def test_non_rgb_image(self):
-        img = Image.new("L", (300, 300), color="red")
-        transformed_img = classify_transforms(img)
-        assert transformed_img.shape == (3, 224, 224)
+        img = np.array(Image.new("L", (300, 300), color="red"))
+        transformed_img = _classify_transform(max_size=224)(image=img)["image"]
+        assert transformed_img.shape == (224, 224, 3)
         assert transformed_img.dtype == np.float32
 
     def test_custom_size(self):
-        img = Image.new("RGB", (300, 300), color="red")
-        transformed_img = classify_transforms(img, size=128)
-        assert transformed_img.shape == (3, 128, 128)
+        img = np.array(Image.new("RGB", (300, 300), color="red"))
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            transformed_img = _classify_transform(max_size=128)(image=img)["image"]
+        assert transformed_img.shape == (128, 128, 3)
         assert transformed_img.dtype == np.float32
 
     def test_custom_mean_std(self):
-        img = Image.new("RGB", (300, 300), color="red")
+        img = np.array(Image.new("RGB", (300, 300), color="red"))
         mean = (0.5, 0.5, 0.5)
         std = (0.5, 0.5, 0.5)
-        transformed_img = classify_transforms(img, mean=mean, std=std)
-        assert transformed_img.shape == (3, 224, 224)
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            transformed_img = _classify_transform(max_size=224)(
+                image=img, normalize_mean=mean, normalize_std=std
+            )["image"]
+        assert transformed_img.shape == (224, 224, 3)
         assert transformed_img.dtype == np.float32
 
     def test_custom_interpolation(self):
-        img = Image.new("RGB", (300, 300), color="red")
-        transformed_img = classify_transforms(
-            img, interpolation=Image.Resampling.NEAREST
-        )
-        assert transformed_img.shape == (3, 224, 224)
-        assert transformed_img.dtype == np.float32
-
-    def test_custom_crop_fraction(self):
-        img = Image.new("RGB", (300, 300), color="red")
-        transformed_img = classify_transforms(img, crop_fraction=0.8)
-        assert transformed_img.shape == (3, 224, 224)
+        img = np.array(Image.new("RGB", (300, 300), color="red"))
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            transformed_img = _classify_transform(max_size=224)(
+                image=img, interpolation=Image.Resampling.NEAREST
+            )["image"]
+        assert transformed_img.shape == (224, 224, 3)
         assert transformed_img.dtype == np.float32
 
 
@@ -55,13 +96,15 @@ class ResponseOutputs:
 
 class TestImageClassifier:
     def test_preprocess_rgb_image(self):
-        img = Image.new("RGB", (300, 300), color="red")
+        img = np.array(Image.new("RGB", (300, 300), color="red"))
         classifier = ImageClassifier(
             model_name="test_model", label_names=["label1", "label2"]
         )
         preprocessed_img = classifier.preprocess(img)
         assert preprocessed_img.shape == (1, 3, 224, 224)
         assert preprocessed_img.dtype == np.float32
+        assert np.all(preprocessed_img[:, 0, :, :] == 1.0)  # red channel
+        assert np.all(preprocessed_img[:, 1:, :, :] == 0.0)  # green and blue channels
 
     def test_postprocess_single_output(self):
         classifier = ImageClassifier(
@@ -115,7 +158,7 @@ class TestImageClassifier:
             assert str(e) == "expected 1 raw output content, got 2"
 
     def test_predict(self):
-        img = Image.new("RGB", (300, 300), color="red")
+        img = np.array(Image.new("RGB", (300, 300), color="red"))
         classifier = ImageClassifier(
             model_name="test_model", label_names=["label1", "label2"]
         )
@@ -144,11 +187,22 @@ class TestImageClassifier:
         ):
             result = classifier.predict(img, triton_uri)
 
-        assert len(result) == 2
-        assert result[0][0] == "label1"
-        assert np.isclose(result[0][1], 0.8)
-        assert result[1][0] == "label2"
-        assert np.isclose(result[1][1], 0.2)
+        assert isinstance(result, ImageClassificationResult)
+        predictions = result.predictions
+        assert len(predictions) == 2
+        assert predictions[0][0] == "label1"
+        assert np.isclose(predictions[0][1], 0.8)
+        assert predictions[1][0] == "label2"
+        assert np.isclose(predictions[1][1], 0.2)
+
+        assert isinstance(result.metrics, dict)
+        assert result.metrics.keys() == {
+            "preprocess_time",
+            "grpc_request_build_time",
+            "triton_inference_time",
+            "postprocess_time",
+        }
+        assert all(isinstance(value, float) for value in result.metrics.values())
 
         classifier.preprocess.assert_called_once_with(img)
         grpc_stub.ModelInfer.assert_called_once()
