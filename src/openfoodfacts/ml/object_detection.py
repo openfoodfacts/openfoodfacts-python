@@ -1,6 +1,7 @@
 import dataclasses
 import logging
 import typing
+import warnings
 
 import albumentations as A
 import cv2
@@ -51,6 +52,7 @@ def object_detection_transform(
                 position=pad_position,
                 fill=fill,
             ),
+            A.ToRGB(p=1.0),
             A.Normalize(mean=normalize_mean, std=normalize_std, p=1.0),
         ],
     )
@@ -299,9 +301,12 @@ class ObjectDetector:
 
     def preprocess(self, image_array: np.ndarray) -> np.ndarray:
         # Apply the transform to the image
-        image_array = object_detection_transform(image_size=self.image_size)(
-            image=image_array
-        )["image"]
+
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", message="The image is already an RGB")
+            image_array = object_detection_transform(image_size=self.image_size)(
+                image=image_array
+            )["image"]
         image_array = np.transpose(image_array, (2, 0, 1))[np.newaxis, :]  # HWC to CHW
         return image_array
 
