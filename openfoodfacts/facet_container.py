@@ -15,7 +15,6 @@ class FacetContainer:
     def _fetch_page_with_retry(self, page: int, max_retries: int = 3) -> Dict[str, Any]:
         for attempt in range(max_retries):
             try:
-                # The actual network request
                 return self.api.get(
                     facet_name=self.facet.value, 
                     page=page, 
