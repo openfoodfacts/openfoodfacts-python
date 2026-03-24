@@ -1,3 +1,4 @@
+
 import base64
 import logging
 import typing
@@ -9,7 +10,7 @@ import requests
 
 from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor, JSONType
 from .utils import URLBuilder, http_session
-
+from .taxonomy import get_taxonomy
 logger = logging.getLogger(__name__)
 
 
@@ -170,11 +171,27 @@ class FacetResource:
         r = _send_request(
             url=f"{self.base_url}/facets/{facet_plural}",
             params={"json": "1", "page": page, "page_size": page_size, **kwargs},
-            api_config=self.api_config,
-            method="GET",
+            api_config=self.api_config,  # <--- Make sure these line up
+            method="GET",                # <--- with the 'url' line above
         )
         return typing.cast(requests.Response, r).json()
 
+    def get_categories(
+        self, 
+        page: int = 1, 
+        page_size: int = 20
+    ) -> List[Dict[str, Any]]:
+        """
+        Fetch categories from the high-performance static taxonomy.
+        Supports pagination by slicing the local list.
+        """
+        taxonomy = get_taxonomy("category")
+        all_nodes = list(taxonomy.iter_nodes())
+        
+        start = (page - 1) * page_size
+        end = start + page_size
+        
+        return [node.to_dict() for node in all_nodes[start:end]]
     def get_products(
         self,
         facet_name: Union[Facet, str],
