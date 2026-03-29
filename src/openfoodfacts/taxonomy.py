@@ -395,7 +395,9 @@ class Taxonomy:
         return cls.from_dict(data)
 
     @classmethod
-    def from_type(cls, taxonomy_type: TaxonomyType, flavor: Flavor = Flavor.off) -> "Taxonomy":
+    def from_type(
+        cls, taxonomy_type: TaxonomyType, flavor: Flavor = Flavor.off
+    ) -> "Taxonomy":
         """Create a Taxonomy from a taxonomy file hosted online from a
         taxonomy type.
 
