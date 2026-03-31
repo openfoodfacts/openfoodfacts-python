@@ -129,6 +129,18 @@ class TaxonomyNode:
         """
         return candidate.is_child_of(self)
 
+    def is_child_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
+        """Return True if `self` is a child of any of `candidates`, False
+        otherwise.
+
+        :param candidates: an iterable of TaxonomyNodes of the same Taxonomy
+        """
+        for candidate in candidates:
+            if candidate.is_parent_of(self):
+                return True
+
+        return False
+
     def is_parent_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
         """Return True if `self` is a parent of any of `candidates`, False
         otherwise.
@@ -140,6 +152,26 @@ class TaxonomyNode:
                 return True
 
         return False
+
+    def get_children_hierarchy(self) -> List["TaxonomyNode"]:
+        """Return the list of all child nodes (direct and indirect)."""
+        all_children = []
+        seen: Set[str] = set()
+
+        if not self.children:
+            return []
+
+        for self_child in self.children:
+            if self_child.id not in seen:
+                all_children.append(self_child)
+                seen.add(self_child.id)
+
+            for child_child in self_child.get_children_hierarchy():
+                if child_child.id not in seen:
+                    all_children.append(child_child)
+                    seen.add(child_child.id)
+
+        return all_children
 
     def get_parents_hierarchy(self) -> List["TaxonomyNode"]:
         """Return the list of all parent nodes (direct and indirect)."""
