@@ -70,27 +70,27 @@ TAXONOMY_URLS = {
         + "/data/taxonomies/other_nutritional_substances.full.json",
     },
     Flavor.obf: {
-        TaxonomyType.category: URLBuilder.static(Flavor.opf, Environment.org)
+        TaxonomyType.category: URLBuilder.static(Flavor.obf, Environment.org)
         + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.off, Environment.org)
+        TaxonomyType.ingredient: URLBuilder.static(Flavor.obf, Environment.org)
         + "/data/taxonomies/ingredients.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.off, Environment.org)
+        TaxonomyType.label: URLBuilder.static(Flavor.obf, Environment.org)
         + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.off, Environment.org)
+        TaxonomyType.brand: URLBuilder.static(Flavor.obf, Environment.org)
         + "/data/taxonomies/brands.full.json",
-        TaxonomyType.allergen: URLBuilder.static(Flavor.off, Environment.org)
+        TaxonomyType.allergen: URLBuilder.static(Flavor.obf, Environment.org)
         + "/data/taxonomies/allergens.full.json",
     },
     Flavor.opff: {
-        TaxonomyType.category: URLBuilder.static(Flavor.opf, Environment.org)
+        TaxonomyType.category: URLBuilder.static(Flavor.opff, Environment.org)
         + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.off, Environment.org)
+        TaxonomyType.ingredient: URLBuilder.static(Flavor.opff, Environment.org)
         + "/data/taxonomies/ingredients.full.json",
     },
     Flavor.opf: {
         TaxonomyType.category: URLBuilder.static(Flavor.opf, Environment.org)
         + "/data/taxonomies/categories.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.off, Environment.org)
+        TaxonomyType.label: URLBuilder.static(Flavor.opf, Environment.org)
         + "/data/taxonomies/labels.full.json",
         TaxonomyType.brand: URLBuilder.static(Flavor.opf, Environment.org)
         + "/data/taxonomies/brands.full.json",
