@@ -21,7 +21,6 @@ logger = get_logger(__name__)
 DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
 
 
-# Only available for Open Food Facts for now (not other flavors)
 TAXONOMY_URLS = {
     Flavor.off: {
         TaxonomyType.category: URLBuilder.static(Flavor.off, Environment.org)
