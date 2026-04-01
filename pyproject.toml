@@ -58,18 +58,18 @@ line_length = 88
 [dependency-groups]
 dev = [
     "requests-mock==1.12.1",
-    "mypy==1.17.1",
-    "coverage[toml]==7.13.4",
+    "mypy==1.20.0",
+    "coverage[toml]==7.13.5",
     "pytest==9.0.2",
-    "types-requests==2.32.4.20260107",
-    "types-tqdm==4.67.3.20260205",
-    "types-redis==4.6.0.20240425",
-    "ruff==0.15.0",
+    "types-requests==2.33.0.20260327",
+    "types-tqdm==4.67.3.20260303",
+    "types-redis==4.6.0.20241004",
+    "ruff==0.15.8",
 ]
 
 [project.optional-dependencies]
-redis = ["redis[hiredis]~=7.1.1"]
-pillow = ["Pillow>=9.3,<12.2"]
+redis = ["redis[hiredis]>=7.1.1,<7.5.0"]
+pillow = ["Pillow>=9.3,<12.3"]
 ml = ["tritonclient[grpc]>2.0.0,<3.0.0", "opencv-python-headless>4.0.0,<5.0.0", "Pillow", "albumentations>=2.0.0"]
 
 
