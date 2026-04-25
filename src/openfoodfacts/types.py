@@ -891,7 +891,6 @@ class DatasetType(str, enum.Enum):
 
 
 class TaxonomyType(str, enum.Enum):
-
     def __new__(cls, value: str, dataset_filename: str):
         """
         Override __new__ to allow storing the dataset filename
@@ -923,7 +922,10 @@ class TaxonomyType(str, enum.Enum):
     data_quality = ("data_quality", "data_quality.full.json")
     origin = ("origin", "origins.full.json")
     language = ("language", "languages.full.json")
-    other_nutritional_substance = ("other_nutritional_substance", "other_nutritional_substances.full.json")
+    other_nutritional_substance = (
+        "other_nutritional_substance",
+        "other_nutritional_substances.full.json",
+    )
 
     @property
     def dataset_path(self) -> str:

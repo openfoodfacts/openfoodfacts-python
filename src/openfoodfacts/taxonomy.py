@@ -23,76 +23,43 @@ DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
 
 TAXONOMY_URLS = {
     Flavor.off: {
-        TaxonomyType.category: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/ingredients.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/brands.full.json",
-        TaxonomyType.packaging_shape: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/packaging_shapes.full.json",
-        TaxonomyType.packaging_material: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/packaging_materials.full.json",
-        TaxonomyType.packaging_recycling: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/packaging_recycling.full.json",
-        TaxonomyType.country: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/countries.full.json",
-        TaxonomyType.store: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/stores.full.json",
-        TaxonomyType.nova_group: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/nova_groups.full.json",
-        TaxonomyType.additive: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/additives.full.json",
-        TaxonomyType.vitamin: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/vitamins.full.json",
-        TaxonomyType.mineral: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/minerals.full.json",
-        TaxonomyType.amino_acid: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/amino_acids.full.json",
-        TaxonomyType.nucleotide: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/nucleotides.full.json",
-        TaxonomyType.allergen: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/allergens.full.json",
-        TaxonomyType.state: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/states.full.json",
-        TaxonomyType.data_quality: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/data_quality.full.json",
-        TaxonomyType.origin: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/origins.full.json",
-        TaxonomyType.language: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/languages.full.json",
-        TaxonomyType.other_nutritional_substance: URLBuilder.static(
-            Flavor.off, Environment.org
-        )
-        + "/data/taxonomies/other_nutritional_substances.full.json",
+        TaxonomyType.category: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.category.dataset_path}",
+        TaxonomyType.ingredient: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.ingredient.dataset_path}",
+        TaxonomyType.label: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.label.dataset_path}",
+        TaxonomyType.brand: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.brand.dataset_path}",
+        TaxonomyType.packaging_shape: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.packaging_shape.dataset_path}",
+        TaxonomyType.packaging_material: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.packaging_material.dataset_path}",
+        TaxonomyType.packaging_recycling: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.packaging_recycling.dataset_path}",
+        TaxonomyType.country: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.country.dataset_path}",
+        TaxonomyType.store: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.store.dataset_path}",
+        TaxonomyType.nova_group: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.nova_group.dataset_path}",
+        TaxonomyType.additive: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.additive.dataset_path}",
+        TaxonomyType.vitamin: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.vitamin.dataset_path}",
+        TaxonomyType.mineral: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.mineral.dataset_path}",
+        TaxonomyType.amino_acid: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.amino_acid.dataset_path}",
+        TaxonomyType.nucleotide: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.nucleotide.dataset_path}",
+        TaxonomyType.allergen: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.allergen.dataset_path}",
+        TaxonomyType.state: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.state.dataset_path}",
+        TaxonomyType.data_quality: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.data_quality.dataset_path}",
+        TaxonomyType.origin: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.origin.dataset_path}",
+        TaxonomyType.language: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.language.dataset_path}",
+        TaxonomyType.other_nutritional_substance: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.other_nutritional_substance.dataset_path}",
     },
     Flavor.obf: {
-        TaxonomyType.category: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/ingredients.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/brands.full.json",
-        TaxonomyType.allergen: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/allergens.full.json",
+        TaxonomyType.category: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.category.dataset_path}",
+        TaxonomyType.ingredient: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.ingredient.dataset_path}",
+        TaxonomyType.label: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.label.dataset_path}",
+        TaxonomyType.brand: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.brand.dataset_path}",
+        TaxonomyType.allergen: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.allergen.dataset_path}",
     },
     Flavor.opff: {
-        TaxonomyType.category: URLBuilder.static(Flavor.opff, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.opff, Environment.org)
-        + "/data/taxonomies/ingredients.full.json",
+        TaxonomyType.category: f"{URLBuilder.static(Flavor.opff, Environment.org)}/{TaxonomyType.category.dataset_path}",
+        TaxonomyType.ingredient: f"{URLBuilder.static(Flavor.opff, Environment.org)}/{TaxonomyType.ingredient.dataset_path}",
     },
     Flavor.opf: {
-        TaxonomyType.category: URLBuilder.static(Flavor.opf, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.opf, Environment.org)
-        + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.opf, Environment.org)
-        + "/data/taxonomies/brands.full.json",
+        TaxonomyType.category: f"{URLBuilder.static(Flavor.opf, Environment.org)}/{TaxonomyType.category.dataset_path}",
+        TaxonomyType.label: f"{URLBuilder.static(Flavor.opf, Environment.org)}/{TaxonomyType.label.dataset_path}",
+        TaxonomyType.brand: f"{URLBuilder.static(Flavor.opf, Environment.org)}/{TaxonomyType.brand.dataset_path}",
     },
 }
 
