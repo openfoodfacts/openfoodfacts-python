@@ -891,6 +891,8 @@ class DatasetType(str, enum.Enum):
 
 
 class TaxonomyType(str, enum.Enum):
+    dataset_filename: str
+
     def __new__(cls, value: str, dataset_filename: str):
         """
         Override __new__ to allow storing the dataset filename
