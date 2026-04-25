@@ -374,6 +374,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#working-with-the-other-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working with the other projects
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -398,6 +409,34 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#barcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Barcode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -518,6 +557,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#working-with-the-other-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working with the other projects
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -542,6 +592,34 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#barcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Barcode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -651,6 +729,20 @@ print(results)
 #  'vegan': 'yes',
 #  'vegetarian': 'yes'}]
 </code></pre>
+<h3 id="working-with-the-other-projects">Working with the other projects</h3>
+<p>The SDK also supports the sibling <strong>Open [<a href="https://world.openbeautyfacts.org/">Beauty</a>|<a href="https://world.openpetfoodfacts.org/">Pet Food</a>|<a href="https://world.openproductsfacts.org/">Products</a>] Facts</strong> projects, not just food:</p>
+<pre><code class="language-python">from openfoodfacts import API, Flavor
+
+# Open Beauty Facts
+beauty_api = API(user_agent=&quot;&lt;app&gt;&quot;, flavor=Flavor.obf)
+product = beauty_api.product.get(&quot;3600523577941&quot;)
+
+# Open Pet Food Facts
+petfood_api = API(user_agent=&quot;&lt;app&gt;&quot;, flavor=Flavor.opff)
+
+# Open Products Facts
+products_api = API(user_agent=&quot;&lt;app&gt;&quot;, flavor=Flavor.opf)
+</code></pre>
 <h2 id="using-the-dataset">Using the dataset</h2>
 <p>If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump. Fortunately it can be done really easily using the SDK:</p>
 <pre><code class="language-python">from openfoodfacts import ProductDataset
@@ -672,6 +764,19 @@ for product in dataset:
 </code></pre>
 <h2 id="taxonomies">Taxonomies</h2>
 <p>For a deep dive on how to handle taxonomies, check out the <a href="../handle_taxonomies/">dedicated page</a>.</p>
+<h2 id="utilities">Utilities</h2>
+<h3 id="barcode">Barcode</h3>
+<p>The SDK includes utilities for normalizing and validating barcodes (GTINs):</p>
+<pre><code class="language-python">from openfoodfacts.barcode import normalize_barcode, has_valid_check_digit
+
+# Normalize a barcode (pad to 8 or 13 digits)
+normalize_barcode(&quot;3017620422003&quot;)  # '3017620422003'
+normalize_barcode(&quot;4003&quot;)           # '00004003' (padded to 8)
+
+# Validate a barcode check digit
+has_valid_check_digit(&quot;3017620422003&quot;)  # True
+has_valid_check_digit(&quot;3017620422004&quot;)  # False
+</code></pre>
 
 
 
