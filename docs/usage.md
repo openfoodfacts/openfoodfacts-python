@@ -100,25 +100,9 @@ print(results)
 #  'vegetarian': 'yes'}]
 ```
 
-## Barcode utilities
+### Working with the other projects
 
-The SDK includes utilities for normalizing and validating barcodes (GTINs):
-
-```python
-from openfoodfacts.barcode import normalize_barcode, has_valid_check_digit
-
-# Normalize a barcode (pad to 8 or 13 digits)
-normalize_barcode("3017620422003")  # '3017620422003'
-normalize_barcode("4003")           # '00004003' (padded to 8)
-
-# Validate a barcode check digit
-has_valid_check_digit("3017620422003")  # True
-has_valid_check_digit("3017620422004")  # False
-```
-
-## Working with other Open*Facts projects
-
-The SDK supports all Open*Facts projects, not just food:
+The SDK also supports the sibling **Open \[[Beauty](https://world.openbeautyfacts.org/)|[Pet Food](https://world.openpetfoodfacts.org/)|[Products](https://world.openproductsfacts.org/)\] Facts** projects, not just food:
 
 ```python
 from openfoodfacts import API, Flavor
@@ -165,3 +149,21 @@ for product in dataset:
 ## Taxonomies
 
 For a deep dive on how to handle taxonomies, check out the [dedicated page](./handle_taxonomies.md).
+
+## Utilities
+
+### Barcode
+
+The SDK includes utilities for normalizing and validating barcodes (GTINs):
+
+```python
+from openfoodfacts.barcode import normalize_barcode, has_valid_check_digit
+
+# Normalize a barcode (pad to 8 or 13 digits)
+normalize_barcode("3017620422003")  # '3017620422003'
+normalize_barcode("4003")           # '00004003' (padded to 8)
+
+# Validate a barcode check digit
+has_valid_check_digit("3017620422003")  # True
+has_valid_check_digit("3017620422004")  # False
+```
