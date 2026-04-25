@@ -21,47 +21,51 @@ logger = get_logger(__name__)
 DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
 
 
-TAXONOMY_URLS = {
-    Flavor.off: {
-        TaxonomyType.category: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.category.dataset_path}",
-        TaxonomyType.ingredient: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.ingredient.dataset_path}",
-        TaxonomyType.label: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.label.dataset_path}",
-        TaxonomyType.brand: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.brand.dataset_path}",
-        TaxonomyType.packaging_shape: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.packaging_shape.dataset_path}",
-        TaxonomyType.packaging_material: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.packaging_material.dataset_path}",
-        TaxonomyType.packaging_recycling: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.packaging_recycling.dataset_path}",
-        TaxonomyType.country: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.country.dataset_path}",
-        TaxonomyType.store: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.store.dataset_path}",
-        TaxonomyType.nova_group: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.nova_group.dataset_path}",
-        TaxonomyType.additive: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.additive.dataset_path}",
-        TaxonomyType.vitamin: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.vitamin.dataset_path}",
-        TaxonomyType.mineral: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.mineral.dataset_path}",
-        TaxonomyType.amino_acid: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.amino_acid.dataset_path}",
-        TaxonomyType.nucleotide: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.nucleotide.dataset_path}",
-        TaxonomyType.allergen: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.allergen.dataset_path}",
-        TaxonomyType.state: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.state.dataset_path}",
-        TaxonomyType.data_quality: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.data_quality.dataset_path}",
-        TaxonomyType.origin: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.origin.dataset_path}",
-        TaxonomyType.language: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.language.dataset_path}",
-        TaxonomyType.other_nutritional_substance: f"{URLBuilder.static(Flavor.off, Environment.org)}/{TaxonomyType.other_nutritional_substance.dataset_path}",
-    },
-    Flavor.obf: {
-        TaxonomyType.category: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.category.dataset_path}",
-        TaxonomyType.ingredient: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.ingredient.dataset_path}",
-        TaxonomyType.label: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.label.dataset_path}",
-        TaxonomyType.brand: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.brand.dataset_path}",
-        TaxonomyType.allergen: f"{URLBuilder.static(Flavor.obf, Environment.org)}/{TaxonomyType.allergen.dataset_path}",
-    },
-    Flavor.opff: {
-        TaxonomyType.category: f"{URLBuilder.static(Flavor.opff, Environment.org)}/{TaxonomyType.category.dataset_path}",
-        TaxonomyType.ingredient: f"{URLBuilder.static(Flavor.opff, Environment.org)}/{TaxonomyType.ingredient.dataset_path}",
-    },
-    Flavor.opf: {
-        TaxonomyType.category: f"{URLBuilder.static(Flavor.opf, Environment.org)}/{TaxonomyType.category.dataset_path}",
-        TaxonomyType.label: f"{URLBuilder.static(Flavor.opf, Environment.org)}/{TaxonomyType.label.dataset_path}",
-        TaxonomyType.brand: f"{URLBuilder.static(Flavor.opf, Environment.org)}/{TaxonomyType.brand.dataset_path}",
-    },
+TAXONOMY_MAPPING = {
+    Flavor.off: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+        TaxonomyType.packaging_shape,
+        TaxonomyType.packaging_material,
+        TaxonomyType.packaging_recycling,
+        TaxonomyType.country,
+        TaxonomyType.store,
+        TaxonomyType.nova_group,
+        TaxonomyType.additive,
+        TaxonomyType.vitamin,
+        TaxonomyType.mineral,
+        TaxonomyType.amino_acid,
+        TaxonomyType.nucleotide,
+        TaxonomyType.allergen,
+        TaxonomyType.state,
+        TaxonomyType.data_quality,
+        TaxonomyType.origin,
+        TaxonomyType.language,
+        TaxonomyType.other_nutritional_substance,
+    ),
+    Flavor.obf: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+        TaxonomyType.allergen,
+    ),
+    Flavor.opff: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+    ),
+    Flavor.opf: (
+        TaxonomyType.category,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+    ),
 }
+
+
+def _generate_file_path(taxonomy_type: TaxonomyType, flavor: Flavor):
+    return f"{URLBuilder.static(flavor, Environment.org)}/{taxonomy_type.dataset_path}"
 
 
 class TaxonomyNode:
@@ -433,7 +437,7 @@ class Taxonomy:
         :param flavor: The data source, defaults to Flavor.off
         :return: a Taxonomy
         """
-        url = TAXONOMY_URLS[flavor][TaxonomyType[taxonomy_type]]
+        url = _generate_file_path(taxonomy_type, flavor)
         return cls.from_url(url)
 
 
@@ -468,7 +472,7 @@ def get_taxonomy(
 
     cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
     taxonomy_path = cache_dir / filename
-    url = TAXONOMY_URLS[flavor][taxonomy_type]
+    url = _generate_file_path(taxonomy_type, flavor)
 
     if not should_download_file(url, taxonomy_path, force_download, download_newer):
         return Taxonomy.from_path(taxonomy_path)
