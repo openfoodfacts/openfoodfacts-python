@@ -891,28 +891,43 @@ class DatasetType(str, enum.Enum):
 
 
 class TaxonomyType(str, enum.Enum):
-    category = "category"
-    ingredient = "ingredient"
-    label = "label"
-    brand = "brand"
-    packaging_shape = "packaging_shape"
-    packaging_material = "packaging_material"
-    packaging_recycling = "packaging_recycling"
-    country = "country"
-    store = "store"
-    nova_group = "nova_group"
-    packaging = "packaging"
-    additive = "additive"
-    vitamin = "vitamin"
-    mineral = "mineral"
-    amino_acid = "amino_acid"
-    nucleotide = "nucleotide"
-    allergen = "allergen"
-    state = "state"
-    data_quality = "data_quality"
-    origin = "origin"
-    language = "language"
-    other_nutritional_substance = "other_nutritional_substance"
+
+    def __new__(cls, value: str, dataset_filename: str):
+        """
+        Override __new__ to allow storing the dataset filename
+        associated with each taxonomy type.
+        """
+        obj = str.__new__(cls, value)
+        obj._value_ = value
+        obj.dataset_filename = dataset_filename
+        return obj
+
+    category = ("category", "categories.full.json")
+    ingredient = ("ingredient", "ingredients.full.json")
+    label = ("label", "labels.full.json")
+    brand = ("brand", "brands.full.json")
+    packaging_shape = ("packaging_shape", "packaging_shapes.full.json")
+    packaging_material = ("packaging_material", "packaging_materials.full.json")
+    packaging_recycling = ("packaging_recycling", "packaging_recycling.full.json")
+    country = ("country", "countries.full.json")
+    store = ("store", "stores.full.json")
+    nova_group = ("nova_group", "nova_groups.full.json")
+    packaging = ("packaging", "packaging.full.json")
+    additive = ("additive", "additives.full.json")
+    vitamin = ("vitamin", "vitamins.full.json")
+    mineral = ("mineral", "minerals.full.json")
+    amino_acid = ("amino_acid", "amino_acids.full.json")
+    nucleotide = ("nucleotide", "nucleotides.full.json")
+    allergen = ("allergen", "allergens.full.json")
+    state = ("state", "states.full.json")
+    data_quality = ("data_quality", "data_quality.full.json")
+    origin = ("origin", "origins.full.json")
+    language = ("language", "languages.full.json")
+    other_nutritional_substance = ("other_nutritional_substance", "other_nutritional_substances.full.json")
+
+    @property
+    def dataset_path(self) -> str:
+        return f"data/taxonomies/{self.dataset_filename}"
 
 
 class NutritionV3NutrientAggregated(BaseModel):
