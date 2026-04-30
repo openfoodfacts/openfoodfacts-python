@@ -58,6 +58,10 @@ def _send_request(
         request_args["cookies"] = request_args.get("cookies", dict()) | {
             "session": api_config.session_cookie,
         }
+    elif api_config.access_token:
+        request_args["headers"] = request_args.get("headers", dict()) | {
+            "Authorization": f"Bearer {api_config.access_token}",
+        }
     if "auth" not in request_args:
         request_args["auth"] = get_http_auth(api_config.environment)
 
@@ -595,6 +599,7 @@ class API:
         environment: Union[Environment, str] = Environment.org,
         session_cookie: Optional[str] = None,
         timeout: int = 10,
+        access_token: Optional[str] = None,
     ) -> None:
         """Initialize the API instance.
 
@@ -615,6 +620,8 @@ class API:
         :param session_cookie: a session cookie, only used for write requests,
             defaults to None
         :param timeout: the timeout for HTTP requests, defaults to 10 seconds
+        :param access_token: a keycloak access token, generated with single sign on,
+            only used for write requests, defaults to None
         """
         if not isinstance(country, Country):
             country = Country[country]
@@ -632,6 +639,7 @@ class API:
             password=password,
             session_cookie=session_cookie,
             timeout=timeout,
+            access_token=access_token,
         )
         self.password = password
         self.country = country
