@@ -233,6 +233,35 @@ class TestTaxonomy:
     @pytest.mark.parametrize(
         "taxonomy,item,output",
         [
+            (category_taxonomy, "en:brown-camargue-rices", set()),
+            (
+                category_taxonomy,
+                "en:cooked-brown-rices",
+                {"en:unsalted-cooked-brown-rices"},
+            ),
+            (
+                category_taxonomy,
+                "en:brown-rices",
+                {
+                    "en:brown-jasmine-rices",
+                    "en:brown-basmati-rices",
+                    "en:brown-camargue-rices",
+                    "en:cooked-brown-rices",
+                    "en:unsalted-cooked-brown-rices",
+                },
+            ),
+        ],
+    )
+    def test_get_children_hierarchy(
+        self, taxonomy: Taxonomy, item: str, output: set[str]
+    ):
+        node = taxonomy[item]
+        children_list = node.get_children_hierarchy()
+        assert set((x.id for x in children_list)) == output
+
+    @pytest.mark.parametrize(
+        "taxonomy,item,output",
+        [
             (category_taxonomy, "en:plant-based-foods-and-beverages", set()),
             (
                 category_taxonomy,
@@ -258,8 +287,8 @@ class TestTaxonomy:
         self, taxonomy: Taxonomy, item: str, output: set[str]
     ):
         node = taxonomy[item]
-        parents = node.get_parents_hierarchy()
-        assert set((x.id for x in parents)) == output
+        parents_list = node.get_parents_hierarchy()
+        assert set((x.id for x in parents_list)) == output
 
     @pytest.mark.parametrize(
         "taxonomy,items,output",
