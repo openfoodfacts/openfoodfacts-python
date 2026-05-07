@@ -893,16 +893,6 @@ class DatasetType(str, enum.Enum):
 class TaxonomyType(str, enum.Enum):
     dataset_filename: str
 
-    def __new__(cls, value: str, dataset_filename: str):
-        """
-        Override __new__ to allow storing the dataset filename
-        associated with each taxonomy type.
-        """
-        obj = str.__new__(cls, value)
-        obj._value_ = value
-        obj.dataset_filename = dataset_filename
-        return obj
-
     category = ("category", "categories.full.json")
     ingredient = ("ingredient", "ingredients.full.json")
     label = ("label", "labels.full.json")
@@ -928,6 +918,16 @@ class TaxonomyType(str, enum.Enum):
         "other_nutritional_substance",
         "other_nutritional_substances.full.json",
     )
+
+    def __new__(cls, value: str, dataset_filename: str):
+        """
+        Override __new__ to allow storing the dataset filename
+        associated with each taxonomy type.
+        """
+        obj = str.__new__(cls, value)
+        obj._value_ = value
+        obj.dataset_filename = dataset_filename
+        return obj
 
     @property
     def dataset_path(self) -> str:
