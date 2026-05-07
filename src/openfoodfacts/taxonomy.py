@@ -21,80 +21,51 @@ logger = get_logger(__name__)
 DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
 
 
-TAXONOMY_URLS = {
-    Flavor.off: {
-        TaxonomyType.category: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/ingredients.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/brands.full.json",
-        TaxonomyType.packaging_shape: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/packaging_shapes.full.json",
-        TaxonomyType.packaging_material: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/packaging_materials.full.json",
-        TaxonomyType.packaging_recycling: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/packaging_recycling.full.json",
-        TaxonomyType.country: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/countries.full.json",
-        TaxonomyType.store: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/stores.full.json",
-        TaxonomyType.nova_group: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/nova_groups.full.json",
-        TaxonomyType.additive: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/additives.full.json",
-        TaxonomyType.vitamin: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/vitamins.full.json",
-        TaxonomyType.mineral: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/minerals.full.json",
-        TaxonomyType.amino_acid: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/amino_acids.full.json",
-        TaxonomyType.nucleotide: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/nucleotides.full.json",
-        TaxonomyType.allergen: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/allergens.full.json",
-        TaxonomyType.state: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/states.full.json",
-        TaxonomyType.data_quality: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/data_quality.full.json",
-        TaxonomyType.origin: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/origins.full.json",
-        TaxonomyType.language: URLBuilder.static(Flavor.off, Environment.org)
-        + "/data/taxonomies/languages.full.json",
-        TaxonomyType.other_nutritional_substance: URLBuilder.static(
-            Flavor.off, Environment.org
-        )
-        + "/data/taxonomies/other_nutritional_substances.full.json",
-    },
-    Flavor.obf: {
-        TaxonomyType.category: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/ingredients.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/brands.full.json",
-        TaxonomyType.allergen: URLBuilder.static(Flavor.obf, Environment.org)
-        + "/data/taxonomies/allergens.full.json",
-    },
-    Flavor.opff: {
-        TaxonomyType.category: URLBuilder.static(Flavor.opff, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.ingredient: URLBuilder.static(Flavor.opff, Environment.org)
-        + "/data/taxonomies/ingredients.full.json",
-    },
-    Flavor.opf: {
-        TaxonomyType.category: URLBuilder.static(Flavor.opf, Environment.org)
-        + "/data/taxonomies/categories.full.json",
-        TaxonomyType.label: URLBuilder.static(Flavor.opf, Environment.org)
-        + "/data/taxonomies/labels.full.json",
-        TaxonomyType.brand: URLBuilder.static(Flavor.opf, Environment.org)
-        + "/data/taxonomies/brands.full.json",
-    },
+TAXONOMY_MAPPING = {
+    Flavor.off: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+        TaxonomyType.packaging_shape,
+        TaxonomyType.packaging_material,
+        TaxonomyType.packaging_recycling,
+        TaxonomyType.country,
+        TaxonomyType.store,
+        TaxonomyType.nova_group,
+        TaxonomyType.additive,
+        TaxonomyType.vitamin,
+        TaxonomyType.mineral,
+        TaxonomyType.amino_acid,
+        TaxonomyType.nucleotide,
+        TaxonomyType.allergen,
+        TaxonomyType.state,
+        TaxonomyType.data_quality,
+        TaxonomyType.origin,
+        TaxonomyType.language,
+        TaxonomyType.other_nutritional_substance,
+    ),
+    Flavor.obf: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+        TaxonomyType.allergen,
+    ),
+    Flavor.opff: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+    ),
+    Flavor.opf: (
+        TaxonomyType.category,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+    ),
 }
+
+
+def _generate_file_path(taxonomy_type: TaxonomyType, flavor: Flavor):
+    return f"{URLBuilder.static(flavor, Environment.org)}/{taxonomy_type.dataset_path}"
 
 
 class TaxonomyNode:
@@ -466,7 +437,7 @@ class Taxonomy:
         :param flavor: The data source, defaults to Flavor.off
         :return: a Taxonomy
         """
-        url = TAXONOMY_URLS[flavor][TaxonomyType[taxonomy_type]]
+        url = _generate_file_path(taxonomy_type, flavor)
         return cls.from_url(url)
 
 
@@ -501,7 +472,7 @@ def get_taxonomy(
 
     cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
     taxonomy_path = cache_dir / filename
-    url = TAXONOMY_URLS[flavor][taxonomy_type]
+    url = _generate_file_path(taxonomy_type, flavor)
 
     if not should_download_file(url, taxonomy_path, force_download, download_newer):
         return Taxonomy.from_path(taxonomy_path)
