@@ -156,6 +156,18 @@ class TaxonomyNode:
         """
         return candidate.is_child_of(self)
 
+    def is_child_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
+        """Return True if `self` is a child of any of `candidates`, False
+        otherwise.
+
+        :param candidates: an iterable of TaxonomyNodes of the same Taxonomy
+        """
+        for candidate in candidates:
+            if candidate.is_parent_of(self):
+                return True
+
+        return False
+
     def is_parent_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
         """Return True if `self` is a parent of any of `candidates`, False
         otherwise.
@@ -167,6 +179,26 @@ class TaxonomyNode:
                 return True
 
         return False
+
+    def get_children_hierarchy(self) -> List["TaxonomyNode"]:
+        """Return the list of all child nodes (direct and indirect)."""
+        all_children = []
+        seen: Set[str] = set()
+
+        if not self.children:
+            return []
+
+        for self_child in self.children:
+            if self_child.id not in seen:
+                all_children.append(self_child)
+                seen.add(self_child.id)
+
+            for child_child in self_child.get_children_hierarchy():
+                if child_child.id not in seen:
+                    all_children.append(child_child)
+                    seen.add(child_child.id)
+
+        return all_children
 
     def get_parents_hierarchy(self) -> List["TaxonomyNode"]:
         """Return the list of all parent nodes (direct and indirect)."""
@@ -283,6 +315,36 @@ class Taxonomy:
                     excluded.add(second_node.id)
 
         return [node for node in nodes if node.id not in excluded]
+
+    def is_child_of_any(
+        self, item: str, candidates: Iterable[str], raises: bool = True
+    ) -> bool:
+        """Return True if `item` is child of any candidate, False otherwise.
+
+        If the item is not in the taxonomy and raises is False, return False.
+
+        :param item: The item to compare
+        :param candidates: A list of candidates
+        :param raises: if True, raises a ValueError if item is not in the
+        taxonomy, defaults to True.
+        """
+        node: TaxonomyNode = self[item]
+
+        if node is None:
+            if raises:
+                raise ValueError("unknown id in taxonomy: %s", node)
+            else:
+                return False
+
+        to_check_nodes: Set[TaxonomyNode] = set()
+
+        for candidate in candidates:
+            candidate_node = self[candidate]
+
+            if candidate_node is not None:
+                to_check_nodes.add(candidate_node)
+
+        return node.is_child_of_any(to_check_nodes)
 
     def is_parent_of_any(
         self, item: str, candidates: Iterable[str], raises: bool = True

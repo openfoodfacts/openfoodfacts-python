@@ -173,32 +173,91 @@ class TestTaxonomy:
     @pytest.mark.parametrize(
         "taxonomy,item,candidates,output",
         [
-            (label_taxonomy, "en:organic", {"en:fr-bio-01"}, True),
-            (label_taxonomy, "en:fr-bio-01", {"en:organic"}, False),
+            (label_taxonomy, "en:fr-bio-01", {"en:organic"}, True),
+            (label_taxonomy, "en:organic", {"en:fr-bio-01"}, False),
             (label_taxonomy, "en:fr-bio-01", [], False),
-            (label_taxonomy, "en:organic", {"en:gluten-free"}, False),
+            (label_taxonomy, "en:no-gluten", {"en:organic"}, False),
             (
                 label_taxonomy,
-                "en:organic",
-                {"en:gluten-free", "en:no-additives", "en:vegan"},
+                "en:no-gluten",
+                {"en:organic", "en:no-additives", "en:vegan"},
                 False,
             ),
             (
                 label_taxonomy,
-                "en:organic",
-                {"en:gluten-free", "en:no-additives", "en:fr-bio-16"},
+                "en:fr-bio-16",
+                {"en:organic", "en:no-gluten", "en:no-additives", "en:vegan"},
                 True,
             ),
         ],
     )
     def test_is_child_of_any(
-        self, taxonomy: Taxonomy, item: str, candidates: list, output: bool
+        self, taxonomy: Taxonomy, item: str, candidates: list[str], output: bool
+    ):
+        assert taxonomy.is_child_of_any(item, candidates) is output
+
+    def test_is_child_of_any_unknown_item(self):
+        with pytest.raises(ValueError):
+            label_taxonomy.is_child_of_any("unknown-id", set())
+
+    @pytest.mark.parametrize(
+        "taxonomy,item,candidates,output",
+        [
+            (label_taxonomy, "en:organic", {"en:fr-bio-01"}, True),
+            (label_taxonomy, "en:fr-bio-01", {"en:organic"}, False),
+            (label_taxonomy, "en:fr-bio-01", [], False),
+            (label_taxonomy, "en:organic", {"en:no-gluten"}, False),
+            (
+                label_taxonomy,
+                "en:organic",
+                {"en:no-gluten", "en:no-additives", "en:vegan"},
+                False,
+            ),
+            (
+                label_taxonomy,
+                "en:organic",
+                {"en:no-gluten", "en:no-additives", "en:fr-bio-16"},
+                True,
+            ),
+        ],
+    )
+    def test_is_parent_of_any(
+        self, taxonomy: Taxonomy, item: str, candidates: list[str], output: bool
     ):
         assert taxonomy.is_parent_of_any(item, candidates) is output
 
-    def test_is_child_of_any_unknwon_item(self):
+    def test_is_parent_of_any_unknown_item(self):
         with pytest.raises(ValueError):
             label_taxonomy.is_parent_of_any("unknown-id", set())
+
+    @pytest.mark.parametrize(
+        "taxonomy,item,output",
+        [
+            (category_taxonomy, "en:brown-camargue-rices", set()),
+            (
+                category_taxonomy,
+                "en:cooked-brown-rices",
+                {"en:unsalted-cooked-brown-rices"},
+            ),
+            (
+                category_taxonomy,
+                "en:brown-rices",
+                {
+                    "en:brown-jasmine-rices",
+                    "en:brown-basmati-rices",
+                    "en:brown-camargue-rices",
+                    "en:cooked-brown-rices",
+                    "en:unsalted-cooked-brown-rices",
+                },
+            ),
+        ],
+    )
+    def test_get_children_hierarchy(
+        self, taxonomy: Taxonomy, item: str, output: set[str]
+    ):
+        node = taxonomy[item]
+        children_list = node.get_children_hierarchy()
+        assert set((x.id for x in children_list)) == output
 
     @pytest.mark.parametrize(
         "taxonomy,item,output",
@@ -228,8 +287,8 @@ class TestTaxonomy:
         self, taxonomy: Taxonomy, item: str, output: set[str]
     ):
         node = taxonomy[item]
-        parents = node.get_parents_hierarchy()
-        assert set((x.id for x in parents)) == output
+        parents_list = node.get_parents_hierarchy()
+        assert set((x.id for x in parents_list)) == output
 
     @pytest.mark.parametrize(
         "taxonomy,items,output",
