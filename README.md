@@ -100,3 +100,11 @@ The Open Food Facts Python SDK is licensed under the [MIT License](https://githu
 Other files that are not part of the SDK itself may be under different a different license.
 The project complies with the [REUSE 3.3 specification](https://reuse.software/spec-3.3/),
 so any such files should be marked accordingly.
+
+
+## Beginner Note
+
+I am a beginner contributing to this project while learning Python and GitHub.
+
+Installation:
+pip install openfoodfacts
