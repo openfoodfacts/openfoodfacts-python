@@ -294,7 +294,7 @@ NUTRITION_3 = {
 }
 
 
-# With missing er_quantity and per_unit in the input_set
+# With missing per_quantity and per_unit in the input_set
 NUTRITION_4 = {
     "input_sets": [
         {
