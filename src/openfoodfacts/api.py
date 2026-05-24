@@ -222,6 +222,7 @@ class ProductResource:
             environment=api_config.environment,
             country_code=self.api_config.country.name,
         )
+        self.base_search_url = URLBuilder.search(self.api_config.environment)
 
     def get(
         self,
@@ -308,6 +309,35 @@ class ProductResource:
             method="GET",
         )
         return typing.cast(requests.Response, r).json()
+
+    def search(
+        self,
+        query: str,
+        page: int = 1,
+        page_size: int = 24,
+        sort_by: Optional[str] = None,
+    ) -> JSONType:
+        """Search products using the search-a-licious endpoint.
+
+        .. warning::
+            This feature is in alpha. The search-a-licious API may
+            change without notice.
+
+        :param query: the search query
+        :param page: page number (starts at 1), defaults to 1
+        :param page_size: number of results per page, defaults to 24
+        :param sort_by: field to sort by, optional
+        :return: search results dict with a 'hits' key containing products
+        """
+        params: dict = {"q": query, "page": page, "page_size": page_size}
+        if sort_by is not None:
+            params["sort_by"] = sort_by
+        resp = http_session.get(
+            f"{self.base_search_url}/search",
+            params=params,
+        )
+        resp.raise_for_status()
+        return typing.cast(JSONType, resp.json())
 
     def update(self, body: Dict[str, Any]):
         """Create a new product or update an existing one."""
