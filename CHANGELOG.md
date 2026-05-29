@@ -1,5 +1,28 @@
 # Changelog
 
+## [5.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.0.1...v5.1.0) (2026-05-29)
+
+
+### Features
+
+* **Taxonomy:** allow fetching taxonomies from other flavors (obf, opff, opf) ([#466](https://github.com/openfoodfacts/openfoodfacts-python/issues/466)) ([e5474de](https://github.com/openfoodfacts/openfoodfacts-python/commit/e5474dedb802bfca74ed5628d235f08d1124117d))
+* **Taxonomy:** children method parity with parent methods ([#467](https://github.com/openfoodfacts/openfoodfacts-python/issues/467)) ([08f27b8](https://github.com/openfoodfacts/openfoodfacts-python/commit/08f27b8cc5071cdc1c7161af515d2e6838d2a54f))
+
+
+### Bug Fixes
+
+* typo in per_quantity ([#481](https://github.com/openfoodfacts/openfoodfacts-python/issues/481)) ([cbe19df](https://github.com/openfoodfacts/openfoodfacts-python/commit/cbe19dfcca560a7219898f54217f02ca17f2912d))
+
+
+### Technical
+
+* add a CONTRIBUTING.md ([#473](https://github.com/openfoodfacts/openfoodfacts-python/issues/473)) ([3252d61](https://github.com/openfoodfacts/openfoodfacts-python/commit/3252d616978ce2f195e0df12a5046756ef60705e))
+* add a new Utilities section (barcode-related). Explain how to use the API for other flavors ([#470](https://github.com/openfoodfacts/openfoodfacts-python/issues/470)) ([a5504e3](https://github.com/openfoodfacts/openfoodfacts-python/commit/a5504e353ff98a80df96b8b64253d311be00aa3a))
+* **deps:** add `pre-commit` to the dev dependencies ([#472](https://github.com/openfoodfacts/openfoodfacts-python/issues/472)) ([6df90e2](https://github.com/openfoodfacts/openfoodfacts-python/commit/6df90e28d6cfa195e11612637e1ad7bfe234a377))
+* Fix API link in README.md ([4a3f459](https://github.com/openfoodfacts/openfoodfacts-python/commit/4a3f45910ba372f64870c435edcf4e229dd80fd8))
+* **Taxonomy:** for dataset filepath, use mapping instead of overriding enum ([#479](https://github.com/openfoodfacts/openfoodfacts-python/issues/479)) ([e9af704](https://github.com/openfoodfacts/openfoodfacts-python/commit/e9af7048fc8eadfe77d1b18a568979c913e96a1d))
+* **Taxonomy:** replace TAXONOMY_URLS with TAXONOMY_MAPPING and a single method to build the url ([#475](https://github.com/openfoodfacts/openfoodfacts-python/issues/475)) ([0f83128](https://github.com/openfoodfacts/openfoodfacts-python/commit/0f831282bc433ca2663e861e5421a90def998316))
+
 ## [5.0.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.0.0...v5.0.1) (2026-03-18)
 
 
