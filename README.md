@@ -15,7 +15,7 @@
 ## Description
 
 This is the official Python SDK for the [Open Food Facts](https://world.openfoodfacts.org/) project.
-It provides a simple interface to the [Open Food Facts API](https://openfoodfacts.github.io/openfoodfacts-server/api/) and allows you to:
+It provides a simple interface to the [Open Food Facts API](https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/) and allows you to:
 
 - Get information about a product
 - Perform text search
