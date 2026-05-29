@@ -1,11 +1,14 @@
+name: Run release-please
+
 on:
   push:
     branches:
       - develop
-name: release-please
+
 jobs:
   release-please:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
+    if: github.repository_owner == 'openfoodfacts'
     steps:
       - uses: googleapis/release-please-action@v4.4
         with:
