@@ -6,30 +6,49 @@ from openfoodfacts.types import (
     NutritionV3,
     NutritionV3InputSet,
     NutritionV3NutrientInput,
+    TaxonomyType,
 )
 
 
-def test_from_product_type_food():
-    assert Flavor.from_product_type("food") == Flavor.off
+class TestFlavor:
+    def test_str(self):
+        assert str(Flavor.off) == "off"
+
+    def test_from_product_type_food(self):
+        assert Flavor.from_product_type("food") == Flavor.off
+
+    def test_from_product_type_beauty(self):
+        assert Flavor.from_product_type("beauty") == Flavor.obf
+
+    def test_from_product_type_petfood(self):
+        assert Flavor.from_product_type("petfood") == Flavor.opff
+
+    def test_from_product_type_product(self):
+        assert Flavor.from_product_type("product") == Flavor.opf
+
+    def test_from_product_type_invalid(self):
+        with pytest.raises(
+            ValueError, match="no Flavor matched with product_type 'invalid'"
+        ):
+            Flavor.from_product_type("invalid")
 
 
-def test_from_product_type_beauty():
-    assert Flavor.from_product_type("beauty") == Flavor.obf
+class TestTaxonomyType:
+    def test_str(self):
+        assert str(TaxonomyType.category) == "category"
 
+    def test_type_unknown(self):
+        with pytest.raises(AttributeError):
+            _ = TaxonomyType.unknown
 
-def test_from_product_type_petfood():
-    assert Flavor.from_product_type("petfood") == Flavor.opff
+    def test_dataset_path_known(self):
+        assert (
+            TaxonomyType.category.dataset_path == "data/taxonomies/categories.full.json"
+        )
 
-
-def test_from_product_type_product():
-    assert Flavor.from_product_type("product") == Flavor.opf
-
-
-def test_from_product_type_invalid():
-    with pytest.raises(
-        ValueError, match="no Flavor matched with product_type 'invalid'"
-    ):
-        Flavor.from_product_type("invalid")
+    def test_dataset_path_unknown(self):
+        with pytest.raises(AttributeError):
+            _ = TaxonomyType.unknown.dataset_path
 
 
 NUTRITION_1 = {
@@ -275,7 +294,7 @@ NUTRITION_3 = {
 }
 
 
-# With missing er_quantity and per_unit in the input_set
+# With missing per_quantity and per_unit in the input_set
 NUTRITION_4 = {
     "input_sets": [
         {

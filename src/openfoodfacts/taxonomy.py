@@ -21,53 +21,51 @@ logger = get_logger(__name__)
 DEFAULT_CACHE_DIR = Path("~/.cache/openfoodfacts/taxonomy").expanduser()
 
 
-# Only available for Open Food Facts for now (not other flavors)
-TAXONOMY_URLS = {
-    TaxonomyType.category: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/categories.full.json",
-    TaxonomyType.ingredient: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/ingredients.full.json",
-    TaxonomyType.label: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/labels.full.json",
-    TaxonomyType.brand: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/brands.full.json",
-    TaxonomyType.packaging_shape: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/packaging_shapes.full.json",
-    TaxonomyType.packaging_material: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/packaging_materials.full.json",
-    TaxonomyType.packaging_recycling: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/packaging_recycling.full.json",
-    TaxonomyType.country: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/countries.full.json",
-    TaxonomyType.store: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/stores.full.json",
-    TaxonomyType.nova_group: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/nova_groups.full.json",
-    TaxonomyType.additive: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/additives.full.json",
-    TaxonomyType.vitamin: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/vitamins.full.json",
-    TaxonomyType.mineral: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/minerals.full.json",
-    TaxonomyType.amino_acid: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/amino_acids.full.json",
-    TaxonomyType.nucleotide: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/nucleotides.full.json",
-    TaxonomyType.allergen: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/allergens.full.json",
-    TaxonomyType.state: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/states.full.json",
-    TaxonomyType.data_quality: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/data_quality.full.json",
-    TaxonomyType.origin: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/origins.full.json",
-    TaxonomyType.language: URLBuilder.static(Flavor.off, Environment.org)
-    + "/data/taxonomies/languages.full.json",
-    TaxonomyType.other_nutritional_substance: URLBuilder.static(
-        Flavor.off, Environment.org
-    )
-    + "/data/taxonomies/other_nutritional_substances.full.json",
+TAXONOMY_MAPPING = {
+    Flavor.off: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+        TaxonomyType.packaging_shape,
+        TaxonomyType.packaging_material,
+        TaxonomyType.packaging_recycling,
+        TaxonomyType.country,
+        TaxonomyType.store,
+        TaxonomyType.nova_group,
+        TaxonomyType.additive,
+        TaxonomyType.vitamin,
+        TaxonomyType.mineral,
+        TaxonomyType.amino_acid,
+        TaxonomyType.nucleotide,
+        TaxonomyType.allergen,
+        TaxonomyType.state,
+        TaxonomyType.data_quality,
+        TaxonomyType.origin,
+        TaxonomyType.language,
+        TaxonomyType.other_nutritional_substance,
+    ),
+    Flavor.obf: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+        TaxonomyType.allergen,
+    ),
+    Flavor.opff: (
+        TaxonomyType.category,
+        TaxonomyType.ingredient,
+    ),
+    Flavor.opf: (
+        TaxonomyType.category,
+        TaxonomyType.label,
+        TaxonomyType.brand,
+    ),
 }
+
+
+def _generate_file_path(taxonomy_type: TaxonomyType, flavor: Flavor):
+    return f"{URLBuilder.static(flavor, Environment.org)}/{taxonomy_type.dataset_path}"
 
 
 class TaxonomyNode:
@@ -129,6 +127,18 @@ class TaxonomyNode:
         """
         return candidate.is_child_of(self)
 
+    def is_child_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
+        """Return True if `self` is a child of any of `candidates`, False
+        otherwise.
+
+        :param candidates: an iterable of TaxonomyNodes of the same Taxonomy
+        """
+        for candidate in candidates:
+            if candidate.is_parent_of(self):
+                return True
+
+        return False
+
     def is_parent_of_any(self, candidates: Iterable["TaxonomyNode"]) -> bool:
         """Return True if `self` is a parent of any of `candidates`, False
         otherwise.
@@ -140,6 +150,26 @@ class TaxonomyNode:
                 return True
 
         return False
+
+    def get_children_hierarchy(self) -> List["TaxonomyNode"]:
+        """Return the list of all child nodes (direct and indirect)."""
+        all_children = []
+        seen: Set[str] = set()
+
+        if not self.children:
+            return []
+
+        for self_child in self.children:
+            if self_child.id not in seen:
+                all_children.append(self_child)
+                seen.add(self_child.id)
+
+            for child_child in self_child.get_children_hierarchy():
+                if child_child.id not in seen:
+                    all_children.append(child_child)
+                    seen.add(child_child.id)
+
+        return all_children
 
     def get_parents_hierarchy(self) -> List["TaxonomyNode"]:
         """Return the list of all parent nodes (direct and indirect)."""
@@ -257,6 +287,36 @@ class Taxonomy:
 
         return [node for node in nodes if node.id not in excluded]
 
+    def is_child_of_any(
+        self, item: str, candidates: Iterable[str], raises: bool = True
+    ) -> bool:
+        """Return True if `item` is child of any candidate, False otherwise.
+
+        If the item is not in the taxonomy and raises is False, return False.
+
+        :param item: The item to compare
+        :param candidates: A list of candidates
+        :param raises: if True, raises a ValueError if item is not in the
+        taxonomy, defaults to True.
+        """
+        node: TaxonomyNode = self[item]
+
+        if node is None:
+            if raises:
+                raise ValueError("unknown id in taxonomy: %s", node)
+            else:
+                return False
+
+        to_check_nodes: Set[TaxonomyNode] = set()
+
+        for candidate in candidates:
+            candidate_node = self[candidate]
+
+            if candidate_node is not None:
+                to_check_nodes.add(candidate_node)
+
+        return node.is_child_of_any(to_check_nodes)
+
     def is_parent_of_any(
         self, item: str, candidates: Iterable[str], raises: bool = True
     ) -> bool:
@@ -367,29 +427,34 @@ class Taxonomy:
         return cls.from_dict(data)
 
     @classmethod
-    def from_type(cls, taxonomy_type: TaxonomyType) -> "Taxonomy":
+    def from_type(
+        cls, taxonomy_type: TaxonomyType, flavor: Flavor = Flavor.off
+    ) -> "Taxonomy":
         """Create a Taxonomy from a taxonomy file hosted online from a
         taxonomy type.
 
         :param taxonomy_type: the taxonomy type
+        :param flavor: The data source, defaults to Flavor.off
         :return: a Taxonomy
         """
-        url = TAXONOMY_URLS[TaxonomyType[taxonomy_type]]
+        url = _generate_file_path(taxonomy_type, flavor)
         return cls.from_url(url)
 
 
 def get_taxonomy(
     taxonomy_type: TaxonomyType | str,
+    flavor: Flavor = Flavor.off,
     force_download: bool = False,
     download_newer: bool = False,
     cache_dir: Path | None = None,
     tmp_dir: Path | None = None,
 ) -> Taxonomy:
-    """Return the taxonomy of the provided type.
+    """Return the taxonomy of the provided type & flavor.
 
     The taxonomy file is downloaded and cached locally.
 
     :param taxonomy_type: the requested taxonomy type
+    :param flavor: The data source, defaults to Flavor.off
     :param force_download: if True, (re)download the taxonomy even if it was
         cached, defaults to False
     :param download_newer: if True, download the taxonomy if a more recent
@@ -403,11 +468,11 @@ def get_taxonomy(
     :return: a Taxonomy
     """
     taxonomy_type = TaxonomyType[taxonomy_type]
-    filename = f"{taxonomy_type.name}.json"
+    filename = f"{flavor.name}-{taxonomy_type.name}.json"
 
     cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
     taxonomy_path = cache_dir / filename
-    url = TAXONOMY_URLS[taxonomy_type]
+    url = _generate_file_path(taxonomy_type, flavor)
 
     if not should_download_file(url, taxonomy_path, force_download, download_newer):
         return Taxonomy.from_path(taxonomy_path)

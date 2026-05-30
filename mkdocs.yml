@@ -8,6 +8,8 @@ nav:
   - Home: 'index.md'
   - Usage: 'usage.md'
   - "Handle taxonomies": 'handle_taxonomies.md'
+  - Dev:
+    - Contributing: 'dev/contributing.md'
 
 theme:
   name: material

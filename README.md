@@ -15,7 +15,7 @@
 ## Description
 
 This is the official Python SDK for the [Open Food Facts](https://world.openfoodfacts.org/) project.
-It provides a simple interface to the [Open Food Facts API](https://openfoodfacts.github.io/openfoodfacts-server/api/) and allows you to:
+It provides a simple interface to the [Open Food Facts API](https://openfoodfacts.github.io/documentation/docs/Product-Opener/api/) and allows you to:
 
 - Get information about a product
 - Perform text search
@@ -89,29 +89,7 @@ To see all possible capabilities, check out the [usage guide](https://openfoodfa
 
 ## Contributing
 
-Any help is welcome, as long as you don't break the continuous integration.
-Fork the repository and open a Pull Request directly on the "develop" branch.
-A maintainer will review and integrate your changes.
-
-Maintainers:
-
-- [Anubhav Bhargava](https://github.com/Anubhav-Bhargava)
-- [Frank Rousseau](https://github.com/frankrousseau)
-- [Pierre Slamich](https://github.com/teolemon)
-- [Raphaël](https://github.com/raphael0202)
-
-Contributors:
-
-- Agamit Sudo
-- [Daniel Stolpe](https://github.com/numberpi)
-- [Enioluwa Segun](https://github.com/enioluwas)
-- [Nicolas Leger](https://github.com/nicolasleger)
-- [Pablo Hinojosa](https://github.com/Pablohn26)
-- [Andrea Stagi](https://github.com/astagi)
-- [Benoît Prieur](https://github.com/benprieur)
-- [Aadarsh A](https://github.com/aadarsh-ram)
-
-We use uv as a dependency manager and ruff as a linter/formatter.
+See [CONTRIBUTING.md](https://github.com/openfoodfacts/openfoodfacts-python/blob/develop/CONTRIBUTING.md)
 
 ## Copyright and License
 

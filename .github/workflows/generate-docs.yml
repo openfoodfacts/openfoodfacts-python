@@ -11,14 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with: 
           python-version: 3.11
       - name: Copy README.md to docs
-        run: cp ./README.md ./docs/index.md
+        run: cp ./README.md ./docs/index.md && mkdir -p ./docs/dev && cp ./CONTRIBUTING.md ./docs/dev/contributing.md
       - name: Install dependencies
         run: pip install --upgrade pip && pip install mkdocs mkdocs-gen-files mkdocs-material
       - run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'

@@ -914,6 +914,37 @@ class TaxonomyType(str, enum.Enum):
     language = "language"
     other_nutritional_substance = "other_nutritional_substance"
 
+    def __str__(self) -> str:
+        return self.name
+
+    @property
+    def dataset_path(self) -> str:
+        dataset_filename_mapping = {
+            self.category: "categories.full.json",
+            self.ingredient: "ingredients.full.json",
+            self.label: "labels.full.json",
+            self.brand: "brands.full.json",
+            self.packaging_shape: "packaging_shapes.full.json",
+            self.packaging_material: "packaging_materials.full.json",
+            self.packaging_recycling: "packaging_recycling.full.json",
+            self.country: "countries.full.json",
+            self.store: "stores.full.json",
+            self.nova_group: "nova_groups.full.json",
+            self.packaging: "packaging.full.json",
+            self.additive: "additives.full.json",
+            self.vitamin: "vitamins.full.json",
+            self.mineral: "minerals.full.json",
+            self.amino_acid: "amino_acids.full.json",
+            self.nucleotide: "nucleotides.full.json",
+            self.allergen: "allergens.full.json",
+            self.state: "states.full.json",
+            self.data_quality: "data_quality.full.json",
+            self.origin: "origins.full.json",
+            self.language: "languages.full.json",
+            self.other_nutritional_substance: "other_nutritional_substances.full.json",
+        }
+        return f"data/taxonomies/{dataset_filename_mapping[self]}"
+
 
 class NutritionV3NutrientAggregated(BaseModel):
     value: float

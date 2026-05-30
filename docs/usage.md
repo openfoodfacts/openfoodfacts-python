@@ -100,6 +100,24 @@ print(results)
 #  'vegetarian': 'yes'}]
 ```
 
+### Working with the other projects
+
+The SDK also supports the sibling **Open \[[Beauty](https://world.openbeautyfacts.org/)|[Pet Food](https://world.openpetfoodfacts.org/)|[Products](https://world.openproductsfacts.org/)\] Facts** projects, not just food:
+
+```python
+from openfoodfacts import API, Flavor
+
+# Open Beauty Facts
+beauty_api = API(user_agent="<app>", flavor=Flavor.obf)
+product = beauty_api.product.get("3600523577941")
+
+# Open Pet Food Facts
+petfood_api = API(user_agent="<app>", flavor=Flavor.opff)
+
+# Open Products Facts
+products_api = API(user_agent="<app>", flavor=Flavor.opf)
+```
+
 ## Using the dataset
 
 If you're planning to perform data analysis on Open Food Facts, the easiest way is to download and use the Open Food Facts dataset dump. Fortunately it can be done really easily using the SDK:
@@ -131,3 +149,21 @@ for product in dataset:
 ## Taxonomies
 
 For a deep dive on how to handle taxonomies, check out the [dedicated page](./handle_taxonomies.md).
+
+## Utilities
+
+### Barcode
+
+The SDK includes utilities for normalizing and validating barcodes (GTINs):
+
+```python
+from openfoodfacts.barcode import normalize_barcode, has_valid_check_digit
+
+# Normalize a barcode (pad to 8 or 13 digits)
+normalize_barcode("3017620422003")  # '3017620422003'
+normalize_barcode("4003")           # '00004003' (padded to 8)
+
+# Validate a barcode check digit
+has_valid_check_digit("3017620422003")  # True
+has_valid_check_digit("3017620422004")  # False
+```
