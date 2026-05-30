@@ -11,10 +11,10 @@ concurrency:
 jobs:
   triage:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'openfoodfacts'
     steps:
-      - uses: mschilde/auto-label-merge-conflicts@5981f8933e92b78098af86b9e33fe0871cc7a3be  # v2.0 (2020-01-27)
+      - name: Check if PRs are dirty
+        uses: eps1lon/actions-label-merge-conflict@v3
         with:
-          CONFLICT_LABEL_NAME: "💥 Merge Conflicts"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MAX_RETRIES: 5
-          WAIT_MS: 5000
+          dirtyLabel: "💥 Merge Conflicts"
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
