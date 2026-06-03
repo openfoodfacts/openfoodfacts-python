@@ -145,6 +145,89 @@ class RobotoffResource:
         ).json()
 
 
+class NutriPatrolResource:
+    def __init__(self, api_config: APIConfig):
+        self.api_config = api_config
+        self.base_url = URLBuilder.nutripatrol(environment=api_config.environment)
+
+    def get_flag(self, flag_id: int) -> JSONType:
+        r = http_session.get(f"{self.base_url}/api/v1/flags/{flag_id}")
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def get_flags(self) -> JSONType:
+        r = http_session.get(f"{self.base_url}/api/v1/flags")
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def create_flag(self, flag_data: dict) -> JSONType:
+        r = http_session.post(
+            f"{self.base_url}/api/v1/flags",
+            json=flag_data,
+        )
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def get_flags_by_ticket_batch(self, ticket_ids: list[int]) -> JSONType:
+        r = http_session.post(
+            f"{self.base_url}/api/v1/flags/batch",
+            json={"ticket_ids": ticket_ids},
+        )
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def get_ticket(self, ticket_id: int) -> JSONType:
+        r = http_session.get(f"{self.base_url}/api/v1/tickets/{ticket_id}")
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def get_tickets(
+        self,
+        barcode: Optional[str] = None,
+        status: Optional[str] = None,
+        type_: Optional[str] = None,
+        reason: Optional[list[str]] = None,
+        page: int = 1,
+        page_size: int = 10,
+    ) -> JSONType:
+        params: dict = {"page": page, "page_size": page_size}
+        if barcode is not None:
+            params["barcode"] = barcode
+        if status is not None:
+            params["status"] = status
+        if type_ is not None:
+            params["type_"] = type_
+        if reason is not None:
+            params["reason"] = reason
+        r = http_session.get(
+            f"{self.base_url}/api/v1/tickets",
+            params=params,
+        )
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def update_ticket_status(self, ticket_id: int, status: str) -> JSONType:
+        r = http_session.put(
+            f"{self.base_url}/api/v1/tickets/{ticket_id}/status",
+            params={"status": status},
+        )
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def get_stats(self, n_days: int = 31) -> JSONType:
+        r = http_session.get(
+            f"{self.base_url}/api/v1/stats",
+            params={"n_days": n_days},
+        )
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+    def status(self) -> JSONType:
+        r = http_session.get(f"{self.base_url}/api/v1/status")
+        r.raise_for_status()
+        return typing.cast(JSONType, r.json())
+
+
 class FacetResource:
     def __init__(self, api_config: APIConfig):
         self.api_config = api_config
@@ -676,6 +759,7 @@ class API:
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
         self.robotoff = RobotoffResource(self.api_config)
+        self.nutripatrol = NutriPatrolResource(self.api_config)
 
 
 def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:
