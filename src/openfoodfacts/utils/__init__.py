@@ -127,6 +127,11 @@ class URLBuilder:
             base_domain=flavor.get_base_domain(),
         )
 
+    @staticmethod
+    def search(environment: Environment) -> str:
+        domain = "net" if environment == Environment.net else "org"
+        return f"https://search.openfoodfacts.{domain}"
+
 
 def jsonl_iter(jsonl_path: Union[str, Path]) -> Iterable[Dict]:
     """Iterate over elements of a JSONL file.
