@@ -861,6 +861,7 @@ class APIConfig(BaseModel):
     password: Optional[str] = None
     session_cookie: Optional[str] = None
     timeout: float = 10.0
+    access_token: Optional[str] = None
 
     @model_validator(mode="after")
     def check_credentials(self):
@@ -875,7 +876,14 @@ class APIConfig(BaseModel):
             raise ValueError(
                 "username/password and session_cookie are mutually exclusive"
             )
-
+        if self.username and self.access_token:
+            raise ValueError(
+                "username/password and access_token are mutually exclusive"
+            )
+        if self.session_cookie and self.access_token:
+            raise ValueError(
+                "session_cookie and access_token are mutually exclusive"
+            )
         return self
 
     @model_validator(mode="after")
