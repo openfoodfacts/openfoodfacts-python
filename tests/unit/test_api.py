@@ -491,7 +491,9 @@ class TestProductSearch:
 
 class TestNutriPatrol:
     def test_get_flag(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         flag_id = 123
         response_data = {"id": flag_id, "status": "open"}
         with requests_mock.mock() as mock:
@@ -503,7 +505,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_get_flags(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         response_data = {"flags": []}
         with requests_mock.mock() as mock:
             mock.get(
@@ -514,7 +518,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_create_flag(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         flag_data = {"barcode": "12345678", "reason": "wrong_category"}
         response_data = {"id": 1, **flag_data}
         with requests_mock.mock() as mock:
@@ -526,8 +532,25 @@ class TestNutriPatrol:
             assert result == response_data
             assert mock.last_request.json() == flag_data
 
+    def test_get_flags_by_ticket_batch(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
+        ticket_ids = [1, 2, 3]
+        response_data = {"flags": []}
+        with requests_mock.mock() as mock:
+            mock.post(
+                "https://nutripatrol.openfoodfacts.org/api/v1/flags/batch",
+                text=json.dumps(response_data),
+            )
+            result = api.nutripatrol.get_flags_by_ticket_batch(ticket_ids)
+            assert result == response_data
+            assert mock.last_request.json() == {"ticket_ids": ticket_ids}
+
     def test_get_ticket(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         ticket_id = 456
         response_data = {"id": ticket_id}
         with requests_mock.mock() as mock:
@@ -539,7 +562,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_get_tickets(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         response_data = {"tickets": []}
         with requests_mock.mock() as mock:
             mock.get(
@@ -550,7 +575,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_get_tickets_with_filters(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         response_data = {"tickets": []}
         with requests_mock.mock() as mock:
             mock.get(
@@ -563,7 +590,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_update_ticket_status(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         ticket_id = 456
         status = "closed"
         response_data = {"id": ticket_id, "status": status}
@@ -576,7 +605,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_get_stats(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         response_data = {"stats": {}}
         with requests_mock.mock() as mock:
             mock.get(
@@ -587,7 +618,9 @@ class TestNutriPatrol:
             assert result == response_data
 
     def test_status(self):
-        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
         response_data = {"status": "ok"}
         with requests_mock.mock() as mock:
             mock.get(
