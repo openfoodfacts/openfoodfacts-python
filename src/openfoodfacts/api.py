@@ -150,46 +150,98 @@ class NutriPatrolResource:
         self.api_config = api_config
         self.base_url = URLBuilder.nutripatrol(environment=api_config.environment)
 
+    def check_auth_method(self) -> None:
+        """Check that the only authentication method is through session cookie,
+        as other methods are currently not supported."""
+        if not self.api_config.session_cookie:
+            raise ValueError("session_cookie must be set to call Nutripatrol API")
+
+        if self.api_config.username or self.api_config.password:
+            raise ValueError(
+                "Only authentication based on session cookie is supported with "
+                "Nutripatrol API. Don't provide username and password, only "
+                "session_cookie."
+            )
+
+        if self.api_config.access_token:
+            raise ValueError(
+                "Only authentication based on session cookie is supported with "
+                "Nutripatrol API. Don't provide access_token, only "
+                "session_cookie."
+            )
+
     def get_flag(self, flag_id: int) -> JSONType:
-        r = http_session.get(f"{self.base_url}/api/v1/flags/{flag_id}")
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/flags/{flag_id}",
+                api_config=self.api_config,
+                method="GET",
+            ),
+        )
+        return r.json()
 
     def get_flags(self) -> JSONType:
-        r = http_session.get(f"{self.base_url}/api/v1/flags")
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
-
-    def create_flag(self, flag_data: dict) -> JSONType:
-        r = http_session.post(
-            f"{self.base_url}/api/v1/flags",
-            json=flag_data,
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/flags",
+                api_config=self.api_config,
+                method="GET",
+            ),
         )
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        return r.json()
+
+    def create_flag(self, flag_data: JSONType) -> JSONType:
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/flags",
+                api_config=self.api_config,
+                method="POST",
+                json=flag_data,
+            ),
+        )
+        return r.json()
 
     def get_flags_by_ticket_batch(self, ticket_ids: list[int]) -> JSONType:
-        r = http_session.post(
-            f"{self.base_url}/api/v1/flags/batch",
-            json={"ticket_ids": ticket_ids},
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/flags/batch",
+                api_config=self.api_config,
+                method="POST",
+                json={"ticket_ids": ticket_ids},
+            ),
         )
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        return r.json()
 
     def get_ticket(self, ticket_id: int) -> JSONType:
-        r = http_session.get(f"{self.base_url}/api/v1/tickets/{ticket_id}")
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/tickets/{ticket_id}",
+                api_config=self.api_config,
+                method="GET",
+            ),
+        )
+        return r.json()
 
     def get_tickets(
         self,
-        barcode: Optional[str] = None,
-        status: Optional[str] = None,
-        type_: Optional[str] = None,
-        reason: Optional[list[str]] = None,
+        barcode: str | None = None,
+        status: str | None = None,
+        type_: str | None = None,
+        reason: list[str] | None = None,
         page: int = 1,
         page_size: int = 10,
     ) -> JSONType:
+        self.check_auth_method()
         params: dict = {"page": page, "page_size": page_size}
         if barcode is not None:
             params["barcode"] = barcode
@@ -199,33 +251,54 @@ class NutriPatrolResource:
             params["type_"] = type_
         if reason is not None:
             params["reason"] = reason
-        r = http_session.get(
-            f"{self.base_url}/api/v1/tickets",
-            params=params,
+
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/tickets",
+                api_config=self.api_config,
+                method="GET",
+                params=params,
+            ),
         )
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        return r.json()
 
     def update_ticket_status(self, ticket_id: int, status: str) -> JSONType:
-        r = http_session.put(
-            f"{self.base_url}/api/v1/tickets/{ticket_id}/status",
-            params={"status": status},
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/tickets/{ticket_id}/status",
+                api_config=self.api_config,
+                method="PUT",
+                params={"status": status},
+            ),
         )
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        return r.json()
 
     def get_stats(self, n_days: int = 31) -> JSONType:
-        r = http_session.get(
-            f"{self.base_url}/api/v1/stats",
-            params={"n_days": n_days},
+        self.check_auth_method()
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/stats",
+                api_config=self.api_config,
+                method="GET",
+                params={"n_days": n_days},
+            ),
         )
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        return r.json()
 
     def status(self) -> JSONType:
-        r = http_session.get(f"{self.base_url}/api/v1/status")
-        r.raise_for_status()
-        return typing.cast(JSONType, r.json())
+        r = typing.cast(
+            requests.Response,
+            _send_request(
+                f"{self.base_url}/api/v1/status",
+                api_config=self.api_config,
+                method="GET",
+            ),
+        )
+        return r.json()
 
 
 class FacetResource:
