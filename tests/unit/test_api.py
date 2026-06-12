@@ -447,7 +447,7 @@ class TestProductSearch:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://search.openfoodfacts.org/search?q=chocolate&page=1&page_size=24",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.product.search("chocolate")
             assert result == response_data
@@ -459,7 +459,7 @@ class TestProductSearch:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://search.openfoodfacts.org/search?q=chocolate&page=2&page_size=10",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.product.search("chocolate", page=2, page_size=10)
             assert result == response_data
@@ -471,7 +471,7 @@ class TestProductSearch:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://search.openfoodfacts.org/search?q=chocolate&page=1&page_size=24&sort_by=unique_scans",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.product.search("chocolate", sort_by="unique_scans")
             assert result == response_data
@@ -483,7 +483,7 @@ class TestProductSearch:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://search.openfoodfacts.net/search?q=chocolate&page=1&page_size=24",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.product.search("chocolate")
             assert result == response_data
@@ -499,7 +499,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 f"https://nutripatrol.openfoodfacts.org/api/v1/flags/{flag_id}",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_flag(flag_id)
             assert result == response_data
@@ -512,7 +512,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://nutripatrol.openfoodfacts.org/api/v1/flags",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_flags()
             assert result == response_data
@@ -526,7 +526,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.post(
                 "https://nutripatrol.openfoodfacts.org/api/v1/flags",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.create_flag(flag_data)
             assert result == response_data
@@ -541,7 +541,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.post(
                 "https://nutripatrol.openfoodfacts.org/api/v1/flags/batch",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_flags_by_ticket_batch(ticket_ids)
             assert result == response_data
@@ -556,7 +556,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 f"https://nutripatrol.openfoodfacts.org/api/v1/tickets/{ticket_id}",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_ticket(ticket_id)
             assert result == response_data
@@ -569,7 +569,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://nutripatrol.openfoodfacts.org/api/v1/tickets?page=1&page_size=10",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_tickets()
             assert result == response_data
@@ -582,7 +582,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://nutripatrol.openfoodfacts.org/api/v1/tickets?page=2&page_size=20&barcode=123&status=open",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_tickets(
                 barcode="123", status="open", page=2, page_size=20
@@ -599,7 +599,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.put(
                 f"https://nutripatrol.openfoodfacts.org/api/v1/tickets/{ticket_id}/status?status={status}",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.update_ticket_status(ticket_id, status)
             assert result == response_data
@@ -612,7 +612,7 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://nutripatrol.openfoodfacts.org/api/v1/stats?n_days=31",
-                text=json.dumps(response_data),
+                json=response_data,
             )
             result = api.nutripatrol.get_stats()
             assert result == response_data
@@ -625,7 +625,45 @@ class TestNutriPatrol:
         with requests_mock.mock() as mock:
             mock.get(
                 "https://nutripatrol.openfoodfacts.org/api/v1/status",
-                text=json.dumps(response_data),
+                json=response_data,
+            )
+            result = api.nutripatrol.status()
+            assert result == response_data
+
+    def test_nutripatrol_methods_require_cookie_auth(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.get_flag(123)
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.get_flags()
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.create_flag({"barcode": "123"})
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.get_flags_by_ticket_batch([1, 2, 3])
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.get_ticket(456)
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.get_tickets()
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.update_ticket_status(456, "closed")
+
+        with pytest.raises(ValueError, match="session_cookie must be set"):
+            api.nutripatrol.get_stats()
+
+    def test_nutripatrol_status_works_without_auth(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        response_data = {"status": "ok"}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://nutripatrol.openfoodfacts.org/api/v1/status",
+                json=response_data,
             )
             result = api.nutripatrol.status()
             assert result == response_data
