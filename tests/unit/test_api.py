@@ -667,4 +667,3 @@ class TestNutriPatrol:
             )
             result = api.nutripatrol.status()
             assert result == response_data
-

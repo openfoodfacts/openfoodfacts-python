@@ -11,6 +11,7 @@ from .types import APIConfig, APIVersion, Country, Environment, Facet, Flavor, J
 from .utils import URLBuilder, http_session
 
 logger = logging.getLogger(__name__)
+_CALLING_URL_MSG = "Calling: %s"
 
 
 def get_http_auth(environment: Environment) -> Optional[Tuple[str, str]]:
@@ -66,7 +67,7 @@ def _send_request(
         request_args["auth"] = get_http_auth(api_config.environment)
 
     # Handle request and return data
-    logger.info("Calling: %s", url)
+    logger.info(_CALLING_URL_MSG, url)
     r = http_session.request(**request_args)
     if r.status_code == 404 and return_none_on_404:
         return None
@@ -141,7 +142,7 @@ class RobotoffResource:
         :return: the API response
         """
         url = f"{self.base_url}/api/v1/predict/lang"
-        logger.info("Calling: %s", url)
+        logger.info(_CALLING_URL_MSG, url)
         return http_session.post(
             url=url,
             data={"text": text, "k": k, "threshold": threshold},
@@ -496,7 +497,7 @@ class ProductResource:
         if sort_by is not None:
             params["sort_by"] = sort_by
         search_url = f"{self.base_search_url}/search"
-        logger.info("Calling: %s", search_url)
+        logger.info(_CALLING_URL_MSG, search_url)
         resp = http_session.get(
             search_url,
             params=params,
@@ -632,7 +633,7 @@ class ProductResource:
             raise ValueError("text must be a non-empty string")
 
         try:
-            logger.info("Calling: %s", url)
+            logger.info(_CALLING_URL_MSG, url)
             r = http_session.patch(
                 url,
                 auth=get_http_auth(self.api_config.environment),
@@ -880,7 +881,7 @@ def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONT
         raise ValueError("text must be a non-empty string")
 
     try:
-        logger.info("Calling: %s", url)
+        logger.info(_CALLING_URL_MSG, url)
         r = http_session.patch(
             url,
             auth=get_http_auth(api_config.environment),
