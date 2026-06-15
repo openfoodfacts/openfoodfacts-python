@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.1.0...v5.2.0) (2026-06-15)
+
+
+### Features
+
+* add search-a-licious endpoint support ([#482](https://github.com/openfoodfacts/openfoodfacts-python/issues/482)) ([5230ad3](https://github.com/openfoodfacts/openfoodfacts-python/commit/5230ad3baf0ba7b7c8970a01325126f2b3a19513))
+* **Auth:** Added support for keycloak access_token ([#476](https://github.com/openfoodfacts/openfoodfacts-python/issues/476)) ([73ada98](https://github.com/openfoodfacts/openfoodfacts-python/commit/73ada98a5c248cae548ae405b5f4f11a2d88a164))
+* integrate nutripatrol API to SDK ([#489](https://github.com/openfoodfacts/openfoodfacts-python/issues/489)) ([949e23a](https://github.com/openfoodfacts/openfoodfacts-python/commit/949e23a89d6b818df8653cbbe7a8706c9dd11026))
+
+
+### Technical
+
+* add tests for search() and NutriPatrolResource ([#488](https://github.com/openfoodfacts/openfoodfacts-python/issues/488)) ([73df04d](https://github.com/openfoodfacts/openfoodfacts-python/commit/73df04d742fa0135592a1fe8a3b39525564791eb))
+* **deps:** bump requests from 2.32.5 to 2.33.0 in the uv group across 1 directory ([#464](https://github.com/openfoodfacts/openfoodfacts-python/issues/464)) ([c77d21d](https://github.com/openfoodfacts/openfoodfacts-python/commit/c77d21d3d502aaa3ff51a88ae10e77ce93734eeb))
+* **deps:** bump requests in the uv group across 1 directory ([c77d21d](https://github.com/openfoodfacts/openfoodfacts-python/commit/c77d21d3d502aaa3ff51a88ae10e77ce93734eeb))
+* **deps:** bump the all-actions group across 1 directory with 8 updates ([#477](https://github.com/openfoodfacts/openfoodfacts-python/issues/477)) ([1864259](https://github.com/openfoodfacts/openfoodfacts-python/commit/186425938359614c43ca07a43f91efe88d2639c2))
+
 ## [5.1.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.0.1...v5.1.0) (2026-05-29)
 
 
