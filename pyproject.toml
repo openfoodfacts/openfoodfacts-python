@@ -60,7 +60,7 @@ dev = [
     "requests-mock==1.12.1",
     "mypy==1.17.1",
     "coverage[toml]==7.13.4",
-    "pytest==9.0.2",
+    "pytest==9.0.3",
     "types-requests==2.32.4.20260107",
     "types-tqdm==4.67.3.20260205",
     "types-redis==4.6.0.20240425",
