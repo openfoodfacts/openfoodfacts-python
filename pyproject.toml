@@ -70,7 +70,7 @@ dev = [
 
 [project.optional-dependencies]
 redis = ["redis[hiredis]>=7.1.1,<8.1.0"]
-pillow = ["Pillow>=9.3,<12.3"]
+pillow = ["Pillow>=9.3,<12.4"]
 ml = ["tritonclient[grpc]>2.0.0,<3.0.0", "opencv-python-headless>4.0.0,<5.0.0", "Pillow", "albumentations>=2.0.0"]
 
 
