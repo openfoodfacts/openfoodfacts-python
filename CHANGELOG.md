@@ -1,5 +1,20 @@
 # Changelog
 
+## [5.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.2.0...v5.3.0) (2026-07-02)
+
+
+### Features
+
+* log API URLs at INFO level before requests ([#490](https://github.com/openfoodfacts/openfoodfacts-python/issues/490)) ([4ed6780](https://github.com/openfoodfacts/openfoodfacts-python/commit/4ed6780acd9278e899be3fb3895e53f11172e7f2))
+
+
+### Technical
+
+* **deps-dev:** bump the all-dependencies group across 1 directory with 9 updates ([#478](https://github.com/openfoodfacts/openfoodfacts-python/issues/478)) ([5c40405](https://github.com/openfoodfacts/openfoodfacts-python/commit/5c404056f053f6dffe1bdf19663de7b4476651a2))
+* **deps:** bump the all-actions group with 3 updates ([#498](https://github.com/openfoodfacts/openfoodfacts-python/issues/498)) ([e78c7c4](https://github.com/openfoodfacts/openfoodfacts-python/commit/e78c7c47203ac4f50088b18cdae863057e0fd367))
+* **deps:** bump the uv group across 1 directory with 3 updates ([#494](https://github.com/openfoodfacts/openfoodfacts-python/issues/494)) ([6d43bde](https://github.com/openfoodfacts/openfoodfacts-python/commit/6d43bde40d6f8caf3d614521347f534b9810ee25))
+* Enhance pull request template with guidelines ([#448](https://github.com/openfoodfacts/openfoodfacts-python/issues/448)) ([4b60b2a](https://github.com/openfoodfacts/openfoodfacts-python/commit/4b60b2af8840266624a851e42c07133d58f6dbab))
+
 ## [5.2.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.1.0...v5.2.0) (2026-06-15)
 
 
