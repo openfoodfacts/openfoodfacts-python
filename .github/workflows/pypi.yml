@@ -1,4 +1,5 @@
 name: Publish PyPI package
+
 on:
   push:
     tags:

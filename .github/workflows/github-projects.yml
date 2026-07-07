@@ -6,6 +6,7 @@ on:
       - opened
       - labeled
       - edited
+
 jobs:
   add-to-project:
     name: Add issues to the relevant GitHub Projects project
