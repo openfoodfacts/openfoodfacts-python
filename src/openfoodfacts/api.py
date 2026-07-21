@@ -3,7 +3,7 @@ import logging
 import typing
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union
 
 import requests
 
@@ -376,6 +376,44 @@ class FacetResource:
             method="GET",
         )
         return typing.cast(requests.Response, r).json()
+
+
+class FolksonomyResource:
+    def __init__(self, api_config: APIConfig):
+        self.api_config: APIConfig = api_config
+        self.base_url = URLBuilder.folksonomy(environment=self.api_config.environment)
+
+    def get(
+        self,
+        code: str,
+        owner: str | None = None,
+        keys: Sequence | str | None = None,
+    ) -> requests.Response:
+        """Retrieve folksonomy tags for a product.
+
+        :param code: the product barcode
+        :param owner: the tag owner; requires authentication as that user.
+            Case-sensitive. Leave empty for public tags (default).
+        :param keys: List of keys to filter by. Can be provided as either
+            a Python sequence (list, set, tuple, ...) or as
+            a comma-separated string.
+            If None (the default), all keys are returned.
+        :return: the API response"""
+        params: dict[str, str] = dict()
+        if owner:
+            params["owner"] = owner
+        if keys:
+            if not isinstance(keys, str):
+                keys = ",".join(keys)
+            params["keys"] = keys
+        r = _send_request(
+            url=f"{self.base_url}/product/{code}",
+            api_config=self.api_config,
+            method="GET",
+            params=params,
+        )
+        assert r is not None
+        return r
 
 
 class ProductResource:
@@ -838,6 +876,7 @@ class API:
         self.country = country
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
+        self.folksonomy = FolksonomyResource(self.api_config)
         self.robotoff = RobotoffResource(self.api_config)
         self.nutripatrol = NutriPatrolResource(self.api_config)
 
