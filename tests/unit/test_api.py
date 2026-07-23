@@ -402,6 +402,75 @@ class TestProducts:
             }
 
 
+class TestFolksonomy:
+    """Unit tests for api.FolksonomyResource and its methods."""
+
+    def test_get_with_entries(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        code = "7311043021598"
+        response_data = [
+            {
+                "product": "7311043021598",
+                "k": "ingredients:garlic",
+                "v": "no",
+                "owner": "",
+                "version": 1,
+                "editor": "freso",
+                "last_edit": "2025-11-09T00:30:50.871369",
+                "comment": "",
+            },
+            {
+                "product": "7311043021598",
+                "k": "packaging:has_character",
+                "v": "no",
+                "owner": "",
+                "version": 1,
+                "editor": "freso",
+                "last_edit": "2025-11-09T00:30:44.868444",
+                "comment": "",
+            },
+            {
+                "product": "7311043021598",
+                "k": "weight:net",
+                "v": "75 g",
+                "owner": "",
+                "version": 1,
+                "editor": "freso",
+                "last_edit": "2025-12-03T21:18:22.202625",
+                "comment": "",
+            },
+            {
+                "product": "7311043021598",
+                "k": "weight:net:g",
+                "v": "75",
+                "owner": "",
+                "version": 1,
+                "editor": "freso",
+                "last_edit": "2026-03-03T16:32:03.239368",
+                "comment": "",
+            },
+            {
+                "product": "7311043021598",
+                "k": "weight:net:source",
+                "v": "packaging",
+                "owner": "",
+                "version": 1,
+                "editor": "freso",
+                "last_edit": "2026-03-03T16:32:06.931969",
+                "comment": "",
+            },
+        ]
+        with requests_mock.mock() as mock:
+            mock.get(
+                f"https://api.folksonomy.openfoodfacts.org/product/{code}",
+                text=json.dumps(response_data),
+                status_code=200,
+            )
+            res = api.folksonomy.get(code)
+            assert res.status_code == 200
+            assert len(res.json()) == 5
+
+
 class TestSendRequest:
     """Unit tests for the api._send_request function."""
 
