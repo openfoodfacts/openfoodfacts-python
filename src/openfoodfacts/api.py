@@ -385,13 +385,13 @@ class FolksonomyResource:
 
     def get(
         self,
-        code: str,
+        product: str,
         owner: str | None = None,
         keys: Sequence | str | None = None,
     ) -> requests.Response:
         """Retrieve folksonomy tags for a product.
 
-        :param code: the product barcode
+        :param product: the product barcode
         :param owner: the tag owner; requires authentication as that user.
             Case-sensitive. Leave empty for public tags (default).
         :param keys: List of keys to filter by. Can be provided as either
@@ -407,7 +407,7 @@ class FolksonomyResource:
                 keys = ",".join(keys)
             params["keys"] = keys
         r = _send_request(
-            url=f"{self.base_url}/product/{code}",
+            url=f"{self.base_url}/product/{product}",
             api_config=self.api_config,
             method="GET",
             params=params,
@@ -417,7 +417,7 @@ class FolksonomyResource:
 
     def add(
         self,
-        code: str,
+        product: str,
         key: str,
         value: str,
         version: Literal[1] | None = None,
@@ -425,7 +425,7 @@ class FolksonomyResource:
     ) -> requests.Response:
         """Add a folksonomy tag to a product.
 
-        :param code: the product barcode
+        :param product: the product barcode
         :param key: the key for the tag
         :param value: the value to set for the tag
         :param version: version of the tag. Should be None or 1.
@@ -433,7 +433,7 @@ class FolksonomyResource:
             Case-sensitive. Leave empty for public tags (default).
         :return: the API response"""
         params: dict[str, str | int] = dict()
-        params["product"] = code
+        params["product"] = product
         params["k"] = key
         params["v"] = value
         if version:
@@ -451,7 +451,7 @@ class FolksonomyResource:
 
     def update(
         self,
-        code: str,
+        product: str,
         key: str,
         value: str,
         version: int,
@@ -459,7 +459,7 @@ class FolksonomyResource:
     ) -> requests.Response:
         """Update a folksonomy tag on a product.
 
-        :param code: the product barcode
+        :param product: the product barcode
         :param key: the key for the tag
         :param value: the value to set for the tag
         :param version: must be equal to previous version + 1
@@ -467,7 +467,7 @@ class FolksonomyResource:
             Case-sensitive. Leave empty for public tags (default).
         :return: the API response"""
         params: dict[str, str | int] = dict()
-        params["product"] = code
+        params["product"] = product
         params["k"] = key
         params["v"] = value
         params["version"] = version
@@ -484,14 +484,14 @@ class FolksonomyResource:
 
     def delete(
         self,
-        code: str,
+        product: str,
         key: str,
         version: int,
         owner: str | None = None,
     ) -> requests.Response:
         """Delete a folksonomy tag on a product.
 
-        :param code: the product barcode
+        :param product: the product barcode
         :param key: the key to delete
         :param version: the version the tag is at
         :param owner: the tag owner; requires authentication as that user.
@@ -502,7 +502,7 @@ class FolksonomyResource:
         if owner:
             params["owner"] = owner
         r = _send_request(
-            url=f"{self.base_url}/product/{code}/{key}",
+            url=f"{self.base_url}/product/{product}/{key}",
             api_config=self.api_config,
             method="DELETE",
             params=params,

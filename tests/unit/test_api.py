@@ -407,7 +407,7 @@ class TestFolksonomy:
 
     def test_get_with_entries(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
-        code = "7311043021598"
+        product = "7311043021598"
         response_data = [
             {
                 "product": "7311043021598",
@@ -462,11 +462,11 @@ class TestFolksonomy:
         ]
         with requests_mock.mock() as mock:
             mock.get(
-                f"https://api.folksonomy.openfoodfacts.org/product/{code}",
+                f"https://api.folksonomy.openfoodfacts.org/product/{product}",
                 text=json.dumps(response_data),
                 status_code=200,
             )
-            res = api.folksonomy.get(code)
+            res = api.folksonomy.get(product)
             assert res.status_code == 200
             assert len(res.json()) == 5
 
