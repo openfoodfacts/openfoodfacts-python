@@ -470,6 +470,73 @@ class TestFolksonomy:
             assert res.status_code == 200
             assert len(res.json()) == 5
 
+    def test_add(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, access_token="test_token"
+        )
+        code = "3017620422003"
+        key = "test:tag"
+        value = "test_value"
+        with requests_mock.mock() as mock:
+            mock.post(
+                "https://api.folksonomy.openfoodfacts.org/product",
+                text="{}",
+                status_code=200,
+            )
+            res = api.folksonomy.add(product=code, key=key, value=value)
+            assert res.request.json() == {
+                "product": code,
+                "k": key,
+                "v": value,
+            }
+            assert res.request.headers["Authorization"] == "Bearer test_token"
+            assert res.status_code == 200
+            assert len(res.json()) == 0
+
+    def test_update(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, access_token="test_token"
+        )
+        code = "3017620422003"
+        key = "test:tag"
+        value = "updated_value"
+        with requests_mock.mock() as mock:
+            mock.put(
+                "https://api.folksonomy.openfoodfacts.org/product",
+                text="{}",
+                status_code=200,
+            )
+            res = api.folksonomy.update(
+                product=code, key=key, value=value, version=2
+            )
+            assert res.request.json() == {
+                "product": code,
+                "k": key,
+                "v": value,
+                "version": 2,
+            }
+            assert res.request.headers["Authorization"] == "Bearer test_token"
+            assert res.status_code == 200
+            assert len(res.json()) == 0
+
+    def test_delete(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, access_token="test_token"
+        )
+        code = "3017620422003"
+        key = "test:tag"
+        with requests_mock.mock() as mock:
+            mock.delete(
+                f"https://api.folksonomy.openfoodfacts.org/product/{code}/{key}",
+                text="{}",
+                status_code=200,
+            )
+            res = api.folksonomy.delete(product=code, key=key, version=1)
+            assert "version=1" in res.request.path_url
+            assert res.request.headers["Authorization"] == "Bearer test_token"
+            assert res.status_code == 200
+            assert len(res.json()) == 0
+
 
 class TestSendRequest:
     """Unit tests for the api._send_request function."""
