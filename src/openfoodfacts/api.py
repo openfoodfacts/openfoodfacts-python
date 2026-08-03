@@ -587,20 +587,18 @@ class ProductResource:
         :param sort_by: result sorting key, defaults to None (no sorting)
         :return: the search results
         """
-        # We force usage of v2 of API
         params = {
             "search_terms": query,
             "page": page,
             "page_size": page_size,
-            "sort_by": sort_by,
-            "json": "1",
         }
 
         if sort_by is not None:
             params["sort_by"] = sort_by
 
+        # Updated endpoint from /cgi/search.pl to /api/v2/search
         r = _send_request(
-            url=f"{self.base_url}/cgi/search.pl",
+            url=f"{self.base_url}/api/v2/search",
             api_config=self.api_config,
             params=params,
             method="GET",
