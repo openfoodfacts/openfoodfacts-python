@@ -1,5 +1,20 @@
 # Changelog
 
+## [5.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.3.0...v5.4.0) (2026-09-01)
+
+
+### Features
+
+* add support for getting folksonomy tags ([#499](https://github.com/openfoodfacts/openfoodfacts-python/issues/499)) ([6e9d258](https://github.com/openfoodfacts/openfoodfacts-python/commit/6e9d2581faf825852d41d15720fe2ac144a33f21))
+* finish rudimentary folksonomy tag CRUD support ([#418](https://github.com/openfoodfacts/openfoodfacts-python/issues/418)) ([b8a8c50](https://github.com/openfoodfacts/openfoodfacts-python/commit/b8a8c5078be07a3bdcf94eb0f45116c0ef4eb1b4))
+
+
+### Technical
+
+* add unit tests for folksonomy add/update/delete ([#501](https://github.com/openfoodfacts/openfoodfacts-python/issues/501)) ([111511d](https://github.com/openfoodfacts/openfoodfacts-python/commit/111511d7f162bdb69d52ce57f3681ac92309b1af))
+* **deps-dev:** bump the all-dependencies group across 1 directory with 8 updates ([#505](https://github.com/openfoodfacts/openfoodfacts-python/issues/505)) ([34d0629](https://github.com/openfoodfacts/openfoodfacts-python/commit/34d0629c970b3887a63c615ace7497a9a28b294b))
+* **deps:** bump the all-actions group across 1 directory with 3 updates ([#506](https://github.com/openfoodfacts/openfoodfacts-python/issues/506)) ([739999d](https://github.com/openfoodfacts/openfoodfacts-python/commit/739999dfb0657f911b09c5f3b07869af3523f1cf))
+
 ## [5.3.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.2.0...v5.3.0) (2026-07-02)
 
 
