@@ -3,7 +3,7 @@ import logging
 import typing
 import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union
 
 import requests
 
@@ -376,6 +376,139 @@ class FacetResource:
             method="GET",
         )
         return typing.cast(requests.Response, r).json()
+
+
+class FolksonomyResource:
+    def __init__(self, api_config: APIConfig):
+        self.api_config: APIConfig = api_config
+        self.base_url = URLBuilder.folksonomy(environment=self.api_config.environment)
+
+    def get(
+        self,
+        product: str,
+        owner: str | None = None,
+        keys: Sequence | str | None = None,
+    ) -> requests.Response:
+        """Retrieve folksonomy tags for a product.
+
+        :param product: the product barcode
+        :param owner: the tag owner; requires authentication as that user.
+            Case-sensitive. Leave empty for public tags (default).
+        :param keys: List of keys to filter by. Can be provided as either
+            a Python sequence (list, set, tuple, ...) or as
+            a comma-separated string.
+            If None (the default), all keys are returned.
+        :return: the API response"""
+        params: dict[str, str] = dict()
+        if owner:
+            params["owner"] = owner
+        if keys:
+            if not isinstance(keys, str):
+                keys = ",".join(keys)
+            params["keys"] = keys
+        r = _send_request(
+            url=f"{self.base_url}/product/{product}",
+            api_config=self.api_config,
+            method="GET",
+            params=params,
+        )
+        assert r is not None
+        return r
+
+    def add(
+        self,
+        product: str,
+        key: str,
+        value: str,
+        version: Literal[1] | None = None,
+        owner: str | None = None,
+    ) -> requests.Response:
+        """Add a folksonomy tag to a product.
+
+        :param product: the product barcode
+        :param key: the key for the tag
+        :param value: the value to set for the tag
+        :param version: version of the tag. Should be None or 1.
+        :param owner: the tag owner; requires authentication as that user.
+            Case-sensitive. Leave empty for public tags (default).
+        :return: the API response"""
+        params: dict[str, str | int] = dict()
+        params["product"] = product
+        params["k"] = key
+        params["v"] = value
+        if version:
+            params["version"] = version
+        if owner:
+            params["owner"] = owner
+        r = _send_request(
+            url=f"{self.base_url}/product",
+            api_config=self.api_config,
+            method="POST",
+            json=params,
+        )
+        assert r is not None
+        return r
+
+    def update(
+        self,
+        product: str,
+        key: str,
+        value: str,
+        version: int,
+        owner: str | None = None,
+    ) -> requests.Response:
+        """Update a folksonomy tag on a product.
+
+        :param product: the product barcode
+        :param key: the key for the tag
+        :param value: the value to set for the tag
+        :param version: must be equal to previous version + 1
+        :param owner: the tag owner; requires authentication as that user.
+            Case-sensitive. Leave empty for public tags (default).
+        :return: the API response"""
+        params: dict[str, str | int] = dict()
+        params["product"] = product
+        params["k"] = key
+        params["v"] = value
+        params["version"] = version
+        if owner:
+            params["owner"] = owner
+        r = _send_request(
+            url=f"{self.base_url}/product",
+            api_config=self.api_config,
+            method="PUT",
+            json=params,
+        )
+        assert r is not None
+        return r
+
+    def delete(
+        self,
+        product: str,
+        key: str,
+        version: int,
+        owner: str | None = None,
+    ) -> requests.Response:
+        """Delete a folksonomy tag on a product.
+
+        :param product: the product barcode
+        :param key: the key to delete
+        :param version: the version the tag is at
+        :param owner: the tag owner; requires authentication as that user.
+            Case-sensitive. Leave empty for public tags (default).
+        :return: the API response"""
+        params: dict[str, str | int] = dict()
+        params["version"] = version
+        if owner:
+            params["owner"] = owner
+        r = _send_request(
+            url=f"{self.base_url}/product/{product}/{key}",
+            api_config=self.api_config,
+            method="DELETE",
+            params=params,
+        )
+        assert r is not None
+        return r
 
 
 class ProductResource:
@@ -838,6 +971,7 @@ class API:
         self.country = country
         self.product = ProductResource(self.api_config)
         self.facet = FacetResource(self.api_config)
+        self.folksonomy = FolksonomyResource(self.api_config)
         self.robotoff = RobotoffResource(self.api_config)
         self.nutripatrol = NutriPatrolResource(self.api_config)
 
