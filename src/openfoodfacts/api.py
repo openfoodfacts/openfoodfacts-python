@@ -146,6 +146,8 @@ class RobotoffResource:
         return http_session.post(
             url=url,
             data={"text": text, "k": k, "threshold": threshold},
+            headers={"User-Agent": self.api_config.user_agent},
+            timeout=self.api_config.timeout,
         ).json()
 
 
