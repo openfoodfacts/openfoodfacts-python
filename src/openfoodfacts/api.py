@@ -634,6 +634,8 @@ class ProductResource:
         resp = http_session.get(
             search_url,
             params=params,
+            headers={"User-Agent": self.api_config.user_agent},
+            timeout=self.api_config.timeout,
         )
         resp.raise_for_status()
         return typing.cast(JSONType, resp.json())
