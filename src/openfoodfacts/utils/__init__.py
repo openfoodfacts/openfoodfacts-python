@@ -226,6 +226,7 @@ def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
     :param output_path: the file output path
     """
     r = http_session.get(url, stream=True)
+    r.raise_for_status()
     etag = r.headers.get("ETag", "").strip("'\"")
 
     if tmp_dir is None:
