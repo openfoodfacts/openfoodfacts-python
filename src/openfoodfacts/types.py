@@ -907,7 +907,6 @@ class TaxonomyType(str, enum.Enum):
     packaging_material = "packaging_material"
     packaging_recycling = "packaging_recycling"
     country = "country"
-    store = "store"
     nova_group = "nova_group"
     packaging = "packaging"
     additive = "additive"
@@ -916,11 +915,25 @@ class TaxonomyType(str, enum.Enum):
     amino_acid = "amino_acid"
     nucleotide = "nucleotide"
     allergen = "allergen"
+    unit = "unit"
     state = "state"
     data_quality = "data_quality"
     origin = "origin"
     language = "language"
     other_nutritional_substance = "other_nutritional_substance"
+    size = "size"
+    additives_class = "additives_class"
+    food_group = "food_group"
+    ingredients_processing = "ingredients_processing"
+    ingredients_analysis = "ingredients_analysis"
+    nutrient = "nutrient"
+    nutrient_level = "nutrient_level"
+    misc = "misc"
+    periods_after_opening = "periods_after_opening"
+    improvement = "improvement"
+    inci_function = "inci_function"
+    origins_adjective = "origins_adjective"
+    storage_condition = "storage_condition"
 
     def __str__(self) -> str:
         return self.name
@@ -936,7 +949,6 @@ class TaxonomyType(str, enum.Enum):
             self.packaging_material: "packaging_materials.full.json",
             self.packaging_recycling: "packaging_recycling.full.json",
             self.country: "countries.full.json",
-            self.store: "stores.full.json",
             self.nova_group: "nova_groups.full.json",
             self.packaging: "packaging.full.json",
             self.additive: "additives.full.json",
@@ -945,11 +957,25 @@ class TaxonomyType(str, enum.Enum):
             self.amino_acid: "amino_acids.full.json",
             self.nucleotide: "nucleotides.full.json",
             self.allergen: "allergens.full.json",
+            self.unit: "units.full.json",
             self.state: "states.full.json",
             self.data_quality: "data_quality.full.json",
             self.origin: "origins.full.json",
             self.language: "languages.full.json",
             self.other_nutritional_substance: "other_nutritional_substances.full.json",
+            self.size: "sizes.full.json",
+            self.additives_class: "additives_classes.full.json",
+            self.food_group: "food_groups.full.json",
+            self.ingredients_processing: "ingredients_processing.full.json",
+            self.ingredients_analysis: "ingredients_analysis.full.json",
+            self.nutrient: "nutrients.full.json",
+            self.nutrient_level: "nutrient_levels.full.json",
+            self.misc: "misc.full.json",
+            self.periods_after_opening: "periods_after_opening.full.json",
+            self.improvement: "improvements.full.json",
+            self.inci_function: "inci_functions.full.json",
+            self.origins_adjective: "origins_adjectives.full.json",
+            self.storage_condition: "storage_conditions.full.json",
         }
         return f"data/taxonomies/{dataset_filename_mapping[self]}"
 
