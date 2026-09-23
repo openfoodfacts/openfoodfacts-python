@@ -4,6 +4,9 @@ on:
     tags:
       - v*.*.*
 
+permissions:
+  contents: read
+
 jobs:
   push_to_pypi:
     runs-on: ubuntu-latest
