@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Set, Union
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Union
 
 import requests
 
@@ -141,20 +141,8 @@ class TaxonomyNode:
             self.synonyms = {}
 
     def is_child_of(self, item: "TaxonomyNode") -> bool:
-        """Return True if `item` is a child of `self` in the taxonomy."""
-        if not self.parents:
-            return False
-
-        if item in self.parents:
-            return True
-
-        for parent in self.parents:
-            is_parent = parent.is_child_of(item)
-
-            if is_parent:
-                return True
-
-        return False
+        """Return True if `self` is a child of `item` in the taxonomy."""
+        return any(parent is item for parent in self._iter_hierarchy("parents"))
 
     def is_parent_of(self, candidate: "TaxonomyNode") -> bool:
         """Return True if `self` is parent of `candidate`, False otherwise.
@@ -189,43 +177,22 @@ class TaxonomyNode:
 
     def get_children_hierarchy(self) -> List["TaxonomyNode"]:
         """Return the list of all child nodes (direct and indirect)."""
-        all_children = []
-        seen: Set[str] = set()
-
-        if not self.children:
-            return []
-
-        for self_child in self.children:
-            if self_child.id not in seen:
-                all_children.append(self_child)
-                seen.add(self_child.id)
-
-            for child_child in self_child.get_children_hierarchy():
-                if child_child.id not in seen:
-                    all_children.append(child_child)
-                    seen.add(child_child.id)
-
-        return all_children
+        return list(self._iter_hierarchy("children"))
 
     def get_parents_hierarchy(self) -> List["TaxonomyNode"]:
         """Return the list of all parent nodes (direct and indirect)."""
-        all_parents = []
-        seen: Set[str] = set()
+        return list(self._iter_hierarchy("parents"))
 
-        if not self.parents:
-            return []
-
-        for self_parent in self.parents:
-            if self_parent.id not in seen:
-                all_parents.append(self_parent)
-                seen.add(self_parent.id)
-
-            for parent_parent in self_parent.get_parents_hierarchy():
-                if parent_parent.id not in seen:
-                    all_parents.append(parent_parent)
-                    seen.add(parent_parent.id)
-
-        return all_parents
+    def _iter_hierarchy(self, relation: str) -> Iterator["TaxonomyNode"]:
+        seen = {self.id}
+        pending = list(reversed(getattr(self, relation)))
+        while pending:
+            node = pending.pop()
+            if node.id in seen:
+                continue
+            seen.add(node.id)
+            yield node
+            pending.extend(reversed(getattr(node, relation)))
 
     def get_localized_name(self, lang: str) -> str:
         """Return the localized name of the node.
