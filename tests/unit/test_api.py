@@ -471,9 +471,7 @@ class TestFolksonomy:
             assert len(res.json()) == 5
 
     def test_add(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         value = "test_value"
@@ -494,9 +492,7 @@ class TestFolksonomy:
             assert len(res.json()) == 0
 
     def test_update(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         value = "updated_value"
@@ -506,9 +502,7 @@ class TestFolksonomy:
                 text="{}",
                 status_code=200,
             )
-            res = api.folksonomy.update(
-                product=code, key=key, value=value, version=2
-            )
+            res = api.folksonomy.update(product=code, key=key, value=value, version=2)
             assert res.request.json() == {
                 "product": code,
                 "k": key,
@@ -520,9 +514,7 @@ class TestFolksonomy:
             assert len(res.json()) == 0
 
     def test_delete(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         with requests_mock.mock() as mock:
@@ -623,6 +615,33 @@ class TestProductSearch:
             )
             result = api.product.search("chocolate")
             assert result == response_data
+
+    def test_product_search_uses_api_config(self):
+        """search() sends the configured User-Agent and timeout"""
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        response_data = {"hits": [], "count": 0}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://search.openfoodfacts.org/search",
+                json=response_data,
+            )
+            api.product.search("chocolate")
+            assert mock.last_request.headers["User-Agent"] == TEST_USER_AGENT
+            assert mock.last_request.timeout == api.product.api_config.timeout
+
+    def test_product_search_does_not_send_credentials(self):
+        """search() does not leak username/password to search-a-licious"""
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, username="user", password="secret"
+        )
+        response_data = {"hits": [], "count": 0}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://search.openfoodfacts.org/search",
+                json=response_data,
+            )
+            api.product.search("chocolate")
+            assert mock.last_request.body is None
 
 
 class TestNutriPatrol:
