@@ -127,6 +127,41 @@ class URLBuilder:
             base_domain=flavor.get_base_domain(),
         )
 
+    @staticmethod
+    def search(environment: Environment) -> str:
+        domain = "net" if environment == Environment.net else "org"
+        return f"https://search.openfoodfacts.{domain}"
+
+    @staticmethod
+    def nutripatrol(environment: Environment) -> str:
+        return URLBuilder._get_url(
+            prefix="nutripatrol",
+            tld=environment.value,
+            base_domain=Flavor.off.get_base_domain(),
+        )
+
+    @staticmethod
+    def folksonomy(environment: Environment) -> str:
+        """Get API endpoint URL for the Folksonomy Engine.
+
+        Note that this method will always return the "openfoodfacts.org" top domain as
+            SDK users don't need to worry about cookie domains for authentication.
+            This endpoint is project agnostic and will work for all the projects.
+
+        Example use:
+        >>> print(URLBuilder.folksonomy(Environment.net))
+        "https://api.folksonomy.openfoodfacts.net"
+
+        :param environment: Whether to use the production (Environment.org)
+            or staging (Environment.net) environment.
+        :return: The Folksonomy Engine's API endpoint URL as a string.
+        """
+        return URLBuilder._get_url(
+            prefix="api.folksonomy",
+            tld=environment.value,
+            base_domain=Flavor.off.get_base_domain(),
+        )
+
 
 def jsonl_iter(jsonl_path: Union[str, Path]) -> Iterable[Dict]:
     """Iterate over elements of a JSONL file.
@@ -191,6 +226,7 @@ def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
     :param output_path: the file output path
     """
     r = http_session.get(url, stream=True)
+    r.raise_for_status()
     etag = r.headers.get("ETag", "").strip("'\"")
 
     if tmp_dir is None:
