@@ -287,7 +287,9 @@ def fetch_etag(url: str) -> str:
     :param url: the file URL
     :return: the Etag
     """
-    r = http_session.head(url)
+    # if we don't add allow_redirects=True, redirections are not
+    # done with HEAD requests, and we don't get the ETag
+    r = http_session.head(url, allow_redirects=True)
     return r.headers.get("ETag", "").strip("'\"")
 
 
