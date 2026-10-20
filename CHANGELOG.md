@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.4.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.4.0...v5.4.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* fix `get_etag` function ([#529](https://github.com/openfoodfacts/openfoodfacts-python/issues/529)) ([bee8e6f](https://github.com/openfoodfacts/openfoodfacts-python/commit/bee8e6ff73c1d8c0aae6c0a65f508c2c02c6706e))
+* fix get_etag function ([bee8e6f](https://github.com/openfoodfacts/openfoodfacts-python/commit/bee8e6ff73c1d8c0aae6c0a65f508c2c02c6706e))
+
 ## [5.4.0](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.3.0...v5.4.0) (2026-09-22)
 
 
