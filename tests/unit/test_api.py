@@ -803,3 +803,17 @@ class TestNutriPatrol:
             )
             result = api.nutripatrol.status()
             assert result == response_data
+
+
+class TestRobotoffPredictLang:
+    def test_predict_lang_uses_api_config(self):
+        """predict_lang() sends the configured User-Agent and timeout"""
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, timeout=7)
+        with requests_mock.mock() as mock:
+            mock.post(
+                "https://robotoff.openfoodfacts.org/api/v1/predict/lang",
+                json={"predictions": []},
+            )
+            api.robotoff.predict_lang("bonjour")
+            assert mock.last_request.headers["User-Agent"] == TEST_USER_AGENT
+            assert mock.last_request.timeout == 7
