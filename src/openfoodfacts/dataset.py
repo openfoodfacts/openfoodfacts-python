@@ -140,7 +140,7 @@ class ProductDataset:
 
     def _csv_iterator(self):
         open_fn = get_open_fn(self.dataset_path)
-        with open_fn(self.dataset_path, "rt", newline="") as csvfile:
+        with open_fn(self.dataset_path, "rt", encoding="utf-8", newline="") as csvfile:
             reader = csv.DictReader(csvfile, delimiter="\t")
             for row in reader:
                 yield dict(row)
