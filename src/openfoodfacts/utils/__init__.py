@@ -2,9 +2,7 @@ import dataclasses
 import gzip
 import json
 import logging
-import random
 import shutil
-import string
 import tempfile
 import time
 from io import BytesIO
@@ -225,36 +223,31 @@ def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
     :param url: the file URL
     :param output_path: the file output path
     """
-    r = http_session.get(url, stream=True)
-    r.raise_for_status()
-    etag = r.headers.get("ETag", "").strip("'\"")
+    if tmp_dir is not None:
+        tmp_dir.mkdir(parents=True, exist_ok=True)
 
-    if tmp_dir is None:
-        # Get system default tmp dir
-        tmp_dir = Path(tempfile.gettempdir())
+    with http_session.get(url, stream=True) as r:
+        r.raise_for_status()
+        etag = r.headers.get("ETag", "").strip("'\"")
 
-    # create a random string to name the temporary directory to avoid concurrent writes
-    suffix = "".join(random.choices(string.ascii_letters, k=8))
-    tmp_dir = tmp_dir / f"tmp_off_{suffix}"
-    tmp_dir.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix="tmp_off_", dir=tmp_dir) as directory:
+            tmp_output_path = Path(directory) / output_path.name
+            with (
+                tmp_output_path.open("wb") as f,
+                tqdm.tqdm(
+                    unit="B",
+                    unit_scale=True,
+                    unit_divisor=1024,
+                    miniters=1,
+                    desc=str(output_path),
+                    total=int(r.headers.get("content-length", 0)),
+                ) as pbar,
+            ):
+                for chunk in r.iter_content(chunk_size=4096):
+                    f.write(chunk)
+                    pbar.update(len(chunk))
 
-    tmp_output_path = tmp_dir / output_path.name
-    with (
-        tmp_output_path.open("wb") as f,
-        tqdm.tqdm(
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            miniters=1,
-            desc=str(output_path),
-            total=int(r.headers.get("content-length", 0)),
-        ) as pbar,
-    ):
-        for chunk in r.iter_content(chunk_size=4096):
-            f.write(chunk)
-            pbar.update(len(chunk))
-
-    shutil.move(tmp_output_path, output_path)
+            shutil.move(tmp_output_path, output_path)
 
     _sanitize_file_path(output_path, ".json").write_text(
         json.dumps(
