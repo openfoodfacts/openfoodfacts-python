@@ -119,7 +119,8 @@ class ProductDataset:
             self.dataset_path = dataset_path
 
             # We infer the dataset type from the file extension
-            full_suffix = "".join(dataset_path.suffixes)
+            suffix_count = 2 if dataset_path.suffix == ".gz" else 1
+            full_suffix = "".join(dataset_path.suffixes[-suffix_count:])
             if full_suffix in (".jsonl.gz", ".jsonl"):
                 self.dataset_type = DatasetType.jsonl
             elif full_suffix in (".csv.gz", ".csv"):
