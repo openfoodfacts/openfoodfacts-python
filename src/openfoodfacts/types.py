@@ -90,6 +90,7 @@ class APIVersion(str, enum.Enum):
     v3_3 = "v3.3"
     v3_4 = "v3.4"
     v3_5 = "v3.5"
+    v3_6 = "v3.6"
 
 
 class Facet(str, enum.Enum):
