@@ -921,7 +921,7 @@ class API:
         password: Optional[str] = None,
         country: Union[Country, str] = Country.world,
         flavor: Union[Flavor, str] = Flavor.off,
-        version: Union[APIVersion, str] = APIVersion.v2,
+        version: Union[APIVersion, str] = APIVersion.v3_6,
         environment: Union[Environment, str] = Environment.org,
         session_cookie: Optional[str] = None,
         timeout: int = 10,
