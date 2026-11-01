@@ -655,6 +655,7 @@ class TestProductSearch:
             )
             api.product.search("chocolate")
             assert mock.last_request.headers.get("User-Agent") == TEST_USER_AGENT
+            assert mock.last_request.timeout == api.api_config.timeout
             auth_header = mock.last_request.headers.get("Authorization")
             assert auth_header == "Basic b2ZmOm9mZg=="
 
