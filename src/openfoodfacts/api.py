@@ -629,14 +629,13 @@ class ProductResource:
         params: dict = {"q": query, "page": page, "page_size": page_size}
         if sort_by is not None:
             params["sort_by"] = sort_by
-        search_url = f"{self.base_search_url}/search"
-        logger.info(_CALLING_URL_MSG, search_url)
-        resp = http_session.get(
-            search_url,
+        r = _send_request(
+            url=f"{self.base_search_url}/search",
+            api_config=self.api_config,
             params=params,
+            method="GET",
         )
-        resp.raise_for_status()
-        return typing.cast(JSONType, resp.json())
+        return typing.cast(JSONType, typing.cast(requests.Response, r).json())
 
     def update(self, body: Dict[str, Any]):
         """Create a new product or update an existing one."""

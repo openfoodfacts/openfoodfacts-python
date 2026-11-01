@@ -471,9 +471,7 @@ class TestFolksonomy:
             assert len(res.json()) == 5
 
     def test_add(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         value = "test_value"
@@ -494,9 +492,7 @@ class TestFolksonomy:
             assert len(res.json()) == 0
 
     def test_update(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         value = "updated_value"
@@ -506,9 +502,7 @@ class TestFolksonomy:
                 text="{}",
                 status_code=200,
             )
-            res = api.folksonomy.update(
-                product=code, key=key, value=value, version=2
-            )
+            res = api.folksonomy.update(product=code, key=key, value=value, version=2)
             assert res.request.json() == {
                 "product": code,
                 "k": key,
@@ -520,9 +514,7 @@ class TestFolksonomy:
             assert len(res.json()) == 0
 
     def test_delete(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         with requests_mock.mock() as mock:
@@ -623,6 +615,48 @@ class TestProductSearch:
             )
             result = api.product.search("chocolate")
             assert result == response_data
+
+    def test_product_search_uses_send_request(self, monkeypatch):
+        """search() uses _send_request to perform HTTP requests"""
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT)
+        called = False
+
+        def mock_send_request(url, api_config, method="GET", **kwargs):
+            nonlocal called
+            called = True
+            assert url == "https://search.openfoodfacts.org/search"
+            assert api_config == api.api_config
+            assert method == "GET"
+            assert kwargs.get("params") == {
+                "q": "chocolate",
+                "page": 1,
+                "page_size": 24,
+            }
+
+            class MockResponse:
+                def json(self):
+                    return {"hits": [], "count": 0}
+
+            return MockResponse()
+
+        monkeypatch.setattr(openfoodfacts.api, "_send_request", mock_send_request)
+        result = api.product.search("chocolate")
+        assert called
+        assert result == {"hits": [], "count": 0}
+
+    def test_product_search_headers_and_auth(self):
+        """search() attaches configured User-Agent and auth to request"""
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, environment="net")
+        response_data = {"hits": [], "count": 0}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://search.openfoodfacts.net/search?q=chocolate&page=1&page_size=24",
+                json=response_data,
+            )
+            api.product.search("chocolate")
+            assert mock.last_request.headers.get("User-Agent") == TEST_USER_AGENT
+            auth_header = mock.last_request.headers.get("Authorization")
+            assert auth_header == "Basic b2ZmOm9mZg=="
 
 
 class TestNutriPatrol:
