@@ -578,6 +578,9 @@ def create_brand_taxonomy_mapping(taxonomy: Taxonomy) -> Dict[str, str]:
     mapping = {}
     for node in taxonomy.iter_nodes():
         unprefixed_key = node.id
+        # Reset per node: an unprefixed id must not inherit the prefix
+        # of the previous node, and must not crash on the fallback below.
+        prefix = None
         if is_prefixed_value(node.id):
             prefix = node.id[:2]
             unprefixed_key = node.id[3:]

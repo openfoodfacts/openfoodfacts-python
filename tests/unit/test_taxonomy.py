@@ -144,6 +144,28 @@ class TestCreateTaxonomyMapping:
 
         assert create_taxonomy_mapping(taxonomy) == expected_mapping
 
+    def test_create_brand_taxonomy_mapping_unprefixed_ids(self):
+        # An unprefixed id previously crashed with UnboundLocalError,
+        # because the name fallback reads `prefix`, which was only set
+        # for prefixed ids. The fallback chain is unchanged (xx -> en
+        # -> prefix language -> id); with no prefix it ends at the id.
+        # The fr-prefixed node first also guards against leaking its
+        # prefix into the following unprefixed node.
+        taxonomy = Taxonomy.from_dict(
+            {
+                "fr:auchan": {"name": {"fr": "Auchan"}},
+                "nestle": {"name": {"en": "Nestlé"}},
+                "mamouth": {"name": {"fr": "Mamouth"}},
+                "noname": {"name": {}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "auchan": "Auchan",
+            "nestle": "Nestlé",
+            "mamouth": "mamouth",
+            "noname": "noname",
+        }
+
     def test_create_brand_taxonomy_mapping(self):
         taxonomy = Taxonomy.from_dict(
             {
