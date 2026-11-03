@@ -155,6 +155,7 @@ class TestCreateTaxonomyMapping:
             {
                 "fr:auchan": {"name": {"fr": "Auchan"}},
                 "nestle": {"name": {"en": "Nestlé"}},
+                "intl": {"name": {"xx": "International", "en": "English"}},
                 "mamouth": {"name": {"fr": "Mamouth"}},
                 "noname": {"name": {}},
             }
@@ -162,6 +163,7 @@ class TestCreateTaxonomyMapping:
         assert create_brand_taxonomy_mapping(taxonomy) == {
             "auchan": "Auchan",
             "nestle": "Nestlé",
+            "intl": "International",
             "mamouth": "mamouth",
             "noname": "noname",
         }
