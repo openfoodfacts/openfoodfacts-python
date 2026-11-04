@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Iterable, Iterator, List, Optional, Set, Union
+from typing import Any, Dict, Iterable, Iterator, List, Literal, Optional, Set, Union
 
 import requests
 
@@ -183,7 +183,9 @@ class TaxonomyNode:
         """Return the list of all parent nodes (direct and indirect)."""
         return list(self._iter_hierarchy("parents"))
 
-    def _iter_hierarchy(self, relation: str) -> Iterator["TaxonomyNode"]:
+    def _iter_hierarchy(
+        self, relation: Literal["parents", "children"]
+    ) -> Iterator["TaxonomyNode"]:
         seen = {self.id}
         pending = list(reversed(getattr(self, relation)))
         while pending:
