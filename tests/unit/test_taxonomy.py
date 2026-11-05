@@ -169,6 +169,32 @@ class TestCreateTaxonomyMapping:
         }
 
 
+class TestTaxonomyFromDict:
+    def test_dangling_parent_is_skipped(self):
+        taxonomy = Taxonomy.from_dict(
+            {
+                "en:child": {
+                    "name": {"en": "Child"},
+                    "parents": ["en:missing"],
+                },
+            }
+        )
+        assert taxonomy["en:child"].parents == []
+
+    def test_defined_parent_kept_alongside_dangling_parent(self):
+        taxonomy = Taxonomy.from_dict(
+            {
+                "en:parent": {"name": {"en": "Parent"}},
+                "en:child": {
+                    "name": {"en": "Child"},
+                    "parents": ["en:parent", "en:missing"],
+                },
+            }
+        )
+        assert [p.id for p in taxonomy["en:child"].parents] == ["en:parent"]
+        assert taxonomy["en:parent"].children == [taxonomy["en:child"]]
+
+
 class TestTaxonomy:
     @pytest.mark.parametrize(
         "taxonomy,item,candidates,output",
