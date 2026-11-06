@@ -222,6 +222,9 @@ def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
         file whose name is derived from `output_path`
     :param url: the file URL
     :param output_path: the file output path
+    :param tmp_dir: parent directory for the temporary download directory, created
+        if missing. The temporary download directory is removed afterwards; its
+        parent is retained. Defaults to the system temporary directory.
     """
     if tmp_dir is not None:
         tmp_dir.mkdir(parents=True, exist_ok=True)
