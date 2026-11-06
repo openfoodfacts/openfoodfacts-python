@@ -168,6 +168,21 @@ class TestCreateTaxonomyMapping:
             "noname": "noname",
         }
 
+    def test_create_brand_taxonomy_mapping_unprefixed_first(self):
+        # Regression test for the original crash: when the first node is
+        # unprefixed, `prefix` had never been assigned before the name
+        # fallback read it, raising UnboundLocalError.
+        taxonomy = Taxonomy.from_dict(
+            {
+                "nestle": {"name": {"en": "Nestlé"}},
+                "fr:auchan": {"name": {"fr": "Auchan"}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "nestle": "Nestlé",
+            "auchan": "Auchan",
+        }
+
     def test_create_brand_taxonomy_mapping(self):
         taxonomy = Taxonomy.from_dict(
             {
