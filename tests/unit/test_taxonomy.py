@@ -1,3 +1,4 @@
+import logging
 import re
 
 import pytest
@@ -181,13 +182,30 @@ class TestTaxonomyFromDict:
         )
         assert taxonomy["en:child"].parents == []
 
-    def test_defined_parent_kept_alongside_dangling_parent(self):
+    def test_defined_parent_kept_alongside_dangling_parent(self, caplog):
+        with caplog.at_level(logging.WARNING):
+            taxonomy = Taxonomy.from_dict(
+                {
+                    "en:parent": {"name": {"en": "Parent"}},
+                    "en:child": {
+                        "name": {"en": "Child"},
+                        "parents": ["en:parent", "en:missing"],
+                    },
+                }
+            )
+        assert [p.id for p in taxonomy["en:child"].parents] == ["en:parent"]
+        assert taxonomy["en:parent"].children == [taxonomy["en:child"]]
+        assert any(record.levelno == logging.WARNING for record in caplog.records)
+        assert "en:missing" in caplog.text
+        assert "en:child" in caplog.text
+
+    def test_dangling_parent_before_defined_parent_is_skipped(self):
         taxonomy = Taxonomy.from_dict(
             {
                 "en:parent": {"name": {"en": "Parent"}},
                 "en:child": {
                     "name": {"en": "Child"},
-                    "parents": ["en:parent", "en:missing"],
+                    "parents": ["en:missing", "en:parent"],
                 },
             }
         )
