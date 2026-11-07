@@ -769,6 +769,7 @@ class ProductResource:
             logger.info(_CALLING_URL_MSG, url)
             r = http_session.patch(
                 url,
+                headers={"User-Agent": self.api_config.user_agent},
                 auth=get_http_auth(self.api_config.environment),
                 json={
                     "fields": "ingredients",
@@ -1018,6 +1019,7 @@ def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONT
         logger.info(_CALLING_URL_MSG, url)
         r = http_session.patch(
             url,
+            headers={"User-Agent": api_config.user_agent},
             auth=get_http_auth(api_config.environment),
             json={
                 "fields": "ingredients",

@@ -145,22 +145,22 @@ class TestProducts:
             res = api.product.parse_ingredients("eau, sucre", lang="fr")
             assert res == ingredients_data
 
-    def test_parse_ingredients_fail(self):
+
+    def test_parse_ingredients_user_agent(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+
         with requests_mock.mock() as mock:
-            response_data = {
-                "status": "fail",
-            }
             mock.patch(
                 "https://world.openfoodfacts.org/api/v3/product/test",
-                text=json.dumps(response_data),
+                json={
+                    "status": "success",
+                    "product": {"ingredients": []},
+                },
             )
 
-            with pytest.raises(
-                RuntimeError,
-                match="Unable to parse ingredients: {'status': 'fail'}",
-            ):
-                api.product.parse_ingredients("eau, sucre", lang="fr")
+            api.product.parse_ingredients("eau, sucre", lang="fr")
+
+            assert mock.last_request.headers["User-Agent"] == TEST_USER_AGENT
 
     def test_parse_ingredients_fail_non_HTTP_200(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
@@ -803,3 +803,24 @@ class TestNutriPatrol:
             )
             result = api.nutripatrol.status()
             assert result == response_data
+
+def test_module_parse_ingredients_user_agent():
+    api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v3")
+
+    with requests_mock.mock() as mock:
+        mock.patch(
+            "https://world.openfoodfacts.org/api/v3/product/test",
+            json={
+                "status": "success",
+                "product": {"ingredients": []},
+            },
+        )
+
+        result = openfoodfacts.api.parse_ingredients(
+            "eau, sucre",
+            lang="fr",
+            api_config=api.api_config,
+        )
+
+        assert result == []
+        assert mock.last_request.headers["User-Agent"] == TEST_USER_AGENT
