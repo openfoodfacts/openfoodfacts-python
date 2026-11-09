@@ -9,6 +9,7 @@ from PIL import Image
 from openfoodfacts.utils import (
     AssetLoadingException,
     get_image_from_url,
+    http_session,
     should_download_file,
 )
 
@@ -72,6 +73,41 @@ def test_get_image_from_url(requests_mock):
     requests_mock.get(http_error_url, status_code=404)
     with pytest.raises(AssetLoadingException):
         get_image_from_url(http_error_url)
+
+
+def test_get_image_from_url_sends_user_agent_and_timeout(requests_mock):
+    """Without an explicit session, image downloads must go through the
+    shared session (so they carry the `openfoodfacts-python` User-Agent
+    instead of the bare `python-requests` one) and must send a timeout, so
+    a stalled server cannot hang the caller forever.
+    """
+    image_url = "https://example.com/image.jpg"
+
+    f = io.BytesIO()
+    Image.new("RGB", (100, 100), "white").save(f, format="JPEG")
+    f.seek(0)
+    requests_mock.get(image_url, content=f.read())
+
+    sent_kwargs = {}
+    real_get = http_session.get
+
+    def recording_get(url, **kwargs):
+        sent_kwargs.update(kwargs)
+        return real_get(url, **kwargs)
+
+    with patch.object(http_session, "get", recording_get):
+        image = get_image_from_url(image_url)
+
+    assert isinstance(image, Image.Image)
+    assert requests_mock.request_history[0].headers["User-Agent"] == (
+        "openfoodfacts-python"
+    )
+    assert sent_kwargs["timeout"] == 10.0
+
+    # A custom timeout is honoured, and an explicit session still gets one
+    with patch.object(http_session, "get", recording_get):
+        get_image_from_url(image_url, timeout=5.0)
+    assert sent_kwargs["timeout"] == 5.0
 
 
 def test_should_download_file():

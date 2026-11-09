@@ -369,12 +369,24 @@ def get_asset_from_url(
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
     auth: Optional[tuple[str, str]] = None,
+    timeout: float = 10.0,
 ) -> AssetDownloadItem:
+    """Fetch an asset from `asset_url`.
+
+    :param asset_url: the URL of the asset to fetch.
+    :param error_raise: if True, raises an `AssetLoadingException` if an error
+      occured, defaults to True.
+    :param session: requests Session to use. If None, the shared
+      `http_session` is used, so requests carry the `openfoodfacts-python`
+      User-Agent. Defaults to None.
+    :param auth: optional (username, password) tuple for HTTP basic auth.
+    :param timeout: the request timeout in seconds, defaults to 10s (the same
+      default as `APIConfig.timeout`).
+    """
     try:
-        if session:
-            r = session.get(asset_url, auth=auth)
-        else:
-            r = requests.get(asset_url, auth=auth)
+        if session is None:
+            session = http_session
+        r = session.get(asset_url, auth=auth, timeout=timeout)
     except (
         requests.exceptions.ConnectionError,
         requests.exceptions.SSLError,
@@ -408,6 +420,7 @@ def get_image_from_url(
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
     return_struct: bool = False,
+    timeout: float = 10.0,
 ) -> Union[ImageDownloadItem, "Image.Image", None]:
     """Fetch an image from `image_url` and load it.
 
@@ -418,6 +431,8 @@ def get_image_from_url(
     :param session: requests Session to use, by default no session is used.
     :param return_struct: if True, return a `ImageDownloadItem` object
         containing the image, image bytes and the response object.
+    :param timeout: the request timeout in seconds, defaults to 10s (the same
+      default as `APIConfig.timeout`).
     :return: the loaded image, or None if an error occured and `error_raise`
         is False. If `return_struct` is True, return a `ImageDownloadItem`
         object.
@@ -425,7 +440,7 @@ def get_image_from_url(
     if not _pillow_available:
         raise ImportError("Pillow is required to load images")
 
-    asset_item = get_asset_from_url(image_url, error_raise, session)
+    asset_item = get_asset_from_url(image_url, error_raise, session, timeout=timeout)
     response = asset_item.response
     if response is None or asset_item.error:
         if return_struct:
