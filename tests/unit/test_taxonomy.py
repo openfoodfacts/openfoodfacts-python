@@ -1,6 +1,8 @@
 import re
 
 import pytest
+import requests
+import requests_mock
 
 from openfoodfacts.taxonomy import (
     Taxonomy,
@@ -314,3 +316,38 @@ class TestTaxonomy:
         item_nodes = [taxonomy[item] for item in items]
         output_nodes = [taxonomy[o] for o in output]
         assert taxonomy.find_deepest_nodes(item_nodes) == output_nodes
+
+
+class TestTaxonomyFromUrl:
+    """from_url must fail loudly on HTTP errors instead of letting r.json()
+    raise a confusing JSONDecodeError on the error-page body."""
+
+    def test_from_url_raises_http_error_on_404(self):
+        url = "https://example.com/taxonomy.json"
+        with requests_mock.mock() as mock:
+            mock.get(url, text="<html>Not Found</html>", status_code=404)
+            with pytest.raises(requests.exceptions.HTTPError):
+                Taxonomy.from_url(url)
+
+    def test_from_url_raises_http_error_on_500(self):
+        url = "https://example.com/taxonomy.json"
+        with requests_mock.mock() as mock:
+            mock.get(url, text="<html>Server Error</html>", status_code=500)
+            with pytest.raises(requests.exceptions.HTTPError):
+                Taxonomy.from_url(url)
+
+    def test_from_url_loads_valid_taxonomy(self):
+        url = "https://example.com/taxonomy.json"
+        with requests_mock.mock() as mock:
+            mock.get(
+                url,
+                json={
+                    "en:apples": {
+                        "name": {"en": "Apples"},
+                        "parents": [],
+                        "children": [],
+                    }
+                },
+            )
+            taxonomy = Taxonomy.from_url(url)
+            assert len(taxonomy.nodes) == 1
