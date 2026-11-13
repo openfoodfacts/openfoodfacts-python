@@ -144,6 +144,61 @@ class TestCreateTaxonomyMapping:
 
         assert create_taxonomy_mapping(taxonomy) == expected_mapping
 
+    def test_create_brand_taxonomy_mapping_unprefixed_ids(self):
+        # An unprefixed id previously crashed with UnboundLocalError,
+        # because the name fallback reads `prefix`, which was only set
+        # for prefixed ids. The fallback chain is unchanged (xx -> en
+        # -> prefix language -> id); with no prefix it ends at the id.
+        # The fr-prefixed node first also guards against leaking its
+        # prefix into the following unprefixed node.
+        taxonomy = Taxonomy.from_dict(
+            {
+                "fr:auchan": {"name": {"fr": "Auchan"}},
+                "nestle": {"name": {"en": "Nestlé"}},
+                "intl": {"name": {"xx": "International", "en": "English"}},
+                "mamouth": {"name": {"fr": "Mamouth"}},
+                "noname": {"name": {}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "auchan": "Auchan",
+            "nestle": "Nestlé",
+            "intl": "International",
+            "mamouth": "mamouth",
+            "noname": "noname",
+        }
+
+    def test_create_brand_taxonomy_mapping_unprefixed_first(self):
+        # Regression test for the original crash: when the first node is
+        # unprefixed, `prefix` had never been assigned before the name
+        # fallback read it, raising UnboundLocalError.
+        taxonomy = Taxonomy.from_dict(
+            {
+                "nestle": {"name": {"en": "Nestlé"}},
+                "fr:auchan": {"name": {"fr": "Auchan"}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "nestle": "Nestlé",
+            "auchan": "Auchan",
+        }
+
+    def test_create_brand_taxonomy_mapping_empty_language_key(self):
+        # Regression test: a `names` dict with an empty-string key but no
+        # xx or en entry must fall back to the id itself, not to the
+        # empty-language name. A prefixed id still falls back to its
+        # prefix-language name.
+        taxonomy = Taxonomy.from_dict(
+            {
+                "nestle": {"name": {"": "Untitled", "fr": "Nestlé FR"}},
+                "fr:mamouth": {"name": {"": "Untitled", "fr": "Mamouth"}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "nestle": "nestle",
+            "mamouth": "Mamouth",
+        }
+
     def test_create_brand_taxonomy_mapping(self):
         taxonomy = Taxonomy.from_dict(
             {
