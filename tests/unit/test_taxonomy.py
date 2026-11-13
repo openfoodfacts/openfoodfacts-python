@@ -183,6 +183,22 @@ class TestCreateTaxonomyMapping:
             "auchan": "Auchan",
         }
 
+    def test_create_brand_taxonomy_mapping_empty_language_key(self):
+        # Regression test: a `names` dict with an empty-string key but no
+        # xx or en entry must fall back to the id itself, not to the
+        # empty-language name. A prefixed id still falls back to its
+        # prefix-language name.
+        taxonomy = Taxonomy.from_dict(
+            {
+                "nestle": {"name": {"": "Untitled", "fr": "Nestlé FR"}},
+                "fr:mamouth": {"name": {"": "Untitled", "fr": "Mamouth"}},
+            }
+        )
+        assert create_brand_taxonomy_mapping(taxonomy) == {
+            "nestle": "nestle",
+            "mamouth": "Mamouth",
+        }
+
     def test_create_brand_taxonomy_mapping(self):
         taxonomy = Taxonomy.from_dict(
             {

@@ -584,8 +584,14 @@ def create_brand_taxonomy_mapping(taxonomy: Taxonomy) -> Dict[str, str]:
         if is_prefixed_value(node.id):
             prefix = node.id[:2]
             unprefixed_key = node.id[3:]
+        # An unprefixed id has no language prefix, so there is no
+        # prefix-language name to fall back to: an empty-string key in
+        # `names` must not be selected over the id itself.
+        prefix_name = (
+            node.names.get(prefix, unprefixed_key) if prefix else unprefixed_key
+        )
         mapping[unprefixed_key] = node.names.get(
-            "xx", node.names.get("en", node.names.get(prefix, unprefixed_key))
+            "xx", node.names.get("en", prefix_name)
         )
     return mapping
 
