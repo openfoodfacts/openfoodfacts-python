@@ -10,6 +10,10 @@ class TestAPIConfig(unittest.TestCase):
         config = openfoodfacts.APIConfig(user_agent="Valid User Agent")
         assert config.user_agent == "Valid User Agent"
 
+    def test_user_agent_leading_whitespace_is_stripped(self):
+        config = openfoodfacts.APIConfig(user_agent="  Valid User Agent")
+        assert config.user_agent == "Valid User Agent"
+
     def test_invalid_user_agent_type(self):
         with self.assertRaises(pydantic_core.ValidationError) as ctx:
             openfoodfacts.APIConfig(user_agent=None)

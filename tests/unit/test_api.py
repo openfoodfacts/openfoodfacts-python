@@ -180,6 +180,50 @@ class TestProducts:
             ):
                 api.product.parse_ingredients("eau, sucre", lang="fr")
 
+    def test_parse_ingredients_sends_configured_user_agent(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        with requests_mock.mock() as mock:
+            response_data = {
+                "product": {"ingredients": []},
+                "status": "success",
+            }
+            mock.patch(
+                "https://world.openfoodfacts.org/api/v3/product/test",
+                text=json.dumps(response_data),
+            )
+            api.product.parse_ingredients("eau, sucre", lang="fr")
+            assert mock.request_history[0].headers["User-Agent"] == TEST_USER_AGENT
+
+    def test_parse_ingredients_strips_leading_whitespace_from_user_agent(self):
+        api = openfoodfacts.API(user_agent=f"  {TEST_USER_AGENT}", version="v2")
+        with requests_mock.mock() as mock:
+            response_data = {
+                "product": {"ingredients": []},
+                "status": "success",
+            }
+            mock.patch(
+                "https://world.openfoodfacts.org/api/v3/product/test",
+                text=json.dumps(response_data),
+            )
+            api.product.parse_ingredients("eau, sucre", lang="fr")
+            assert mock.request_history[0].headers["User-Agent"] == TEST_USER_AGENT
+
+    def test_parse_ingredients_function_sends_configured_user_agent(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        with requests_mock.mock() as mock:
+            response_data = {
+                "product": {"ingredients": []},
+                "status": "success",
+            }
+            mock.patch(
+                "https://world.openfoodfacts.org/api/v3/product/test",
+                text=json.dumps(response_data),
+            )
+            openfoodfacts.api.parse_ingredients(
+                "eau, sucre", "fr", api.product.api_config
+            )
+            assert mock.request_history[0].headers["User-Agent"] == TEST_USER_AGENT
+
     def test_upload_image_success(self):
         api = openfoodfacts.API(
             user_agent=TEST_USER_AGENT,

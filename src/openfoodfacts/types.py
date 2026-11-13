@@ -890,6 +890,10 @@ class APIConfig(BaseModel):
     def check_user_agent(self):
         if not isinstance(self.user_agent, str) or not self.user_agent.strip():
             raise ValueError("User agent must be a string and cannot be empty.")
+        # requests rejects header values with leading whitespace, so drop
+        # it here so every request built from this config sends a valid
+        # User-Agent header.
+        self.user_agent = self.user_agent.lstrip()
         return self
 
 
