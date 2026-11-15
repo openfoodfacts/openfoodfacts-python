@@ -725,6 +725,59 @@ class TestNutriPatrol:
             )
             assert result == response_data
 
+    def test_get_tickets_with_type_filter(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
+        response_data = {"tickets": []}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://nutripatrol.openfoodfacts.org/api/v1/tickets?page=1&page_size=10&type=flag",
+                json=response_data,
+            )
+            result = api.nutripatrol.get_tickets(type_="flag")
+            assert result == response_data
+            assert mock.last_request.qs["type"] == ["flag"]
+            assert "type_" not in mock.last_request.qs
+
+    def test_get_tickets_with_type_alias(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
+        response_data = {"tickets": []}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://nutripatrol.openfoodfacts.org/api/v1/tickets?page=1&page_size=10&type=flag",
+                json=response_data,
+            )
+            result = api.nutripatrol.get_tickets(type="flag")
+            assert result == response_data
+            assert mock.last_request.qs["type"] == ["flag"]
+            assert "type_" not in mock.last_request.qs
+
+    def test_get_tickets_with_all_filters(self):
+        api = openfoodfacts.API(
+            user_agent=TEST_USER_AGENT, session_cookie="test_session"
+        )
+        response_data = {"tickets": []}
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://nutripatrol.openfoodfacts.org/api/v1/tickets?page=2&page_size=20&barcode=123&status=open&type=flag&reason=nutrient&reason=label",
+                json=response_data,
+            )
+            result = api.nutripatrol.get_tickets(
+                barcode="123",
+                status="open",
+                type_="flag",
+                reason=["nutrient", "label"],
+                page=2,
+                page_size=20,
+            )
+            assert result == response_data
+            assert mock.last_request.qs["type"] == ["flag"]
+            assert mock.last_request.qs["reason"] == ["nutrient", "label"]
+            assert "type_" not in mock.last_request.qs
+
     def test_update_ticket_status(self):
         api = openfoodfacts.API(
             user_agent=TEST_USER_AGENT, session_cookie="test_session"
