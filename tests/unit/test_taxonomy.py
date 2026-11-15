@@ -1,7 +1,6 @@
 import re
 
 import pytest
-
 from openfoodfacts.taxonomy import (
     Taxonomy,
     TaxonomyNode,
@@ -314,3 +313,7 @@ class TestTaxonomy:
         item_nodes = [taxonomy[item] for item in items]
         output_nodes = [taxonomy[o] for o in output]
         assert taxonomy.find_deepest_nodes(item_nodes) == output_nodes
+
+    def test_get_taxonomy_with_string_flavor(self):
+        taxonomy = get_taxonomy("category", flavor="off")
+        assert isinstance(taxonomy, Taxonomy)
