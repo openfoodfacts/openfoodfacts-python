@@ -244,15 +244,28 @@ class NutriPatrolResource:
         reason: list[str] | None = None,
         page: int = 1,
         page_size: int = 10,
+        type: str | None = None,
     ) -> JSONType:
+        """Retrieve moderation tickets with optional filtering.
+
+        :param barcode: product barcode to filter by, defaults to None
+        :param status: ticket status to filter by, defaults to None
+        :param type_: ticket type to filter by, defaults to None
+        :param reason: list of ticket reasons to filter by, defaults to None
+        :param page: page number (starts at 1), defaults to 1
+        :param page_size: number of items per page, defaults to 10
+        :param type: alias for `type_` parameter, defaults to None
+        :return: the API response JSON
+        """
         self.check_auth_method()
         params: dict = {"page": page, "page_size": page_size}
+        ticket_type = type if type is not None else type_
         if barcode is not None:
             params["barcode"] = barcode
         if status is not None:
             params["status"] = status
-        if type_ is not None:
-            params["type_"] = type_
+        if ticket_type is not None:
+            params["type"] = ticket_type
         if reason is not None:
             params["reason"] = reason
 
