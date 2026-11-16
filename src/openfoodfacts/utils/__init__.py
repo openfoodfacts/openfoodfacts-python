@@ -217,15 +217,26 @@ def _sanitize_file_path(file_path: Path, suffix: str = "") -> Path:
     return file_path.with_name(file_path.name.replace(".", "_") + suffix)
 
 
-def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
+def download_file(
+    url: str,
+    output_path: Path,
+    tmp_dir: Path | None = None,
+    timeout: float = 10.0,
+):
     """Download a dataset file and store it in `output_path`.
 
     The file metadata (`etag`, `url`, `created_at`) are stored in a JSON
         file whose name is derived from `output_path`
     :param url: the file URL
     :param output_path: the file output path
+    :param tmp_dir: the temporary directory used during download, defaults
+        to the system temporary directory
+    :param timeout: the request timeout in seconds, defaults to 10s. It
+        applies to the connection and to the delay between received chunks,
+        so a stalled download aborts instead of hanging forever, while a
+        slow-but-progressing download of a large file is not cut off.
     """
-    r = http_session.get(url, stream=True)
+    r = http_session.get(url, stream=True, timeout=timeout)
     r.raise_for_status()
     etag = r.headers.get("ETag", "").strip("'\"")
 
