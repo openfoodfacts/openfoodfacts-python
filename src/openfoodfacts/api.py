@@ -1,4 +1,5 @@
 import base64
+import json
 import logging
 import typing
 import warnings
@@ -796,10 +797,7 @@ class ProductResource:
                 f"{r.status_code}, {r.text}"
             )
 
-        response_data = r.json()
-
-        if response_data.get("status") != "success":
-            raise RuntimeError(f"Unable to parse ingredients: {response_data}")
+        response_data = _parse_ingredients_response(r)
 
         return response_data["product"].get("ingredients", [])
 
@@ -976,6 +974,27 @@ class API:
         self.nutripatrol = NutriPatrolResource(self.api_config)
 
 
+def _parse_ingredients_response(r: requests.Response) -> dict:
+    """Decode a parse_ingredients response, raising RuntimeError on failure.
+
+    Both parse_ingredients implementations promise a RuntimeError when
+    parsing fails, so an invalid JSON body (e.g. an HTML error page
+    behind a 200 status) is wrapped instead of leaking JSONDecodeError.
+    """
+    try:
+        response_data = r.json()
+    except json.JSONDecodeError as e:
+        raise RuntimeError(
+            "Unable to parse ingredients: invalid JSON response: "
+            f"{r.status_code}, {r.text[:200]}"
+        ) from e
+
+    if response_data.get("status") != "success":
+        raise RuntimeError(f"Unable to parse ingredients: {response_data}")
+
+    return response_data
+
+
 def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONType]:
     """Parse ingredients text using Product Opener API.
 
@@ -1045,9 +1064,6 @@ def parse_ingredients(text: str, lang: str, api_config: APIConfig) -> list[JSONT
             f"{r.status_code}, {r.text}"
         )
 
-    response_data = r.json()
-
-    if response_data.get("status") != "success":
-        raise RuntimeError(f"Unable to parse ingredients: {response_data}")
+    response_data = _parse_ingredients_response(r)
 
     return response_data["product"]["ingredients"]

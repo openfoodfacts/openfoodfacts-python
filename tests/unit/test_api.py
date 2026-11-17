@@ -5,6 +5,7 @@ import pytest
 import requests_mock
 
 import openfoodfacts
+from openfoodfacts.api import parse_ingredients as parse_ingredients_function
 
 TEST_USER_AGENT = "test_off_python"
 
@@ -179,6 +180,29 @@ class TestProducts:
                 ),
             ):
                 api.product.parse_ingredients("eau, sucre", lang="fr")
+
+    def test_parse_ingredients_fail_invalid_json(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        api_config = openfoodfacts.APIConfig(user_agent=TEST_USER_AGENT)
+        parse_calls = [
+            lambda: api.product.parse_ingredients("eau, sucre", lang="fr"),
+            lambda: parse_ingredients_function("eau, sucre", "fr", api_config),
+        ]
+        with requests_mock.mock() as mock:
+            mock.patch(
+                "https://world.openfoodfacts.org/api/v3/product/test",
+                text="<html><body>Bad Gateway</body></html>",
+            )
+
+            for parse_call in parse_calls:
+                with pytest.raises(
+                    RuntimeError,
+                    match=re.escape(
+                        "Unable to parse ingredients: invalid JSON response: "
+                        "200, <html><body>Bad Gateway</body></html>"
+                    ),
+                ):
+                    parse_call()
 
     def test_upload_image_success(self):
         api = openfoodfacts.API(
