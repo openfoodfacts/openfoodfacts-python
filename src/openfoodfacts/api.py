@@ -1,4 +1,5 @@
 import base64
+import json
 import logging
 import typing
 import warnings
@@ -982,7 +983,7 @@ def _parse_ingredients_response(r: requests.Response) -> dict:
     """
     try:
         response_data = r.json()
-    except requests.exceptions.JSONDecodeError as e:
+    except ValueError as e:
         raise RuntimeError(
             "Unable to parse ingredients: invalid JSON response: "
             f"{r.status_code}, {r.text[:200]}"
