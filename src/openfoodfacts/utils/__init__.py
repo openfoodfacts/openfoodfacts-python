@@ -250,22 +250,27 @@ def download_file(
     tmp_dir.mkdir(parents=True, exist_ok=True)
 
     tmp_output_path = tmp_dir / output_path.name
-    with (
-        tmp_output_path.open("wb") as f,
-        tqdm.tqdm(
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            miniters=1,
-            desc=str(output_path),
-            total=int(r.headers.get("content-length", 0)),
-        ) as pbar,
-    ):
-        for chunk in r.iter_content(chunk_size=4096):
-            f.write(chunk)
-            pbar.update(len(chunk))
+    try:
+        with (
+            tmp_output_path.open("wb") as f,
+            tqdm.tqdm(
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                miniters=1,
+                desc=str(output_path),
+                total=int(r.headers.get("content-length", 0)),
+            ) as pbar,
+        ):
+            for chunk in r.iter_content(chunk_size=4096):
+                f.write(chunk)
+                pbar.update(len(chunk))
 
-    shutil.move(tmp_output_path, output_path)
+        shutil.move(tmp_output_path, output_path)
+    finally:
+        # Always remove the per-download temporary directory, including
+        # when streaming fails part-way through and leaves a partial file.
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
     _sanitize_file_path(output_path, ".json").write_text(
         json.dumps(
