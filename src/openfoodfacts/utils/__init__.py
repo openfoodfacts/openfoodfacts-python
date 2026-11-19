@@ -217,15 +217,26 @@ def _sanitize_file_path(file_path: Path, suffix: str = "") -> Path:
     return file_path.with_name(file_path.name.replace(".", "_") + suffix)
 
 
-def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
+def download_file(
+    url: str,
+    output_path: Path,
+    tmp_dir: Path | None = None,
+    timeout: float = 10.0,
+):
     """Download a dataset file and store it in `output_path`.
 
     The file metadata (`etag`, `url`, `created_at`) are stored in a JSON
         file whose name is derived from `output_path`
     :param url: the file URL
     :param output_path: the file output path
+    :param tmp_dir: the temporary directory used during download, defaults
+        to the system temporary directory
+    :param timeout: the request timeout in seconds, defaults to 10s. It
+        applies to the connection and to the delay between received chunks,
+        so a stalled download aborts instead of hanging forever, while a
+        slow-but-progressing download of a large file is not cut off.
     """
-    r = http_session.get(url, stream=True)
+    r = http_session.get(url, stream=True, timeout=timeout)
     r.raise_for_status()
     etag = r.headers.get("ETag", "").strip("'\"")
 
@@ -239,22 +250,27 @@ def download_file(url: str, output_path: Path, tmp_dir: Path | None = None):
     tmp_dir.mkdir(parents=True, exist_ok=True)
 
     tmp_output_path = tmp_dir / output_path.name
-    with (
-        tmp_output_path.open("wb") as f,
-        tqdm.tqdm(
-            unit="B",
-            unit_scale=True,
-            unit_divisor=1024,
-            miniters=1,
-            desc=str(output_path),
-            total=int(r.headers.get("content-length", 0)),
-        ) as pbar,
-    ):
-        for chunk in r.iter_content(chunk_size=4096):
-            f.write(chunk)
-            pbar.update(len(chunk))
+    try:
+        with (
+            tmp_output_path.open("wb") as f,
+            tqdm.tqdm(
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                miniters=1,
+                desc=str(output_path),
+                total=int(r.headers.get("content-length", 0)),
+            ) as pbar,
+        ):
+            for chunk in r.iter_content(chunk_size=4096):
+                f.write(chunk)
+                pbar.update(len(chunk))
 
-    shutil.move(tmp_output_path, output_path)
+        shutil.move(tmp_output_path, output_path)
+    finally:
+        # Always remove the per-download temporary directory, including
+        # when streaming fails part-way through and leaves a partial file.
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
     _sanitize_file_path(output_path, ".json").write_text(
         json.dumps(
