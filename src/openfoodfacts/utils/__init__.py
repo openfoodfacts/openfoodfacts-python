@@ -33,6 +33,9 @@ except ImportError:
 http_session = requests.Session()
 http_session.headers.update({"User-Agent": "openfoodfacts-python"})
 
+# Default HTTP timeout in seconds for asset downloads, matching APIConfig.timeout.
+DEFAULT_HTTP_TIMEOUT = 10.0
+
 
 def configure_root_logger(
     logger: logging.Logger,
@@ -369,7 +372,7 @@ def get_asset_from_url(
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
     auth: Optional[tuple[str, str]] = None,
-    timeout: float = 10.0,
+    timeout: float = DEFAULT_HTTP_TIMEOUT,
 ) -> AssetDownloadItem:
     """Fetch an asset from `asset_url`.
 
@@ -380,8 +383,8 @@ def get_asset_from_url(
       `http_session` is used, so requests carry the `openfoodfacts-python`
       User-Agent. Defaults to None.
     :param auth: optional (username, password) tuple for HTTP basic auth.
-    :param timeout: the request timeout in seconds, defaults to 10s (the same
-      default as `APIConfig.timeout`).
+    :param timeout: the request timeout in seconds, defaults to
+      `DEFAULT_HTTP_TIMEOUT` (10s, the same default as `APIConfig.timeout`).
     """
     try:
         if session is None:
@@ -420,7 +423,7 @@ def get_image_from_url(
     error_raise: bool = True,
     session: Optional[requests.Session] = None,
     return_struct: bool = False,
-    timeout: float = 10.0,
+    timeout: float = DEFAULT_HTTP_TIMEOUT,
 ) -> Union[ImageDownloadItem, "Image.Image", None]:
     """Fetch an image from `image_url` and load it.
 
@@ -431,8 +434,8 @@ def get_image_from_url(
     :param session: requests Session to use, by default no session is used.
     :param return_struct: if True, return a `ImageDownloadItem` object
         containing the image, image bytes and the response object.
-    :param timeout: the request timeout in seconds, defaults to 10s (the same
-      default as `APIConfig.timeout`).
+    :param timeout: the request timeout in seconds, defaults to
+      `DEFAULT_HTTP_TIMEOUT` (10s, the same default as `APIConfig.timeout`).
     :return: the loaded image, or None if an error occured and `error_raise`
         is False. If `return_struct` is True, return a `ImageDownloadItem`
         object.
