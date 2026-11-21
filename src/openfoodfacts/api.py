@@ -562,7 +562,19 @@ class ProductResource:
             # product not found
             return None
         else:
-            resp = r.json()
+            try:
+                resp = r.json()
+            except ValueError as e:
+                # ValueError covers both JSON decoders requests may use:
+                # stdlib json.JSONDecodeError and, when simplejson is
+                # installed, simplejson.JSONDecodeError (CodeRabbit review
+                # on #552 — requests' own JSONDecodeError subclasses the
+                # decoder in use, so catching one decoder's error leaks
+                # the other).
+                raise RuntimeError(
+                    f"Unable to get product {code}: invalid JSON response: "
+                    f"{r.status_code}, {r.text[:200]}"
+                ) from e
 
         if resp["status"] == 0:
             # invalid barcode

@@ -81,6 +81,18 @@ class TestProducts:
             ):
                 api.product.get(code, raise_if_invalid=True)
 
+    def test_get_product_invalid_json(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        code = "1223435"
+        with requests_mock.mock() as mock:
+            mock.get(
+                f"https://world.openfoodfacts.org/api/v2/product/{code}",
+                text="<html><body>Proxy Error</body></html>",
+                status_code=200,
+            )
+            with pytest.raises(RuntimeError, match="invalid JSON response"):
+                api.product.get(code)
+
     def test_text_search(self):
         api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
         with requests_mock.mock() as mock:
