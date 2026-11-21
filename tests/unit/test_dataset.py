@@ -5,7 +5,7 @@ import pytest
 
 from openfoodfacts import dataset
 from openfoodfacts.dataset import ProductDataset
-from openfoodfacts.types import DatasetType
+from openfoodfacts.types import DatasetType, Flavor
 
 
 @pytest.mark.parametrize("prefix", ["products", "en.openfoodfacts.org.products"])
@@ -37,6 +37,44 @@ def test_local_dataset_format(
 def test_local_dataset_rejects_unknown_extension(tmp_path, filename):
     with pytest.raises(ValueError, match="Unknown dataset type"):
         ProductDataset(dataset_path=tmp_path / filename)
+
+
+@pytest.mark.parametrize(
+    "flavor, expected_url",
+    [
+        (
+            Flavor.off,
+            "https://static.openfoodfacts.org/data/en.openfoodfacts.org.products.csv.gz",
+        ),
+        (
+            Flavor.obf,
+            "https://static.openbeautyfacts.org/data/en.openbeautyfacts.org.products.csv",
+        ),
+        (
+            Flavor.opff,
+            "https://static.openpetfoodfacts.org/data/en.openpetfoodfacts.org.products.csv",
+        ),
+        (
+            Flavor.opf,
+            "https://static.openproductsfacts.org/data/en.openproductsfacts.org.products.csv",
+        ),
+    ],
+)
+def test_dataset_example_selects_flavor_csv_url(
+    tmp_path, monkeypatch, flavor, expected_url
+):
+    """Each usage-guide dataset example downloads its own project's CSV."""
+    downloaded_urls = []
+    monkeypatch.setattr(dataset, "should_download_file", lambda *args, **kwargs: True)
+    monkeypatch.setattr(
+        dataset,
+        "download_file",
+        lambda url, path, **kwargs: downloaded_urls.append(url),
+    )
+
+    ProductDataset(flavor=flavor, dataset_type="csv", cache_dir=tmp_path)
+
+    assert downloaded_urls == [expected_url]
 
 
 @pytest.mark.parametrize("compressed", [False, True])
