@@ -1,3 +1,5 @@
+"""Official Python SDK for the Open Food Facts API."""
+
 from openfoodfacts.barcode import normalize_barcode
 
 from .api import API
