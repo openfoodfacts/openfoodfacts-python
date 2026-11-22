@@ -45,6 +45,12 @@ or manually from source:
     cd openfoodfacts-python
     pip install .  # Note the “.” at the end!
 
+> **Note:** It is recommended to install this package inside a Python virtual environment (`venv`) to avoid dependency conflicts:
+> ```bash
+> python -m venv .venv
+> source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+> ```
+
 ## Examples
 
 All the examples below assume that you have imported the SDK and instantiated the API object:
