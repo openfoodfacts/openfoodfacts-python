@@ -8,6 +8,7 @@ from PIL import Image
 
 from openfoodfacts.utils import (
     AssetLoadingException,
+    fetch_etag,
     get_image_from_url,
     should_download_file,
 )
@@ -131,3 +132,35 @@ def test_should_download_file():
             )
             is False
         )
+
+
+def test_fetch_etag_sends_timeout():
+    """fetch_etag() must send a timeout with the HEAD request, so a stalled
+    ETag check aborts instead of hanging the dataset/taxonomy download
+    forever."""
+    url = "https://example.com/file"
+
+    with patch("openfoodfacts.utils.http_session.head") as mock_head:
+        mock_head.return_value.headers = {"ETag": '"etag123"'}
+        assert fetch_etag(url) == "etag123"
+        assert mock_head.call_args.kwargs["timeout"] == 10.0
+
+    # A custom timeout is passed through, including via
+    # should_download_file() when checking for a newer version.
+    with (
+        patch.object(Path, "is_file", return_value=True),
+        patch("openfoodfacts.utils.get_file_etag", return_value="etag123"),
+        patch("openfoodfacts.utils.http_session.head") as mock_head,
+    ):
+        mock_head.return_value.headers = {"ETag": '"etag456"'}
+        assert (
+            should_download_file(
+                url,
+                Path("/path/to/file"),
+                force_download=False,
+                download_newer=True,
+                timeout=5.0,
+            )
+            is True
+        )
+        assert mock_head.call_args.kwargs["timeout"] == 5.0
