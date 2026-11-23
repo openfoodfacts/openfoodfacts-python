@@ -803,3 +803,27 @@ class TestNutriPatrol:
             )
             result = api.nutripatrol.status()
             assert result == response_data
+
+
+class TestFacets:
+    def test_get_invalid_json(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://world.openfoodfacts.org/facets/labels",
+                text="<html><body>Proxy Error</body></html>",
+                status_code=200,
+            )
+            with pytest.raises(RuntimeError, match="invalid JSON response"):
+                api.facet.get("label")
+
+    def test_get_products_invalid_json(self):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, version="v2")
+        with requests_mock.mock() as mock:
+            mock.get(
+                "https://world.openfoodfacts.org/facets/labels/en:organic",
+                text="<html><body>Proxy Error</body></html>",
+                status_code=200,
+            )
+            with pytest.raises(RuntimeError, match="invalid JSON response"):
+                api.facet.get_products("label", "en:organic")
