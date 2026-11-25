@@ -138,13 +138,15 @@ Two dataset types are available `csv` and `jsonl`. The `jsonl` dataset contains 
 You can also use `ProductDataset` to fetch other non-food datasets:
 
 ```python
-from openfoodfacts import ProductDataset
+from openfoodfacts import Flavor, ProductDataset
 
-dataset = ProductDataset(dataset_type="csv")
+dataset = ProductDataset(flavor=Flavor.obf, dataset_type="csv")
 
 for product in dataset:
     print(product["product_name"])
 ```
+
+The example above downloads the Open Beauty Facts dataset. Pass `flavor=Flavor.opff` for Open Pet Food Facts or `flavor=Flavor.opf` for Open Products Facts instead.
 
 ## Taxonomies
 
