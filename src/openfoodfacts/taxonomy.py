@@ -464,7 +464,9 @@ class Taxonomy:
 
     @classmethod
     def from_type(
-        cls, taxonomy_type: TaxonomyType, flavor: Flavor = Flavor.off
+        cls,
+        taxonomy_type: TaxonomyType | str,
+        flavor: Flavor | str = Flavor.off,
     ) -> "Taxonomy":
         """Create a Taxonomy from a taxonomy file hosted online from a
         taxonomy type.
@@ -473,13 +475,20 @@ class Taxonomy:
         :param flavor: The data source, defaults to Flavor.off
         :return: a Taxonomy
         """
+        if isinstance(taxonomy_type, str):
+            taxonomy_type = TaxonomyType[taxonomy_type]
+        if isinstance(flavor, str):
+            try:
+                flavor = Flavor(flavor)
+            except ValueError:
+                flavor = Flavor[flavor.replace("-", "_")]
         url = _generate_file_path(taxonomy_type, flavor)
         return cls.from_url(url)
 
 
 def get_taxonomy(
     taxonomy_type: TaxonomyType | str,
-    flavor: Flavor = Flavor.off,
+    flavor: Flavor | str = Flavor.off,
     force_download: bool = False,
     download_newer: bool = False,
     cache_dir: Path | None = None,
@@ -503,7 +512,13 @@ def get_taxonomy(
         None, which means that the system default temporary directory will be used.
     :return: a Taxonomy
     """
-    taxonomy_type = TaxonomyType[taxonomy_type]
+    if isinstance(taxonomy_type, str):
+        taxonomy_type = TaxonomyType[taxonomy_type]
+    if isinstance(flavor, str):
+        try:
+            flavor = Flavor(flavor)
+        except ValueError:
+            flavor = Flavor[flavor.replace("-", "_")]
     filename = f"{flavor.name}-{taxonomy_type.name}.json"
 
     cache_dir = DEFAULT_CACHE_DIR if cache_dir is None else cache_dir
