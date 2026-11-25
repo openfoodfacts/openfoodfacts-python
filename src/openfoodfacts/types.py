@@ -125,14 +125,30 @@ class Facet(str, enum.Enum):
 
     @classmethod
     def from_str_or_enum(cls, value: Union[str, "Facet"]) -> "Facet":
-        """Convert a string to an enum value."""
+        """Convert a string or enum to an enum value.
+
+        Accepts either the singular enum member name (e.g. "label")
+        or the plural enum value (e.g. "labels").
+        """
         if isinstance(value, cls):
             return value
 
-        elif isinstance(value, str):
-            if value not in Facet.__members__:
-                raise ValueError("unknown Facet: %s", value)
-            return cls[value]
+        if isinstance(value, str):
+            if value in cls.__members__:
+                return cls[value]
+            try:
+                return cls(value)
+            except ValueError:
+                normalized = value.replace("-", "_")
+                if normalized in cls.__members__:
+                    return cls[normalized]
+                try:
+                    return cls(normalized)
+                except ValueError:
+                    pass
+            raise ValueError(f"unknown Facet: {value}")
+
+        raise TypeError(f"Expected Facet or str, got {type(value).__name__}")
 
 
 class Environment(str, enum.Enum):

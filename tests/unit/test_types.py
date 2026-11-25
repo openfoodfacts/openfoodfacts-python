@@ -1,6 +1,7 @@
 import pytest
 
 from openfoodfacts.types import (
+    Facet,
     Flavor,
     JSONType,
     NutritionV3,
@@ -458,3 +459,37 @@ class TestNutritionV3NutrientInput:
             }
         )
         assert parsed.value_string == "5.2"
+
+
+class TestFacet:
+    def test_from_str_or_enum_with_enum(self):
+        assert Facet.from_str_or_enum(Facet.brand) == Facet.brand
+        assert Facet.from_str_or_enum(Facet.label) == Facet.label
+
+    def test_from_str_or_enum_with_singular_name(self):
+        assert Facet.from_str_or_enum("brand") == Facet.brand
+        assert Facet.from_str_or_enum("category") == Facet.category
+        assert Facet.from_str_or_enum("additive") == Facet.additive
+
+    def test_from_str_or_enum_with_plural_value(self):
+        # As documented in API docstrings (e.g. "labels", "brands", "categories")
+        assert Facet.from_str_or_enum("brands") == Facet.brand
+        assert Facet.from_str_or_enum("labels") == Facet.label
+        assert Facet.from_str_or_enum("categories") == Facet.category
+
+    def test_from_str_or_enum_with_hyphenated_value(self):
+        assert (
+            Facet.from_str_or_enum("data-quality-warnings")
+            == Facet.data_quality_warning
+        )
+        assert Facet.from_str_or_enum("packager-codes") == Facet.packager_code
+
+    def test_from_str_or_enum_unknown_string_raises_value_error(self):
+        with pytest.raises(ValueError, match="unknown Facet: unknown_facet"):
+            Facet.from_str_or_enum("unknown_facet")
+
+    def test_from_str_or_enum_invalid_type_raises_type_error(self):
+        with pytest.raises(TypeError, match="Expected Facet or str, got int"):
+            Facet.from_str_or_enum(123)
+        with pytest.raises(TypeError, match="Expected Facet or str, got NoneType"):
+            Facet.from_str_or_enum(None)
