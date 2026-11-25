@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.4.2](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.4.1...v5.4.2) (2026-11-25)
+
+
+### Bug Fixes
+
+* **dataset:** accept dotted local dataset filenames ([#523](https://github.com/openfoodfacts/openfoodfacts-python/issues/523)) ([689c90f](https://github.com/openfoodfacts/openfoodfacts-python/commit/689c90f54b5c972bf214d10ec754baeff4917ad8))
+* **dataset:** decode CSV products as UTF-8 ([#527](https://github.com/openfoodfacts/openfoodfacts-python/issues/527)) ([29f9628](https://github.com/openfoodfacts/openfoodfacts-python/commit/29f962840f9a8cd3b4738cf83c0b71b356731d1f))
+
+
+### Technical
+
+* add quick start steps to CONTRIBUTING.md ([#566](https://github.com/openfoodfacts/openfoodfacts-python/issues/566)) ([38c1eee](https://github.com/openfoodfacts/openfoodfacts-python/commit/38c1eeeb3d3bffe800901987cf5abeddd4516f6c))
+
 ## [5.4.1](https://github.com/openfoodfacts/openfoodfacts-python/compare/v5.4.0...v5.4.1) (2026-10-20)
 
 
