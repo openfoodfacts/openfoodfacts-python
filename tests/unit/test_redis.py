@@ -1,15 +1,15 @@
 import datetime
 import json
 from typing import Optional, cast
+from unittest.mock import Mock, call
 
 import pytest
-from redis import Redis
-
 from openfoodfacts.redis import (
     ProductUpdateEvent,
     get_new_updates_multistream,
     get_processed_since,
 )
+from redis import Redis
 
 
 class TestRedisUpdate:
@@ -244,6 +244,106 @@ def test_get_processed_since():
         code="3",
         **base_values,
     )
+
+
+def test_get_processed_since_resets_cursor_for_ocr_stream():
+    client = Mock()
+    product = {
+        "code": "123",
+        "flavor": "off",
+        "user_id": "user",
+        "action": "updated",
+        "comment": "",
+        "product_type": "food",
+    }
+    client.xrange.side_effect = [[("3000-0", product)], [], []]
+    list(get_processed_since(client, "1000-0"))
+    assert client.xrange.call_args_list[0] == call(
+        "product_updates", min="1000-0", count=100
+    )
+    assert client.xrange.call_args_list[1] == call(
+        "product_updates", min="(3000-0", count=100
+    )
+    assert client.xrange.call_args_list[2] == call(
+        "ocr_ready", min="1000-0", count=100
+    )
+
+
+class DeterministicStreamClient:
+    def __init__(self, streams: dict[str, list[tuple[str, dict]]]):
+        self.streams = streams
+
+    @staticmethod
+    def _parse_id(stream_id: str) -> tuple[int, int]:
+        ms, seq = stream_id.split("-")
+        return int(ms), int(seq)
+
+    def xrange(
+        self, name: str, min: str = "-", max: str = "+", count: Optional[int] = None
+    ):
+        assert max == "+"
+        stream = self.streams.get(name, [])
+        exclusive = min.startswith("(")
+        min_str = min[1:] if exclusive else min
+        min_key = self._parse_id(min_str)
+
+        matched = []
+        for item_id, item_data in stream:
+            item_key = self._parse_id(item_id)
+            if exclusive:
+                if item_key > min_key:
+                    matched.append((item_id, item_data))
+            else:
+                if item_key >= min_key:
+                    matched.append((item_id, item_data))
+
+        if count is not None:
+            matched = matched[:count]
+        return matched
+
+
+def test_get_processed_since_retains_earlier_ocr_events():
+    product = {
+        "code": "123",
+        "flavor": "off",
+        "user_id": "user",
+        "action": "updated",
+        "comment": "",
+        "product_type": "food",
+    }
+    ocr = {
+        "code": "123",
+        "product_type": "food",
+        "image_id": "1",
+        "json_url": "https://example.com/1.json",
+    }
+    client = cast(
+        Redis,
+        DeterministicStreamClient(
+            {
+                "product_updates": [
+                    ("2000-0", product),
+                    ("3000-0", product),
+                ],
+                "ocr_ready": [
+                    ("1500-0", ocr),
+                    ("2500-0", ocr),
+                    ("3000-0", ocr),
+                    ("3500-0", ocr),
+                ],
+            }
+        ),
+    )
+
+    events = list(get_processed_since(client, "1000-0"))
+    assert [event.id for event in events] == [
+        "2000-0",
+        "3000-0",
+        "1500-0",
+        "2500-0",
+        "3000-0",
+        "3500-0",
+    ]
 
 
 class RedisXreadClient:

@@ -142,10 +142,12 @@ def get_processed_since(
     if isinstance(min_id, datetime.datetime):
         min_id = f"{int(min_id.timestamp() * 1000)}-0"
 
+    initial_min_id = min_id
     for stream_name in (
         product_updates_stream_name,
         ocr_ready_stream_name,
     ):
+        min_id = initial_min_id
         while True:
             logger.debug(
                 "Fetching batch from Redis, stream %s, min_id %s, count %d",
