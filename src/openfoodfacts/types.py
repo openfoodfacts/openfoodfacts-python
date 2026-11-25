@@ -985,7 +985,7 @@ class NutritionV3NutrientAggregated(BaseModel):
     unit: str = Field(description="Normalized unit", examples=["g", "kJ", "kcal", "%"])
     modifier: str | None = None
     source: str = Field(examples=["packaging", "manufacturer", "estimate", "usda"])
-    source_per: Literal["serving", "100g", "100ml"]
+    source_per: Literal["serving", "100g", "100ml", "1kg"]
     source_index: int
 
 
@@ -1009,13 +1009,14 @@ class NutritionV3NutrientInput(BaseModel):
 
 class NutritionV3AggregatedSet(BaseModel):
     preparation: Literal["as_sold", "prepared"]
-    per: Literal["100g", "100ml"]
+    # Open Pet Food Facts aggregates nutrients per 1kg
+    per: Literal["100g", "100ml", "1kg"]
     nutrients: dict[str, NutritionV3NutrientAggregated] = Field(default_factory=dict)
 
 
 class NutritionV3InputSet(BaseModel):
     preparation: Literal["as_sold", "prepared"]
-    per: Literal["serving", "100g", "100ml"]
+    per: Literal["serving", "100g", "100ml", "1kg"]
     source: str = Field(
         examples=["packaging", "manufacturer", "database-usda", "estimate"]
     )

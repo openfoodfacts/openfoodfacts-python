@@ -392,9 +392,53 @@ NUTRITION_4 = {
 }
 
 
+# Open Pet Food Facts: nutrients are aggregated per 1kg, and input sets can be per 1kg
+NUTRITION_PETFOOD_1KG = {
+    "aggregated_set": {
+        "preparation": "as_sold",
+        "per": "1kg",
+        "nutrients": {
+            "proteins": {
+                "value": 280,
+                "unit": "g",
+                "source": "packaging",
+                "source_per": "1kg",
+                "source_index": 0,
+            },
+            "fat": {
+                "value": 150,
+                "unit": "g",
+                "source": "packaging",
+                "source_per": "100g",
+                "source_index": 1,
+            },
+        },
+    },
+    "input_sets": [
+        {
+            "preparation": "as_sold",
+            "per": "1kg",
+            "per_quantity": 1000,
+            "per_unit": "g",
+            "source": "packaging",
+            "nutrients": {"proteins": {"value": 280, "unit": "g"}},
+        },
+        {
+            "preparation": "as_sold",
+            "per": "100g",
+            "per_quantity": 100,
+            "per_unit": "g",
+            "source": "packaging",
+            "nutrients": {"fat": {"value": 15, "unit": "g"}},
+        },
+    ],
+}
+
+
 class TestNutritionV3:
     @pytest.mark.parametrize(
-        "obj", [NUTRITION_1, NUTRITION_2, NUTRITION_3, NUTRITION_4]
+        "obj",
+        [NUTRITION_1, NUTRITION_2, NUTRITION_3, NUTRITION_4, NUTRITION_PETFOOD_1KG],
     )
     def test_parse(self, obj: JSONType):
         NutritionV3.model_validate(obj)
@@ -407,6 +451,15 @@ class TestNutritionV3:
         assert (
             len(nutrition_obj.filter_input_sets(source="packaging", per="100ml")) == 0
         )
+
+    def test_per_1kg(self):
+        nutrition_obj = NutritionV3.model_validate(NUTRITION_PETFOOD_1KG)
+        assert nutrition_obj.aggregated_set is not None
+        assert nutrition_obj.aggregated_set.per == "1kg"
+        assert nutrition_obj.aggregated_set.nutrients["proteins"].source_per == "1kg"
+        assert len(nutrition_obj.filter_input_sets(per="1kg")) == 1
+        result = nutrition_obj.get_input_nutrient(nutrient="proteins", per="1kg")
+        assert result is not None and result.value == 280
 
     def test_get_input_nutrient(self):
         nutrition_obj = NutritionV3.model_validate(NUTRITION_2)
