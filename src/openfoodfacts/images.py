@@ -318,10 +318,10 @@ def convert_to_legacy_schema(images: JSONType) -> JSONType:
             "sizes": {
                 # remove URL field
                 size: {k: v for k, v in image_size_data.items() if k != "url"}
-                for size, image_size_data in image_data["sizes"].items()
+                for size, image_size_data in image_data.get("sizes", {}).items()
             },
-            "uploaded_t": image_data["uploaded_t"],
-            "uploader": image_data["uploader"],
+            "uploaded_t": image_data.get("uploaded_t"),
+            "uploader": image_data.get("uploader"),
         }
 
     for selected_key, image_by_lang in images.get("selected", {}).items():
@@ -332,7 +332,7 @@ def convert_to_legacy_schema(images: JSONType) -> JSONType:
                 "sizes": {
                     # remove URL field
                     size: {k: v for k, v in image_size_data.items() if k != "url"}
-                    for size, image_size_data in image_data["sizes"].items()
+                    for size, image_size_data in image_data.get("sizes", {}).items()
                 },
                 **(image_data.get("generation", {})),
             }
