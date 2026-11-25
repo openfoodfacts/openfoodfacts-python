@@ -4,6 +4,13 @@ Any help is welcome, as long as you don't break the continuous integration.
 Fork the repository and open a Pull Request directly on the `develop` branch.
 A maintainer will review and integrate your changes.
 
+## Quick Start for Contributors
+
+1. Fork this repository and clone your fork locally:
+   ```bash
+   git clone [https://github.com/](https://github.com/)<your-username>/openfoodfacts-python.git
+   cd openfoodfacts-python
+   
 Maintainers:
 
 - [Anubhav Bhargava](https://github.com/Anubhav-Bhargava)
