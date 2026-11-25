@@ -432,7 +432,21 @@ class Taxonomy:
 
         for key, key_data in data.items():
             node = taxonomy[key]
-            parents = [taxonomy[ref] for ref in key_data.get("parents", [])]
+            parents = []
+            for ref in key_data.get("parents", []):
+                parent = taxonomy[ref]
+                if parent is None:
+                    # A partial or hand-trimmed taxonomy may reference a
+                    # parent id that is not defined in the dict. Skip that
+                    # edge (with a warning naming it) instead of crashing
+                    # the whole load with an AttributeError.
+                    logger.warning(
+                        "Skipping undefined parent %s for taxonomy node %s",
+                        ref,
+                        key,
+                    )
+                else:
+                    parents.append(parent)
             node.add_parents(parents)
 
         return taxonomy
