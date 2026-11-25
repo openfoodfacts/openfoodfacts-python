@@ -4,32 +4,78 @@ github_actions:
 
 REDIS:
 - changed-files:
-  - any-glob-to-any-file: 'tests/**/test_redis.py'
   - any-glob-to-any-file: 'src/openfoodfacts/redis.py'
+  - any-glob-to-any-file: 'tests/**/test_redis.py'
 
-images:
+'🖼️ Images':
 - changed-files:
   - any-glob-to-any-file: 'src/openfoodfacts/images.py'
   - any-glob-to-any-file: 'tests/**/test_images.py'
 
 OCR:
 - changed-files:
+  - any-glob-to-any-file: 'src/openfoodfacts/ocr.py'
   - any-glob-to-any-file: 'tests/**/test_ocr.py'
 
-tests:
+Dataset:
+- changed-files:
+  - any-glob-to-any-file: 'src/openfoodfacts/dataset.py'
+  - any-glob-to-any-file: 'tests/**/test_dataset.py'
+
+Taxonomies:
+- changed-files:
+  - any-glob-to-any-file: 'src/openfoodfacts/taxonomy.py'
+  - any-glob-to-any-file: 'tests/**/test_taxonomy.py'
+  - any-glob-to-any-file: 'docs/handle_taxonomies.md'
+
+'🥗 ingredients':
+- changed-files:
+  - any-glob-to-any-file: 'src/openfoodfacts/ingredients.py'
+
+'🤖 Robotoff':
+- changed-files:
+  - any-glob-to-any-file: 'src/openfoodfacts/ml/**/*'
+  - any-glob-to-any-file: 'tests/ml/**/*'
+
+'🧪 tests':
 - changed-files:
   - any-glob-to-any-file: 'tests/**/*'
 
 utils:
 - changed-files:
-  - any-glob-to-any-file: 'src/openfoodfacts/utils.py'
+  - any-glob-to-any-file: 'src/openfoodfacts/utils/**/*'
   - any-glob-to-any-file: 'tests/**/test_utils.py'
   - any-glob-to-any-file: 'tests/unit/utils/**/*'
+
+'🐍 Python':
+- changed-files:
+  - any-glob-to-any-file: '**/*.py'
 
 dependencies:
 - changed-files:
   - any-glob-to-any-file: 'uv.lock'
 
+'python:uv':
+- changed-files:
+  - any-glob-to-any-file: 'uv.lock'
+  - any-glob-to-any-file: 'pyproject.toml'
+
+'📦 Packaging':
+- changed-files:
+  - any-glob-to-any-file: 'conda/**/*'
+  - any-glob-to-any-file: 'pyproject.toml'
+
 documentation:
 - changed-files:
   - any-glob-to-any-file: 'docs/**/*'
+  - any-glob-to-any-file: 'README.md'
+  - any-glob-to-any-file: 'CONTRIBUTING.md'
+  - any-glob-to-any-file: 'CHANGELOG.md'
+  - any-glob-to-any-file: 'mkdocs.yml'
+
+reuse:
+- changed-files:
+  - any-glob-to-any-file: 'REUSE.md'
+  - any-glob-to-any-file: 'REUSE.toml'
+  - any-glob-to-any-file: 'LICENSES/**/*'
+  - any-glob-to-any-file: 'LICENSE'
