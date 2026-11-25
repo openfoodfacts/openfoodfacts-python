@@ -459,6 +459,10 @@ class Taxonomy:
         """
         session = http_session if session is None else session
         r = session.get(url, timeout=timeout)
+        # Fail loudly on HTTP errors instead of letting r.json() raise a
+        # confusing JSONDecodeError on an error page (e.g. a 404 HTML body
+        # when the taxonomy file moved or the flavour has none).
+        r.raise_for_status()
         data = r.json()
         return cls.from_dict(data)
 
