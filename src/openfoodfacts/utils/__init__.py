@@ -281,20 +281,27 @@ def get_file_etag(dataset_path: Path) -> Optional[str]:
     return None
 
 
-def fetch_etag(url: str) -> str:
+def fetch_etag(url: str, timeout: float = 10.0) -> str:
     """Get the Etag of a remote file.
 
     :param url: the file URL
+    :param timeout: the request timeout in seconds, defaults to 10s. It
+        applies to the connection and to the delay before the first byte,
+        so a stalled ETag check aborts instead of hanging forever.
     :return: the Etag
     """
     # if we don't add allow_redirects=True, redirections are not
     # done with HEAD requests, and we don't get the ETag
-    r = http_session.head(url, allow_redirects=True)
+    r = http_session.head(url, allow_redirects=True, timeout=timeout)
     return r.headers.get("ETag", "").strip("'\"")
 
 
 def should_download_file(
-    url: str, filepath: Path, force_download: bool, download_newer: bool
+    url: str,
+    filepath: Path,
+    force_download: bool,
+    download_newer: bool,
+    timeout: float = 10.0,
 ) -> bool:
     """Return True if the file located at `url` should be downloaded again.
 
@@ -306,6 +313,8 @@ def should_download_file(
         version compared to the cached version is available (based on file
         Etag). This parameter if ignored if force_download is True, defaults
         to False.
+    :param timeout: the request timeout in seconds for the ETag check,
+        defaults to 10s.
     :return: True if the file should be downloaded again, False otherwise
     """
     if filepath.is_file():
@@ -316,7 +325,7 @@ def should_download_file(
         if download_newer:
             # Check if the file is up to date
             cached_etag = get_file_etag(filepath)
-            current_etag = fetch_etag(url)
+            current_etag = fetch_etag(url, timeout=timeout)
             return cached_etag != current_etag
         else:
             # The file exists, no need to download it again
