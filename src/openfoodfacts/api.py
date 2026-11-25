@@ -955,12 +955,21 @@ class API:
         if isinstance(version, APIVersion):
             version = version.value
 
+        if not isinstance(flavor, Flavor):
+            try:
+                flavor = Flavor(flavor)
+            except ValueError:
+                flavor = Flavor[flavor.replace("-", "_")]
+
+        if not isinstance(environment, Environment):
+            environment = Environment[environment]
+
         self.api_config = APIConfig(
             user_agent=user_agent,
             country=country,
-            flavor=Flavor[flavor],
+            flavor=flavor,
             version=version,
-            environment=Environment[environment],
+            environment=environment,
             username=username,
             password=password,
             session_cookie=session_cookie,

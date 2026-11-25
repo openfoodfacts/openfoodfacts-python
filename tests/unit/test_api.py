@@ -1,10 +1,9 @@
 import json
 import re
 
+import openfoodfacts
 import pytest
 import requests_mock
-
-import openfoodfacts
 
 TEST_USER_AGENT = "test_off_python"
 
@@ -471,9 +470,7 @@ class TestFolksonomy:
             assert len(res.json()) == 5
 
     def test_add(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         value = "test_value"
@@ -494,9 +491,7 @@ class TestFolksonomy:
             assert len(res.json()) == 0
 
     def test_update(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         value = "updated_value"
@@ -506,9 +501,7 @@ class TestFolksonomy:
                 text="{}",
                 status_code=200,
             )
-            res = api.folksonomy.update(
-                product=code, key=key, value=value, version=2
-            )
+            res = api.folksonomy.update(product=code, key=key, value=value, version=2)
             assert res.request.json() == {
                 "product": code,
                 "k": key,
@@ -520,9 +513,7 @@ class TestFolksonomy:
             assert len(res.json()) == 0
 
     def test_delete(self):
-        api = openfoodfacts.API(
-            user_agent=TEST_USER_AGENT, access_token="test_token"
-        )
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, access_token="test_token")
         code = "3017620422003"
         key = "test:tag"
         with requests_mock.mock() as mock:
@@ -803,3 +794,32 @@ class TestNutriPatrol:
             )
             result = api.nutripatrol.status()
             assert result == response_data
+
+
+class TestAPIInit:
+    @pytest.mark.parametrize(
+        "flavor_input,expected_flavor",
+        [
+            ("off", openfoodfacts.Flavor.off),
+            ("off-pro", openfoodfacts.Flavor.off_pro),
+            ("off_pro", openfoodfacts.Flavor.off_pro),
+            (openfoodfacts.Flavor.off_pro, openfoodfacts.Flavor.off_pro),
+            (openfoodfacts.Flavor.off, openfoodfacts.Flavor.off),
+        ],
+    )
+    def test_init_flavor(self, flavor_input, expected_flavor):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, flavor=flavor_input)
+        assert api.api_config.flavor == expected_flavor
+
+    @pytest.mark.parametrize(
+        "env_input,expected_env",
+        [
+            ("org", openfoodfacts.Environment.org),
+            ("net", openfoodfacts.Environment.net),
+            (openfoodfacts.Environment.org, openfoodfacts.Environment.org),
+            (openfoodfacts.Environment.net, openfoodfacts.Environment.net),
+        ],
+    )
+    def test_init_environment(self, env_input, expected_env):
+        api = openfoodfacts.API(user_agent=TEST_USER_AGENT, environment=env_input)
+        assert api.api_config.environment == expected_env
