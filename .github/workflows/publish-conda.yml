@@ -4,6 +4,9 @@ on:
   # Triggers the workflow on a new release
   release:
     types: [created]
+
+permissions:
+  contents: read
     
 jobs:
   publish:
