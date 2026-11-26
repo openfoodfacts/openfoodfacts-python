@@ -337,7 +337,19 @@ class FacetResource:
             api_config=self.api_config,
             method="GET",
         )
-        return typing.cast(requests.Response, r).json()
+        try:
+            return typing.cast(requests.Response, r).json()
+        except ValueError as e:
+            # ValueError covers both JSON decoders requests may use:
+            # stdlib json.JSONDecodeError and, when simplejson is
+            # installed, simplejson.JSONDecodeError (same point as
+            # get_product — requests' own JSONDecodeError subclasses
+            # the decoder in use, so catching one decoder's error
+            # leaks the other).
+            raise RuntimeError(
+                f"Unable to get facet {facet_name}: invalid JSON response: "
+                f"{r.status_code}, {r.text[:200]}"
+            ) from e
 
     def get_products(
         self,
@@ -375,7 +387,15 @@ class FacetResource:
             api_config=self.api_config,
             method="GET",
         )
-        return typing.cast(requests.Response, r).json()
+        try:
+            return typing.cast(requests.Response, r).json()
+        except ValueError as e:
+            # Same invalid-JSON guard as get(): see the comment there.
+            raise RuntimeError(
+                f"Unable to get products for facet {facet_name} "
+                f"{facet_value}: invalid JSON response: "
+                f"{r.status_code}, {r.text[:200]}"
+            ) from e
 
 
 class FolksonomyResource:
